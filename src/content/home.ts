@@ -1,4 +1,5 @@
 import type { ImageAsset, VideoAsset } from "@/types/media";
+import { withBase } from "@/lib/base-path";
 
 /*
  * Homepage content, kept apart from presentation so copy and media can be replaced
@@ -22,10 +23,10 @@ export type HeroSlide = {
 
 const heroVideo = (label: string): VideoAsset => ({
   type: "video",
-  src: "/videos/hero.webm",
+  src: withBase("/videos/hero.webm"),
   mimeType: "video/webm",
   label,
-  poster: "/images/home/hero-poster.webp",
+  poster: withBase("/images/home/hero-poster.webp"),
   width: 720,
   height: 405,
 });
@@ -52,13 +53,13 @@ export const story = {
   cta: { label: "About us", href: "/about" },
   images: [
     image(
-      "/images/home/story-team.webp",
+      withBase("/images/home/story-team.webp"),
       "The Sunbeam team reviewing material samples with clients in a living room",
       1440,
       1440,
     ),
     image(
-      "/images/home/story-lighting.webp",
+      withBase("/images/home/story-lighting.webp"),
       "A Sunbeam designer adjusting a cluster of pendant lights against a warm plaster wall",
       2118,
       2648,
@@ -70,20 +71,20 @@ export const story = {
     /* Silent, cropped loop that plays in the teaser tile. */
     loop: {
       type: "video",
-      src: "/videos/about-teaser.webm",
+      src: withBase("/videos/about-teaser.webm"),
       mimeType: "video/webm",
       label: "A Sunbeam designer introducing the studio",
-      poster: "/images/home/about-teaser-poster.webp",
+      poster: withBase("/images/home/about-teaser-poster.webp"),
       width: 480,
       height: 310,
     } satisfies VideoAsset,
     /* Full film with sound, opened from "Watch video". */
     film: {
       type: "video",
-      src: "/videos/about.mp4",
+      src: withBase("/videos/about.mp4"),
       mimeType: "video/mp4",
       label: "The Sunbeam Design Studio story, from 2021 till today",
-      poster: "/images/home/about-poster.webp",
+      poster: withBase("/images/home/about-poster.webp"),
       width: 720,
       height: 1280,
     } satisfies VideoAsset,
@@ -114,13 +115,13 @@ export const services = {
       href: "/#projects",
       images: [
         image(
-          "/images/home/service-interior-2.webp",
+          withBase("/images/home/service-interior-2.webp"),
           "Open-plan apartment living and dining area with sheer curtains and sea views",
           2400,
           1600,
         ),
         image(
-          "/images/home/service-interior-1.webp",
+          withBase("/images/home/service-interior-1.webp"),
           "Minimal grey clinic lounge with a monochrome artwork and linear lighting",
           1600,
           1920,
@@ -136,13 +137,13 @@ export const services = {
       href: "/#projects",
       images: [
         image(
-          "/images/home/service-ffe-1.webp",
+          withBase("/images/home/service-ffe-1.webp"),
           "Bedroom with a woven timber wardrobe, linen bedding and a pendant lamp",
           1980,
           2200,
         ),
         image(
-          "/images/home/service-ffe-2.webp",
+          withBase("/images/home/service-ffe-2.webp"),
           "Round oak dining table with curved chairs on a jute rug in afternoon light",
           1980,
           2200,
@@ -174,13 +175,13 @@ export const projects = {
       tags: ["Commercial", "Food & Beverage"],
       href: "/projects/baxters",
       cover: image(
-        "/images/projects/baxters.webp",
+        withBase("/images/projects/baxters.webp"),
         "Baxters bakery-café with timber beams, monochrome floor tiles and pendant lights",
         1600,
         1920,
       ),
       detail: image(
-        "/images/projects/baxters-2.webp",
+        withBase("/images/projects/baxters-2.webp"),
         "Baxters café seating with green chairs on a geometric tiled floor",
         1600,
         1920,
@@ -192,13 +193,13 @@ export const projects = {
       tags: ["Residential", "Villas"],
       href: "/#projects",
       cover: image(
-        "/images/projects/sodic-villette.webp",
+        withBase("/images/projects/sodic-villette.webp"),
         "Sodic Villette reception with a leather daybed, patterned rug and open kitchen",
         2400,
         1846,
       ),
       detail: image(
-        "/images/projects/sodic-villette-2.webp",
+        withBase("/images/projects/sodic-villette-2.webp"),
         "Sodic Villette living room with a textured feature wall and corner sofa",
         1600,
         1920,
@@ -210,13 +211,13 @@ export const projects = {
       tags: ["Commercial", "Gym & Clubhouse"],
       href: "/#projects",
       cover: image(
-        "/images/projects/la7-zoya.webp",
+        withBase("/images/projects/la7-zoya.webp"),
         "LA7 Zoya clubhouse façade in terracotta and sand tones behind a green lawn",
         1920,
         1080,
       ),
       detail: image(
-        "/images/projects/la7-zoya-2.webp",
+        withBase("/images/projects/la7-zoya-2.webp"),
         "LA7 Zoya indoor gym with sculpted ring lights above training equipment",
         1920,
         1080,
@@ -228,13 +229,13 @@ export const projects = {
       tags: ["Residential", "Villas"],
       href: "/#projects",
       cover: image(
-        "/images/projects/palm-hills.webp",
+        withBase("/images/projects/palm-hills.webp"),
         "Palm Hills villa dining room with a long table under copper pendant lights",
         2400,
         1845,
       ),
       detail: image(
-        "/images/projects/palm-hills-2.webp",
+        withBase("/images/projects/palm-hills-2.webp"),
         "Palm Hills villa bedroom with a scalloped headboard and soft neutral bedding",
         2000,
         2222,
@@ -246,13 +247,13 @@ export const projects = {
       tags: ["Commercial", "Food & Beverage"],
       href: "/#projects",
       cover: image(
-        "/images/projects/wndr.webp",
+        withBase("/images/projects/wndr.webp"),
         "Wonderville café counter with a sculptural ceiling installation and terrazzo floor",
         2400,
         1600,
       ),
       detail: image(
-        "/images/projects/wndr-2.webp",
+        withBase("/images/projects/wndr-2.webp"),
         "Wonderville café dining area with planters and timber tables",
         2400,
         1600,
@@ -264,13 +265,13 @@ export const projects = {
       tags: ["Commercial", "Food & Beverage"],
       href: "/#projects",
       cover: image(
-        "/images/projects/pottery.webp",
+        withBase("/images/projects/pottery.webp"),
         "Pottery Café dining hall with arched niches, olive banquettes and rattan pendants",
         2400,
         1600,
       ),
       detail: image(
-        "/images/projects/pottery-2.webp",
+        withBase("/images/projects/pottery-2.webp"),
         "Pottery Café outdoor terrace with timber pergola and olive trees",
         2400,
         1600,
@@ -294,7 +295,7 @@ const logo = (
   display: number,
 ): Client => ({
   name,
-  logo: image(`/images/clients/${file}.webp`, name, width, height),
+  logo: image(withBase(`/images/clients/${file}.webp`), name, width, height),
   height: display,
 });
 
@@ -328,21 +329,21 @@ export const testimonials = {
         "Sunbeam understood our home before we could describe it. Every material, every light and every corner feels considered — calm, warm and entirely ours.",
       author: "Nour & Karim El-Sayed",
       project: "Private Residence — Almaza Bay, North Coast",
-      image: image("/images/home/testimonial-almaza.webp", "", 2400, 1600),
+      image: image(withBase("/images/home/testimonial-almaza.webp"), "", 2400, 1600),
     },
     {
       quote:
         "From the first sketch to the final styling, the process felt effortless. The team balanced our brand, our budget and our timeline with real care.",
       author: "Client name",
       project: "Commercial project — Cairo",
-      image: image("/images/home/testimonial-almaza.webp", "", 2400, 1600),
+      image: image(withBase("/images/home/testimonial-almaza.webp"), "", 2400, 1600),
     },
     {
       quote:
         "The FF&E package arrived complete and on time. Every piece fits the space as if it was always meant to be there.",
       author: "Client name",
       project: "Private villa — New Cairo",
-      image: image("/images/home/testimonial-almaza.webp", "", 2400, 1600),
+      image: image(withBase("/images/home/testimonial-almaza.webp"), "", 2400, 1600),
     },
   ] satisfies Testimonial[],
 };
@@ -357,7 +358,7 @@ export const faqs = {
   statement:
     "We believe great design starts with clarity and trust. Explore our frequently asked questions to learn more about our process, services, and design approach.",
   image: image(
-    "/images/home/faq.webp",
+    withBase("/images/home/faq.webp"),
     "Two Sunbeam designers sharing a high-five across a meeting table",
     1092,
     1440,
@@ -405,7 +406,7 @@ export const consultation = {
   cta: { label: "Send us message", href: "mailto:hello@sunbeam.com" },
   booking: {
     host: "Lina Magdy",
-    hostImage: image("/images/home/consultant-lina.webp", "Lina Magdy", 256, 256),
+    hostImage: image(withBase("/images/home/consultant-lina.webp"), "Lina Magdy", 256, 256),
     event: "Design Consultation",
     summary: "A relaxed first conversation about your space, goals and budget.",
     details: [

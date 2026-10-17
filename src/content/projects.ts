@@ -1,4 +1,5 @@
 import type { ImageAsset } from "@/types/media";
+import { withBase } from "@/lib/base-path";
 import { projects, testimonials, type Project } from "./home";
 
 /*
@@ -16,7 +17,7 @@ const image = (src: string, alt: string, width: number, height: number): ImageAs
 });
 
 const render = (file: string, alt: string, width = 1600, height = 1920) =>
-  image(`/images/projects/baxters/${file}.webp`, alt, width, height);
+  image(withBase(`/images/projects/baxters/${file}.webp`), alt, width, height);
 
 export type ProjectDetail = {
   slug: string;
@@ -60,7 +61,12 @@ const details: ProjectDetail[] = [
     tags: ["Commercial", "Food & Beverage", "FF&E"],
     summary:
       "A neighbourhood bakery-café where warm timber beams, graphic monochrome floors and soft pendant light create an easy, all-day atmosphere — designed to feel as good at 8am coffee as it does at a long weekend lunch.",
-    logo: image("/images/projects/baxters/logo.webp", "Bäxters European Kitchen", 360, 274),
+    logo: image(
+      withBase("/images/projects/baxters/logo.webp"),
+      "Bäxters European Kitchen",
+      360,
+      274,
+    ),
     hero: render(
       "hero",
       "Baxters dining hall under timber beams, with tables on a monochrome tiled floor and the bäxters window beyond",

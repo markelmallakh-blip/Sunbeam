@@ -7,7 +7,7 @@ import { Logo } from "@/components/ui/Logo";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
 import { RollText } from "@/components/ui/RollText";
 import { Container } from "./Container";
-import { CopyrightYear } from "./CopyrightYear";
+import { CopyrightYear } from "@/components/layout/CopyrightYear";
 import { FooterMotion } from "./FooterMotion";
 
 /* Figma "Footer": newsletter and contact, link columns, legal row and the bleeding wordmark. */

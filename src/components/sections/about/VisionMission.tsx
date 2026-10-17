@@ -19,10 +19,14 @@ export function VisionMissionBand({ band, index }: { band: Band; index: number }
   return (
     <section
       aria-labelledby={id}
-      className={cn("py-section text-ink", reversed ? "bg-stone" : "bg-white")}
+      className={cn(
+        "flex items-center py-section text-ink lg:min-h-[calc(100svh-4.4375rem)]",
+        reversed ? "bg-stone" : "bg-white",
+      )}
     >
       <Container
         className={cn(
+          "w-full",
           "flex flex-col gap-12 lg:items-center lg:justify-between lg:gap-10",
           reversed ? "lg:flex-row-reverse" : "lg:flex-row",
         )}

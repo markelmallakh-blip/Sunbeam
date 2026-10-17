@@ -1,4 +1,5 @@
 import type { ImageAsset, VideoAsset } from "@/types/media";
+import { withBase } from "@/lib/base-path";
 import { story as homeStory } from "./home";
 
 /*
@@ -22,7 +23,7 @@ export const aboutHero = {
   intro:
     "Since 2021, Sunbeam Spaces Studio has shaped residential and commercial interiors across Egypt and beyond guided by light, material and the way people truly live.",
   image: image(
-    "/images/about/hero.webp",
+    withBase("/images/about/hero.webp"),
     "A Sunbeam hospitality interior with sculpted timber ceiling ribbons, sheer curtains and sea views",
     2400,
     1076,
@@ -43,7 +44,7 @@ export const companyOverview = {
     "From the first concept to the final detail, we take a considered approach to every project, carefully selecting materials, furniture, lighting, and finishes to ensure each element works in harmony. Our goal is to create spaces that feel cohesive, function effortlessly, and stand the test of time.",
   ],
   image: image(
-    "/images/about/overview.webp",
+    withBase("/images/about/overview.webp"),
     "A Sunbeam workplace interior with a long meeting table, a textured artwork wall and exposed ceiling services",
     920,
     1150,
@@ -57,10 +58,10 @@ export const ourStory = {
   /* Silent landscape loop cut from the studio film until a dedicated reel is supplied. */
   loop: {
     type: "video",
-    src: "/videos/story-loop.webm",
+    src: withBase("/videos/story-loop.webm"),
     mimeType: "video/webm",
     label: "Sunbeam's founder in the studio",
-    poster: "/images/about/story-loop-poster.webp",
+    poster: withBase("/images/about/story-loop-poster.webp"),
     width: 720,
     height: 468,
   } satisfies VideoAsset,
@@ -90,7 +91,7 @@ export const founder = {
   name: "Lina Magdy",
   role: "Founder of Sunbeam Design Studio",
   portrait: image(
-    "/images/about/founder.webp",
+    withBase("/images/about/founder.webp"),
     "Lina Magdy, founder of Sunbeam Design Studio, seated in an ochre wingback chair",
     720,
     788,

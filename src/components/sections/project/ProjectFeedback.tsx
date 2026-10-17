@@ -12,7 +12,8 @@ const HEADER = 71; // compact sticky header height, px
 /*
  * Figma "Feedback" (78:2279 ↔ 78:2281): a full-bleed photo with a small white "Client Feedback"
  * card. On desktop the section pins and scrolling opens the card into the full testimonial —
- * the card grows, then the quote and the client fade up into it. Phones and reduced motion show
+ * the card grows to fit its content (quote and client always fit), then the quote and the
+ * client fade up into it. Phones and reduced motion show
  * the open card.
  */
 export function ProjectFeedback({ feedback }: { feedback: ProjectDetail["feedback"] }) {
@@ -49,12 +50,12 @@ export function ProjectFeedback({ feedback }: { feedback: ProjectDetail["feedbac
     <section
       ref={ref}
       aria-label="Client feedback"
-      className="relative flex items-center justify-center overflow-hidden px-gutter py-16 lg:h-[calc(100svh-4.4375rem)] lg:min-h-[40rem] lg:py-[6.25rem]"
+      className="relative flex items-center justify-center overflow-hidden px-gutter py-16 lg:min-h-[calc(100svh-4.4375rem)] lg:py-12"
     >
       <ResponsiveImage asset={feedback.image} sizes="100vw" parallax={false} fill />
       <figure
         data-card
-        className="relative flex w-full max-w-[60.25rem] flex-col items-center justify-between gap-10 overflow-hidden bg-white px-6 pt-12 pb-10 text-center text-ink sm:px-20 sm:pt-20 sm:pb-[3.75rem] lg:h-full lg:max-h-[46rem]"
+        className="relative flex w-full max-w-[64rem] flex-col items-center gap-10 overflow-hidden bg-white px-6 pt-12 pb-12 text-center text-ink sm:px-20 sm:pt-20 sm:pb-16"
       >
         <div data-head className="flex w-max shrink-0 flex-col items-center gap-8">
           <Icon name="quote" size={38} className="text-rust" />

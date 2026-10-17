@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { projectSlugs } from "@/content/projects";
+import { withBase } from "@/lib/base-path";
 
 type Route = {
   path: string;
@@ -21,7 +22,7 @@ const routes: Route[] = [
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({
-    url: new URL(route.path, siteConfig.url).toString(),
+    url: new URL(withBase(route.path), siteConfig.url).toString(),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

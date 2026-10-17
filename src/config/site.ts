@@ -1,3 +1,4 @@
+import { withBase } from "@/lib/base-path";
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const siteConfig = {
@@ -8,7 +9,7 @@ export const siteConfig = {
     "Sunbeam Design Studio creates residential and commercial interiors in Egypt that blend style, comfort and function through thoughtful design, space planning and FF&E.",
   url: siteUrl,
   locale: "en_US",
-  ogImage: "/og/home.jpg",
+  ogImage: withBase("/og/home.jpg"),
   contact: {
     email: "hello@sunbeam.com",
     address: "7 El-Marwa, Nabil Al Wakkad, Cairo, Egypt",

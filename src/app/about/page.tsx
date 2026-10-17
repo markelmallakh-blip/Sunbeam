@@ -10,12 +10,17 @@ import { StackedSections } from "@/components/animations/StackedSections";
 import { Clients } from "@/components/sections/Clients";
 import { Consultation } from "@/components/sections/Consultation";
 import { PageMotion } from "@/components/animations/PageMotion";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   title: "About Us",
   description: aboutHero.intro,
-  alternates: { canonical: "/about" },
-  openGraph: { url: "/about", title: "About Sunbeam Spaces", description: aboutHero.intro },
+  alternates: { canonical: withBase("/about") },
+  openGraph: {
+    url: withBase("/about"),
+    title: "About Sunbeam Spaces",
+    description: aboutHero.intro,
+  },
 };
 
 /* Figma "About Us" (54:687). */

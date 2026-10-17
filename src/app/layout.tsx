@@ -8,16 +8,17 @@ import { PageTransition } from "@/components/transitions/PageTransition";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
 import { alqest, montserrat } from "./fonts";
 import "./globals.css";
+import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: { default: siteConfig.title, template: `%s | ${siteConfig.name}` },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  alternates: { canonical: "/" },
+  alternates: { canonical: withBase("/") },
   openGraph: {
     type: "website",
-    url: "/",
+    url: withBase("/"),
     siteName: siteConfig.name,
     title: siteConfig.title,
     description: siteConfig.description,

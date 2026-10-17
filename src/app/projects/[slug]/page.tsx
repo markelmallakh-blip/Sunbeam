@@ -10,6 +10,7 @@ import { ProjectFeedback } from "@/components/sections/project/ProjectFeedback";
 import { MoreProjects } from "@/components/sections/project/MoreProjects";
 import { Consultation } from "@/components/sections/Consultation";
 import { PageMotion } from "@/components/animations/PageMotion";
+import { withBase } from "@/lib/base-path";
 
 export function generateStaticParams() {
   return projectSlugs.map((slug) => ({ slug }));
@@ -25,9 +26,9 @@ export async function generateMetadata({
   return {
     title: project.title,
     description: detail.summary,
-    alternates: { canonical: `/projects/${slug}` },
+    alternates: { canonical: withBase(`/projects/${slug}`) },
     openGraph: {
-      url: `/projects/${slug}`,
+      url: withBase(`/projects/${slug}`),
       title: `${project.title} — Sunbeam Spaces`,
       description: detail.summary,
       images: [{ url: project.cover.src, alt: project.cover.alt }],

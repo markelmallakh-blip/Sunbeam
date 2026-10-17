@@ -7,6 +7,7 @@ import { gsap } from "@/lib/gsap";
 import { fullPaneIndexes, windowPaneMask } from "@/lib/window-shape";
 import { WindowShape } from "@/components/brand/WindowShape";
 import { smoothScroll } from "@/lib/smooth-scroll";
+import { withoutBase } from "@/lib/base-path";
 
 type Box = { x: number; y: number; width: number; height: number };
 
@@ -187,7 +188,9 @@ export function PageTransition({ children }: { children: ReactNode }) {
       if (reduceMotion && !running.current) return;
 
       event.preventDefault();
-      if (!running.current) void navigate(url.pathname + url.search + url.hash, url.pathname);
+      // Link hrefs carry the base path; the router adds it back itself.
+      const path = withoutBase(url.pathname);
+      if (!running.current) void navigate(path + url.search + url.hash, path);
     };
     // Capture phase runs before next/link's handler, which then sees `defaultPrevented`.
     document.addEventListener("click", onClick, true);
