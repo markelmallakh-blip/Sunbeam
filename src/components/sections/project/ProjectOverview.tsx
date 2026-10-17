@@ -8,7 +8,9 @@ import { cn } from "@/lib/cn";
 import { DetailBento } from "./DetailBento";
 
 /* Figma "Project Overview" (61:822): two photos and a statement, then the detail bento. */
-export function ProjectOverview({ overview }: { overview: ProjectDetail["overview"] }) {
+type Overview = NonNullable<ProjectDetail["overview"]>;
+
+export function ProjectOverview({ overview }: { overview: Overview }) {
   const [interior, exterior] = overview.images;
   const { pieces } = overview;
 
@@ -111,7 +113,7 @@ function Piece({
 }
 
 /* Material palette: plain colour bands (names are for screen readers only). */
-function Palette({ colors }: { colors: ProjectDetail["overview"]["palette"] }) {
+function Palette({ colors }: { colors: Overview["palette"] }) {
   return (
     <ul aria-label="Material palette" className="flex h-[17.75rem] lg:h-auto">
       {colors.map((color) => (

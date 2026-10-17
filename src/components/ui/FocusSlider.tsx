@@ -41,6 +41,11 @@ type FocusSliderProps = {
   position?: MotionValue<number>;
   /** Scroll-driven mode: called when a neighbour is clicked or an arrow key is pressed. */
   onRequestIndex?: (index: number) => void;
+  /**
+   * Where the active slide sits: centred by default, or at the offset (px from the viewport's
+   * left edge) this returns — e.g. aligned with the section heading. Re-read on resize.
+   */
+  alignTo?: (viewport: HTMLElement) => number;
   /** Render-prop for controls (arrows, progress) below the track. */
   controls?: (state: {
     index: number;
@@ -67,6 +72,7 @@ export function FocusSlider({
   initialIndex = 0,
   position: externalPosition,
   onRequestIndex,
+  alignTo,
   controls,
 }: FocusSliderProps) {
   const slides = Children.toArray(children);
@@ -108,9 +114,9 @@ export function FocusSlider({
     const slide = firstSlideRef.current;
     if (!viewport || !slide) return;
     const width = slide.offsetWidth;
-    center.set(viewport.clientWidth / 2 - width / 2);
+    center.set(alignTo ? alignTo(viewport) : viewport.clientWidth / 2 - width / 2);
     stepSize.set(width + gap);
-  }, [gap, center, stepSize]);
+  }, [gap, center, stepSize, alignTo]);
 
   useLayoutEffect(measure, [measure]);
   useEffect(() => {

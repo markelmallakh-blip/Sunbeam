@@ -1,4 +1,5 @@
 import { projects } from "@/content/home";
+import { projectHref } from "@/content/projects";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/layout/Container";
 import { SectionHeading } from "@/components/layout/SectionHeading";
@@ -32,9 +33,12 @@ export function Projects() {
           </Button>
         </Reveal>
       </Container>
-      <ProjectsSlider count={projects.items.length} startIndex={1}>
+      <ProjectsSlider count={projects.items.length}>
         {projects.items.map((project) => (
-          <ProjectCard key={project.slug} project={project} />
+          <ProjectCard
+            key={project.slug}
+            project={{ ...project, href: projectHref(project.slug) }}
+          />
         ))}
       </ProjectsSlider>
     </section>

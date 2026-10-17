@@ -58,10 +58,10 @@ async function Project({ params }: { params: PageProps<"/projects/[slug]">["para
   return (
     <>
       <ProjectHero project={project} detail={detail} />
-      <ProjectOverview overview={detail.overview} />
+      {detail.overview && <ProjectOverview overview={detail.overview} />}
       <ProjectDeliver deliver={detail.deliver} />
       <ProjectGallery gallery={detail.gallery} />
-      <ProjectFeedback feedback={detail.feedback} />
+      {detail.feedback && <ProjectFeedback feedback={detail.feedback} />}
       <MoreProjects current={slug} />
       <Consultation />
       <PageMotion />

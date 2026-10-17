@@ -27,7 +27,7 @@ const EXPANDED = { width: 1262, share: 0.835 }; // Figma expanded card: 1262px o
  */
 export function ProjectHero({ project, detail }: { project: Project; detail: ProjectDetail }) {
   const ref = useRef<HTMLElement>(null);
-  const { brief } = detail;
+  const { brief, logo } = detail;
 
   useGsap(({ reduceMotion }) => {
     const mm = gsap.matchMedia(ref.current ?? undefined);
@@ -102,15 +102,17 @@ export function ProjectHero({ project, detail }: { project: Project; detail: Pro
           className="relative z-[1] -mt-16 flex flex-col items-center gap-10 bg-white px-6 py-8 sm:px-10 sm:py-10 lg:mt-0 lg:ml-auto lg:w-[43.625rem] lg:gap-[3.75rem] lg:p-8 lg:pr-[3.75rem]"
         >
           <div data-head className="flex w-full flex-col items-start gap-6">
-            <Image
-              src={detail.logo.src}
-              alt={detail.logo.alt}
-              width={detail.logo.width}
-              height={detail.logo.height}
-              sizes="120px"
-              priority
-              className="h-[5.75rem] w-auto object-contain object-bottom"
-            />
+            {logo && (
+              <Image
+                src={logo.src}
+                alt={logo.alt}
+                width={logo.width}
+                height={logo.height}
+                sizes="120px"
+                priority
+                className="h-[5.75rem] w-auto object-contain object-bottom"
+              />
+            )}
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <h1 id="project-title" className="font-display text-h3 leading-[1.3]">
@@ -152,21 +154,23 @@ export function ProjectHero({ project, detail }: { project: Project; detail: Pro
             ))}
           </div>
 
-          <dl className="grid w-full grid-cols-3 gap-6 sm:flex sm:justify-end sm:gap-[6.25rem]">
-            {brief.stats.map((stat) => (
-              <div key={stat.label} className="flex flex-col-reverse gap-2">
-                <dt className="text-small text-slate">{stat.label}</dt>
-                <dd className="font-display text-h2 leading-[1.2] text-rust">
-                  <CountUp
-                    value={stat.value}
-                    prefix={stat.prefix}
-                    suffix={stat.suffix}
-                    pad={stat.pad}
-                  />
-                </dd>
-              </div>
-            ))}
-          </dl>
+          {brief.stats && (
+            <dl className="grid w-full grid-cols-3 gap-6 sm:flex sm:justify-end sm:gap-[6.25rem]">
+              {brief.stats.map((stat) => (
+                <div key={stat.label} className="flex flex-col-reverse gap-2">
+                  <dt className="text-small text-slate">{stat.label}</dt>
+                  <dd className="font-display text-h2 leading-[1.2] text-rust">
+                    <CountUp
+                      value={stat.value}
+                      prefix={stat.prefix}
+                      suffix={stat.suffix}
+                      pad={stat.pad}
+                    />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </article>
       </div>
     </section>

@@ -1,6 +1,7 @@
 import type { ImageAsset } from "@/types/media";
 import { withBase } from "@/lib/base-path";
 import { projects, testimonials, type Project } from "./home";
+import { projectRenders, type RenderFile } from "./project-renders";
 
 /*
  * Project detail pages (Figma "Single Project — Baxters", 60:803). The listing (title, tags,
@@ -24,16 +25,18 @@ export type ProjectDetail = {
   /** Tags shown on the hero card (the listing's tags plus the service). */
   tags: string[];
   summary: string;
-  logo: ImageAsset;
+  /** Client logo on the hero card (optional). */
+  logo?: ImageAsset;
   hero: ImageAsset;
   /** Shown as the hero card opens up on scroll (Figma "expanded" variant, 70:4049). */
   brief: {
     title: string;
     text: string;
     images: [ImageAsset, ImageAsset];
-    stats: { value: number; prefix?: string; suffix?: string; pad?: number; label: string }[];
+    stats?: { value: number; prefix?: string; suffix?: string; pad?: number; label: string }[];
   };
-  overview: {
+  /** Photos, statement and the "Our Art in Detail" bento (hand-made case studies only). */
+  overview?: {
     images: [ImageAsset, ImageAsset];
     statement: string;
     detailTitle: string;
@@ -50,7 +53,7 @@ export type ProjectDetail = {
   };
   deliver: { title: string; items: { title: string; text: string; image: ImageAsset }[] };
   gallery: { eyebrow: string; title: string; images: ImageAsset[] };
-  feedback: { image: ImageAsset; quote: string; name: string; project: string };
+  feedback?: { image: ImageAsset; quote: string; name: string; project: string };
 };
 
 const fallbackTestimonial = testimonials.items[0];
@@ -174,15 +177,71 @@ const details: ProjectDetail[] = [
   },
 ];
 
+/*
+ * Projects without a hand-made case study get a page built from their renders
+ * (scripts/project-renders.mjs). The copy is a neutral placeholder until each project's own
+ * story, client quote and numbers are supplied.
+ */
+const fromRenders = (project: Project): ProjectDetail | undefined => {
+  const renders = projectRenders[project.slug];
+  if (!renders) return undefined;
+  const photo = (file: RenderFile | undefined, alt: string) =>
+    file ? image(withBase(file.src), alt, file.width, file.height) : project.cover;
+  const kind = project.tags.join(" · ").toLowerCase();
+  return {
+    slug: project.slug,
+    tags: [...project.tags, "FF&E"],
+    summary: `${project.title} is a ${kind} project by Sunbeam Design Studio — shaped from first concept and space planning through to the final furniture, lighting and styling.`,
+    hero: project.cover,
+    brief: {
+      title: "Project Overview",
+      text: "A calm, considered space built around how it is used every day, with natural materials, soft light and carefully chosen furniture bringing it together.",
+      images: [
+        photo(renders.brief[0], `${project.title} interior`),
+        photo(renders.brief[1], `${project.title} interior detail`),
+      ],
+    },
+    deliver: {
+      title: "What We Deliver",
+      items: [
+        {
+          title: "Interior Design",
+          text: "Thoughtful space planning, a clear design concept and a careful mix of materials, lighting and furniture, shaped around the people who use the space.",
+          image: photo(renders.deliver[0], `${project.title} interior design`),
+        },
+        {
+          title: "Furniture, Fixtures & Equipment (FF&E)",
+          text: "A turnkey FF&E approach — furniture, lighting, fixtures, finishes and decorative details coordinated into one cohesive, comfortable whole.",
+          image: photo(renders.deliver[1], `${project.title} furniture and fixtures`),
+        },
+      ],
+    },
+    gallery: {
+      eyebrow: "Gallery",
+      title: "Design Details",
+      images: renders.gallery.map((file, index) =>
+        photo(file, `${project.title} — view ${index + 1}`),
+      ),
+    },
+  };
+};
+
+const generated = projects.items
+  .filter((project) => !details.some((detail) => detail.slug === project.slug))
+  .map(fromRenders)
+  .filter((detail): detail is ProjectDetail => Boolean(detail));
+
+const allDetails = [...details, ...generated];
+
 export function getProjectDetail(slug: string) {
-  return details.find((detail) => detail.slug === slug);
+  return allDetails.find((detail) => detail.slug === slug);
 }
 
 export function getProject(slug: string): Project | undefined {
   return projects.items.find((project) => project.slug === slug);
 }
 
-export const projectSlugs = details.map((detail) => detail.slug);
+export const projectSlugs = allDetails.map((detail) => detail.slug);
 
 /** Detail page when one exists, otherwise the homepage projects section. */
 export function projectHref(slug: string) {

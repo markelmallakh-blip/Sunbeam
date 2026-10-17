@@ -67,6 +67,14 @@ export function ProjectsSlider({
     return () => mm.revert();
   }, [count, position, startIndex, span]);
 
+  // The active project lines up with the section heading's left edge (inside the container).
+  const alignToHeading = useCallback((viewport: HTMLElement) => {
+    const container = viewport.closest("section")?.querySelector<HTMLElement>(".max-w-site");
+    if (!container) return 0;
+    const padding = parseFloat(getComputedStyle(container).paddingLeft) || 0;
+    return container.getBoundingClientRect().left + padding - viewport.getBoundingClientRect().left;
+  }, []);
+
   const onRequestIndex = useCallback(
     (next: number) => {
       const trigger = triggerRef.current;
@@ -84,6 +92,7 @@ export function ProjectsSlider({
         label="Selected projects"
         position={scrollDriven ? position : undefined}
         onRequestIndex={onRequestIndex}
+        alignTo={alignToHeading}
         initialIndex={startIndex}
         slideClassName="w-[85vw] sm:w-[34rem] lg:w-[min(64.125rem,calc((100svh-12.5rem)*2.1))]"
         controls={({ progress }) => (

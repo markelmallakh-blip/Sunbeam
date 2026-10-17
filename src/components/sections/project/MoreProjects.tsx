@@ -9,11 +9,9 @@ import { ProjectsSlider } from "@/components/sections/ProjectsSlider";
 
 /* Figma "Categories" / Discover More (82:2302): the projects in the "Selected work" slider. */
 export function MoreProjects({ current }: { current: string }) {
-  // The current project leads, so it sits faded on the left of the first project shown (Figma).
-  const ordered = [
-    ...projects.items.filter((project) => project.slug === current),
-    ...projects.items.filter((project) => project.slug !== current),
-  ].map((project) => ({ ...project, href: projectHref(project.slug) }));
+  const ordered = projects.items
+    .filter((project) => project.slug !== current)
+    .map((project) => ({ ...project, href: projectHref(project.slug) }));
 
   return (
     <section
@@ -37,7 +35,7 @@ export function MoreProjects({ current }: { current: string }) {
           </Button>
         </Reveal>
       </Container>
-      <ProjectsSlider count={ordered.length} startIndex={1}>
+      <ProjectsSlider count={ordered.length}>
         {ordered.map((project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}

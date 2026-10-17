@@ -16,7 +16,11 @@ const HEADER = 71; // compact sticky header height, px
  * client fade up into it. Phones and reduced motion show
  * the open card.
  */
-export function ProjectFeedback({ feedback }: { feedback: ProjectDetail["feedback"] }) {
+export function ProjectFeedback({
+  feedback,
+}: {
+  feedback: NonNullable<ProjectDetail["feedback"]>;
+}) {
   const ref = useRef<HTMLElement>(null);
 
   useGsap(({ reduceMotion }) => {
