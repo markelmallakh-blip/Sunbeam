@@ -1,10 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { SplitText } from "gsap/SplitText";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
-
-gsap.registerPlugin(SplitText);
+import { gsap, ScrollTrigger, SplitText } from "@/lib/gsap";
 
 /*
  * Text that must keep its own markup or motion: sliders, dialogs, forms, the inked letter, and

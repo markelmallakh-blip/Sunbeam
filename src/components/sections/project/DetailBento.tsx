@@ -1,11 +1,8 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { SplitText } from "gsap/SplitText";
 import { useGsap } from "@/hooks/useGsap";
-import { gsap } from "@/lib/gsap";
-
-gsap.registerPlugin(SplitText);
+import { gsap, SplitText } from "@/lib/gsap";
 
 /*
  * Entrance for the "Our Art in Detail" bento. As it scrolls in, each `[data-tile]` wipes up into

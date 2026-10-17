@@ -9,7 +9,7 @@ import { RollText } from "@/components/ui/RollText";
 import { Video } from "@/components/media/Video";
 import { Container } from "@/components/layout/Container";
 import { useGsap } from "@/hooks/useGsap";
-import { gsap } from "@/lib/gsap";
+import { gsap, SplitText } from "@/lib/gsap";
 import { cn } from "@/lib/cn";
 import { duration, easeSoft, gsapEaseSoft } from "@/lib/motion";
 
@@ -25,15 +25,24 @@ export function Hero() {
   const slide = hero.slides[active] ?? hero.slides[0];
   const next = () => setActive((value) => (value + 1) % hero.slides.length);
 
-  /* Intro sequence (GSAP timeline): eyebrow, masked headline, then CTA and tabs. */
+  /*
+   * Intro sequence (GSAP timeline), straight after hydration: eyebrow, then the headline line by
+   * line out of a mask (first line first), then CTA and tabs. The headline opts out of the
+   * page-wide reveal (data-split="off") so only this animation runs on it.
+   */
   useGsap(({ reduceMotion: reduce }) => {
     if (reduce) return;
+    const title = scope.current?.querySelector<HTMLElement>("[data-hero-title]");
+    const split = title
+      ? SplitText.create(title, { type: "lines", mask: "lines", linesClass: "split-line" })
+      : null;
     gsap
       .timeline({ defaults: { ease: gsapEaseSoft, duration: duration.slow } })
       .from("[data-hero-media]", { scale: 1.08, duration: 2.2, ease: "power2.out" }, 0)
-      .from("[data-hero-eyebrow]", { autoAlpha: 0, y: 16 }, 0.2)
-      .from("[data-hero-title]", { yPercent: 105 }, 0.3)
-      .from("[data-hero-fade]", { autoAlpha: 0, y: 16, stagger: 0.1 }, 0.7);
+      .from("[data-hero-eyebrow]", { autoAlpha: 0, y: 16 }, 0.05)
+      .from(split?.lines ?? [], { yPercent: 110, stagger: 0.12 }, 0.15)
+      .from("[data-hero-fade]", { autoAlpha: 0, y: 16, stagger: 0.1 }, 0.5);
+    return () => split?.revert();
   }, scope);
 
   return (
@@ -63,7 +72,7 @@ export function Hero() {
           <div data-hero-eyebrow>
             <Eyebrow>{hero.eyebrow}</Eyebrow>
           </div>
-          <h1 id="hero-title" className="overflow-hidden pb-[0.08em] font-display text-display">
+          <h1 id="hero-title" data-split="off" className="pb-[0.08em] font-display text-display">
             <span data-hero-title className="block max-w-[9.2em] text-balance">
               {hero.title}
             </span>
