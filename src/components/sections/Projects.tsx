@@ -32,7 +32,7 @@ export function Projects() {
           </Button>
         </Reveal>
       </Container>
-      <ProjectsSlider count={projects.items.length}>
+      <ProjectsSlider count={projects.items.length} startIndex={1}>
         {projects.items.map((project) => (
           <ProjectCard key={project.slug} project={project} />
         ))}
