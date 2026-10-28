@@ -4,7 +4,6 @@ import { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import type { VideoAsset } from "@/types/media";
 import { Icon } from "@/components/ui/Icon";
-import { RollText } from "@/components/ui/RollText";
 import { Video } from "@/components/media/Video";
 
 type StoryVideoDialogProps = {
@@ -24,7 +23,7 @@ export function StoryVideoDialog({
   video,
   label,
   children,
-  triggerClassName = "group/roll inline-flex items-center gap-2 text-small font-medium",
+  triggerClassName = "inline-flex items-center gap-2 text-small font-medium transition-opacity duration-300 hover:opacity-70",
 }: StoryVideoDialogProps) {
   const [open, setOpen] = useState(false);
 
@@ -40,7 +39,7 @@ export function StoryVideoDialog({
         {children ?? (
           <>
             <Icon name="play" size={18} />
-            <RollText>{label}</RollText>
+            <span>{label}</span>
           </>
         )}
       </button>

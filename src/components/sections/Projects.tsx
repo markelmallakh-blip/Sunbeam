@@ -1,46 +1,27 @@
-import { projects } from "@/content/home";
-import { projectHref } from "@/content/projects";
+import { projects } from "@/content/homepage";
 import { Button } from "@/components/ui/Button";
-import { Container } from "@/components/layout/Container";
-import { SectionHeading } from "@/components/layout/SectionHeading";
-import { Reveal } from "@/components/animations/Reveal";
-import { ProjectCard } from "./ProjectCard";
-import { ProjectsSlider } from "./ProjectsSlider";
+import { ProjectsCarousel } from "./ProjectsCarousel";
 
+/* Figma "Categories" (95:5988): centred heading, the "our work carousel" and a "View all" CTA. */
 export function Projects() {
   return (
     <section
       id="projects"
       aria-labelledby="projects-title"
-      className="flex scroll-mt-header flex-col gap-16 bg-white pt-28 text-ink"
+      className="flex scroll-mt-header flex-col items-center gap-stack overflow-hidden bg-white px-edge py-block"
     >
-      <Container>
-        <Reveal className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-          <SectionHeading
-            id="projects-title"
-            eyebrow={projects.eyebrow}
-            title={projects.title}
-            description={projects.description}
-            size="h3"
-            className="[&>div]:max-w-none"
-          />
-          <Button
-            href={projects.cta.href}
-            variant="dark"
-            className="self-start md:mb-1 md:self-end"
-          >
-            {projects.cta.label}
-          </Button>
-        </Reveal>
-      </Container>
-      <ProjectsSlider count={projects.items.length}>
-        {projects.items.map((project) => (
-          <ProjectCard
-            key={project.slug}
-            project={{ ...project, href: projectHref(project.slug) }}
-          />
-        ))}
-      </ProjectsSlider>
+      <div className="flex flex-col items-center gap-2 text-center">
+        <h2 id="projects-title" className="text-heading-2 font-semibold text-ink">
+          {projects.title}
+        </h2>
+        <p className="max-w-[43.625rem] text-body tracking-[0.5px] text-slate">
+          {projects.description}
+        </p>
+      </div>
+      <ProjectsCarousel items={projects.items} />
+      <Button href={projects.cta.href} variant="light">
+        {projects.cta.label}
+      </Button>
     </section>
   );
 }

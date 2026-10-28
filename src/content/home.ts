@@ -14,8 +14,6 @@ const image = (src: string, alt: string, width: number, height: number): ImageAs
   height,
 });
 
-export const announcement = "Don’t miss November offer";
-
 export type HeroSlide = {
   label: string;
   media: VideoAsset;

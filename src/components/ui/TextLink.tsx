@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef } from "react";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
-import { RollText } from "./RollText";
 
 type TextLinkProps = ComponentPropsWithoutRef<typeof Link> & {
   /** Text size defaults to body; pass a text-* class to change it. */
@@ -15,16 +14,16 @@ export function TextLink({ tone = "rust", className, children, ...props }: TextL
     <Link
       {...props}
       className={cn(
-        "group/roll inline-flex items-center gap-2 font-medium uppercase",
+        "group/link inline-flex items-center gap-2 font-medium uppercase",
         tone === "rust" ? "text-rust" : "text-ink",
         className,
       )}
     >
-      {typeof children === "string" ? <RollText>{children}</RollText> : <span>{children}</span>}
+      <span>{children}</span>
       <Icon
         name="arrow-right"
         size={12}
-        className="transition-transform duration-300 ease-soft group-hover/roll:translate-x-1"
+        className="transition-transform duration-300 ease-soft group-hover/link:translate-x-1"
       />
     </Link>
   );

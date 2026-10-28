@@ -3,20 +3,19 @@
 import { useActionState, useId } from "react";
 import { subscribeToNewsletter, type NewsletterState } from "@/actions/newsletter";
 import { buttonClasses } from "./Button";
-import { RollText } from "./RollText";
 import { cn } from "@/lib/cn";
 
 const initialState: NewsletterState = { status: "idle", message: "" };
 
-/* Figma "Input Fields" (48:4780) paired with the dark CTA, as in the footer. */
-export function NewsletterForm() {
+/* Figma footer newsletter: a Gray .5 field (4px corners) holding the dark "Subscribe" CTA. */
+export function NewsletterForm({ note }: { note?: string }) {
   const [state, formAction, pending] = useActionState(subscribeToNewsletter, initialState);
   const inputId = useId();
   const messageId = useId();
 
   return (
     <form action={formAction} noValidate className="w-full max-w-[26.125rem]">
-      <div className="flex h-14 items-center gap-2 bg-linen p-2.5 focus-within:outline focus-within:outline-line">
+      <div className="flex items-center gap-3 rounded-[4px] bg-linen py-2.5 pr-2.5 pl-3.5 focus-within:outline focus-within:outline-line">
         <label htmlFor={inputId} className="sr-only">
           Email address
         </label>
@@ -29,25 +28,25 @@ export function NewsletterForm() {
           placeholder="Enter Email Address"
           aria-describedby={state.message ? messageId : undefined}
           aria-invalid={state.status === "error" || undefined}
-          className="min-w-0 flex-1 bg-transparent px-1 text-body text-ink placeholder:text-slate focus:outline-none"
+          className="min-w-0 flex-1 bg-transparent text-body tracking-[0.5px] text-ink placeholder:text-slate focus:outline-none"
         />
         <button
           type="submit"
           disabled={pending}
-          className={buttonClasses({ variant: "dark", size: "sm", className: "h-full" })}
+          className={buttonClasses({ variant: "dark", size: "md", className: "h-auto py-2.5" })}
         >
-          <RollText>{pending ? "Sending…" : "Subscribe"}</RollText>
+          {pending ? "Sending…" : "Subscribe"}
         </button>
       </div>
       <p
         id={messageId}
         role="status"
         className={cn(
-          "mt-2 min-h-5 text-caption",
-          state.status === "error" ? "text-rust" : "text-slate",
+          "mt-4 min-h-4 text-caption tracking-[0.5px]",
+          state.status === "error" ? "text-rust" : "text-stone",
         )}
       >
-        {state.message}
+        {state.message || note}
       </p>
     </form>
   );

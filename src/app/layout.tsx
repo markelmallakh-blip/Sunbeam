@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
-import { AnnouncementBar } from "@/components/navigation/AnnouncementBar";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { CalEmbed } from "@/components/booking/CalEmbed";
 import { MotionProvider } from "@/components/animations/MotionProvider";
 import { PageTransition } from "@/components/transitions/PageTransition";
 import { SmoothScroll } from "@/components/animations/SmoothScroll";
@@ -51,8 +51,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MotionProvider>
           <SmoothScroll />
           <PageTransition>
-            <AnnouncementBar />
-            <Header />
+            <Header booking={<CalEmbed />} />
             <main id="main">{children}</main>
             <Footer />
           </PageTransition>

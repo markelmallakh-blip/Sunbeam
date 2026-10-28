@@ -1,6 +1,8 @@
 export type NavItem = {
   label: string;
   href: string;
+  /** Shows the dropdown chevron (Figma header: Services, Projects). */
+  menu?: boolean;
 };
 
 export type FooterColumn = {
@@ -11,13 +13,14 @@ export type FooterColumn = {
 /* Pages not built yet point at their homepage sections; switch each link as its page lands. */
 export const mainNavigation: readonly NavItem[] = [
   { label: "About", href: "/about" },
-  { label: "Services", href: "/#services" },
-  { label: "Projects", href: "/#projects" },
+  { label: "Services", href: "/#services", menu: true },
+  { label: "Projects", href: "/#projects", menu: true },
   { label: "FAQs", href: "/#faqs" },
-  { label: "Blog", href: "/#newsletter" },
+  { label: "Blog", href: "/#blog" },
+  { label: "Contact Us", href: "/#consultation" },
 ];
 
-export const primaryCta: NavItem = { label: "Let's talk", href: "/#consultation" };
+export const primaryCta: NavItem = { label: "Schedule Meeting", href: "/#consultation" };
 
 export const footerNavigation: readonly FooterColumn[] = [
   {
@@ -25,7 +28,7 @@ export const footerNavigation: readonly FooterColumn[] = [
     links: [
       { label: "Home", href: "/" },
       { label: "About", href: "/about" },
-      { label: "Blog", href: "/#newsletter" },
+      { label: "Blog", href: "/#blog" },
     ],
   },
   {
@@ -47,7 +50,6 @@ export const footerNavigation: readonly FooterColumn[] = [
     links: [
       { label: "Contact us", href: "/#consultation" },
       { label: "FAQs", href: "/#faqs" },
-      { label: "Our work", href: "/#projects" },
     ],
   },
 ];

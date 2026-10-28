@@ -2,12 +2,14 @@ import Link from "next/link";
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Icon } from "./Icon";
-import { RollText } from "./RollText";
 
-/* Mirrors the Figma "CTA" component set (15:3087): Type × Status × size × icon. */
+/*
+ * Mirrors the Figma "CTA" component set (15:3087): Type × Status × size × icon.
+ * 2026-10 redesign: 4px corners, 0.5px tracking, light CTA on Gray 1 (#EEE).
+ */
 const variants = {
   dark: "bg-ink text-white hover:bg-black",
-  light: "bg-stone text-ink hover:bg-white",
+  light: "bg-mist text-ink hover:bg-mist-strong",
   "outline-light": "border border-white text-white hover:bg-white hover:text-ink",
   "outline-dark": "border border-ink text-ink hover:bg-ink hover:text-white",
 } as const;
@@ -43,7 +45,7 @@ export function buttonClasses({
   className,
 }: Pick<ButtonOwnProps, "variant" | "size" | "className">) {
   return cn(
-    "group/roll inline-flex shrink-0 items-center justify-center font-medium whitespace-nowrap uppercase",
+    "group/btn inline-flex shrink-0 items-center justify-center rounded-[4px] font-medium tracking-[0.5px] whitespace-nowrap uppercase",
     "transition-colors duration-300 ease-soft disabled:pointer-events-none disabled:opacity-50",
     variants[variant],
     sizes[size],
@@ -68,12 +70,12 @@ export function Button({
   const content = (
     <>
       {icon === "left" && <Icon name="arrow-right" size={iconSize} />}
-      {typeof children === "string" ? <RollText>{children}</RollText> : <span>{children}</span>}
+      <span>{children}</span>
       {icon === "right" && (
         <Icon
           name="arrow-right"
           size={iconSize}
-          className="transition-transform duration-500 ease-soft group-hover/roll:translate-x-0.5"
+          className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1"
         />
       )}
     </>
