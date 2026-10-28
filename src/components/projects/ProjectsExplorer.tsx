@@ -15,9 +15,6 @@ import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
 import { ProjectGridCard, type CardHover } from "./ProjectGridCard";
 
-/* How much lower the middle column starts (pt-40); the scroll swap moves each side by this much. */
-const STAGGER = 160;
-
 const SERVICES = ["All", "Interior Design", "FF&E"] as const;
 type Service = (typeof SERVICES)[number];
 
@@ -28,12 +25,10 @@ const matches = (project: Project, filter: string) =>
   filter === "All" || project.category === filter || project.services.includes(filter);
 
 /*
- * Figma "Projects" (185:1587): filter bar over a staggered three-column grid (the middle column
- * starts 160px lower), then "Load more". Tabs filter on category or service in the browser.
- * On scroll, photos drift a few percent inside their frames and the columns swap their stagger:
- * the middle column climbs above the outer two, and drops back when scrolling up. Everything is
- * drawn from the start — nothing waits to enter the viewport — and reduced motion turns the drift
- * off.
+ * Figma "Projects" (185:1587): filter bar over an even three-column grid, then a loader that brings
+ * in more as it scrolls into view. Tabs filter on category or service in the browser. Photos
+ * drift a few percent inside their frames on scroll; everything is drawn from the start — nothing
+ * waits to enter the viewport — and reduced motion turns the drift off.
  */
 export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState("All");
@@ -53,14 +48,6 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
     return projects.filter((project) => matches(project, filter) && offers(project, service));
   }, [projects, filter, service]);
   const shown = list.slice(0, visible);
-  // Once everything is shown, a last row that isn't full is set apart from the columns and
-  // centred beneath them, so the grid never ends on an empty slot.
-  const complete = list.length <= visible;
-  const fullRows = complete ? shown.length - (shown.length % 3) : shown.length;
-  const columns = [0, 1, 2].map((column) =>
-    shown.slice(0, fullRows).filter((_, index) => index % 3 === column),
-  );
-  const lastRow = shown.slice(fullRows);
 
   useGsap(
     ({ reduceMotion }) => {
@@ -83,28 +70,6 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
           },
         );
       });
-      // The columns trade places as the grid scrolls, then come to rest level: the middle one
-      // starts 160px lower (Figma), rises above the outer two by mid-scroll while they sink, and
-      // by the time the grid's end reaches mid-screen all three line up so the grid ends flush.
-      // Every column finishes above its natural end, so nothing spills into the next section.
-      // Scrolling back up plays it in reverse.
-      const columns = [
-        ["[data-parallax-column='middle']", -1],
-        ["[data-parallax-column='side']", 1],
-      ] as const;
-      for (const [selector, sign] of columns) {
-        gsap
-          .timeline({
-            scrollTrigger: {
-              trigger: gridRef.current,
-              start: "top center",
-              end: "bottom center",
-              scrub: true,
-            },
-          })
-          .fromTo(selector, { y: 0 }, { y: sign * STAGGER, ease: "none" })
-          .to(selector, { y: (sign * STAGGER) / 2, ease: "none" });
-      }
     },
     gridRef,
     [filter, service, visible],
@@ -160,7 +125,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
               aria-label="Card hover"
               className="hidden gap-1 rounded-[4px] bg-mist p-1 lg:flex"
             >
-              {(["frame", "flip"] as const).map((option) => (
+              {(["frame", "flip", "zoom"] as const).map((option) => (
                 <button
                   key={option}
                   type="button"
@@ -171,7 +136,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
                     hover === option ? "bg-white text-ink" : "text-slate hover:text-ink",
                   )}
                 >
-                  {option === "frame" ? "Frame" : "Flip"}
+                  {option[0]?.toUpperCase() + option.slice(1)}
                 </button>
               ))}
             </div>
@@ -186,39 +151,21 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
         </div>
       </div>
 
+      {/*
+       * Even rows of three on desktop; a last row that isn't full stays centred under the others.
+       * Phones and tablets get one and two columns.
+       */}
       <div
         ref={gridRef}
         role="tabpanel"
         aria-label={`${filter} projects`}
-        className="grid gap-12 overflow-clip px-edge pt-[4.5rem] pb-24 sm:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-12 px-edge pt-[4.5rem] pb-24 sm:grid-cols-2 lg:flex lg:flex-wrap lg:justify-center lg:gap-x-12 lg:gap-y-20"
       >
-        {/* Phones and tablets: one simple list in order; desktop: three staggered columns. */}
-        <div className="flex flex-col gap-12 sm:col-span-2 lg:hidden">
-          {shown.map((project) => (
-            <ProjectGridCard key={project.slug} project={project} />
-          ))}
-        </div>
-        {columns.map((items, column) => (
-          <div
-            key={column}
-            data-parallax-column={column === 1 ? "middle" : "side"}
-            className={cn("hidden flex-col gap-20 lg:flex", column === 1 && "pt-40")}
-          >
-            {items.map((project) => (
-              <ProjectGridCard key={project.slug} project={project} hover={hover} />
-            ))}
+        {shown.map((project) => (
+          <div key={project.slug} className="lg:w-[calc((100%-6rem)/3)]">
+            <ProjectGridCard project={project} hover={hover} />
           </div>
         ))}
-        {lastRow.length > 0 && (
-          // Cards keep the column width (a third of the row, less the two 3rem gaps).
-          <div className="hidden justify-center gap-12 lg:col-span-3 lg:flex">
-            {lastRow.map((project) => (
-              <div key={project.slug} className="w-[calc((100%-6rem)/3)]">
-                <ProjectGridCard project={project} hover={hover} />
-              </div>
-            ))}
-          </div>
-        )}
       </div>
 
       {list.length > visible && (

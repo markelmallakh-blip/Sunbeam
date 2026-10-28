@@ -13,11 +13,13 @@ import { cn } from "@/lib/cn";
  * - "flip": after the Madinet Masr "tilting card" in reverse. Only the thumbnail's area turns over:
  *   its back face is that exact crop of the full photo, so the turn starts seamlessly, and the rest
  *   of the photo fades to the grey mount.
+ * - "zoom": the classic card — tags in a line above the title on every screen, and the photo
+ *   simply zooms in a little on hover.
  * Smaller screens have no hover, so they keep the tags in a line above the title. ProjectsExplorer
  * scrubs a `--parallax` percentage on each frame that every photo layer drifts by, which keeps the
  * flip's crop in register with the full photo.
  */
-export type CardHover = "frame" | "flip";
+export type CardHover = "frame" | "flip" | "zoom";
 
 /* The thumbnail box from Figma's hover variant, as insets of the card in %. */
 const THUMB = { top: 5.36, side: 6.03, bottom: 31.43 };
@@ -46,7 +48,17 @@ export function ProjectGridCard({
   return (
     <Link href={projectHref(project.slug)} className="group flex flex-col gap-5">
       <div data-parallax-frame className="relative aspect-[448/560] overflow-hidden bg-mist">
-        {hover === "frame" ? (
+        {hover === "zoom" ? (
+          <div className={cn("absolute inset-x-0 -top-[6%] h-[112%]", drift)}>
+            <Image
+              src={project.cover.src}
+              alt={project.cover.alt}
+              fill
+              sizes={SIZES}
+              className="object-cover transition-transform duration-1000 ease-soft group-hover:scale-105"
+            />
+          </div>
+        ) : hover === "frame" ? (
           <div className="absolute inset-0 transition-[clip-path] duration-1000 ease-soft [clip-path:inset(0)] lg:group-hover:[clip-path:inset(5.36%_6.03%_31.43%_6.03%)] lg:group-focus-visible:[clip-path:inset(5.36%_6.03%_31.43%_6.03%)]">
             <div className={cn("absolute inset-x-0 -top-[6%] h-[112%]", drift)}>
               {/* Scales about the thumbnail's centre (37% down the card, 38% down this layer). */}
@@ -110,21 +122,28 @@ export function ProjectGridCard({
           </>
         )}
 
-        <ul className="absolute bottom-6 left-6 hidden flex-col gap-[1.125rem] text-body font-medium tracking-[1.2px] text-slate uppercase lg:flex">
-          {tags.map((tag, index) => (
-            <li
-              key={tag}
-              style={{ transitionDelay: `${300 + index * 80}ms` }}
-              className="translate-y-2 opacity-0 transition-[opacity,translate] duration-700 ease-soft group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
+        {hover !== "zoom" && (
+          <ul className="absolute bottom-6 left-6 hidden flex-col gap-[1.125rem] text-body font-medium tracking-[1.2px] text-slate uppercase lg:flex">
+            {tags.map((tag, index) => (
+              <li
+                key={tag}
+                style={{ transitionDelay: `${300 + index * 80}ms` }}
+                className="translate-y-2 opacity-0 transition-[opacity,translate] duration-700 ease-soft group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+              >
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <p className="flex flex-wrap items-center gap-2 text-caption font-medium tracking-[1.2px] text-slate uppercase lg:hidden">
+        <p
+          className={cn(
+            "flex flex-wrap items-center gap-2 text-caption font-medium tracking-[1.2px] text-slate uppercase",
+            hover !== "zoom" && "lg:hidden",
+          )}
+        >
           {tags.map((tag, index) => (
             <Fragment key={tag}>
               {index > 0 && <span aria-hidden className="size-[3px] rounded-full bg-ash" />}
