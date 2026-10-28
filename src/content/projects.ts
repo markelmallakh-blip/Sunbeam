@@ -576,7 +576,7 @@ export const projectsPage = {
   description:
     "A selection of homes, workplaces and hospitality interiors across Egypt and beyond — each one shaped by light, material and the way people truly live.",
   /* Tabs filter on category or service; tabs without a matching project are left out. */
-  filters: ["All", "Residential", "Commercial", "Hospitality", "FF&E"],
+  filters: ["All", "Residential", "Commercial", "Hospitality"],
   pageSize: 9,
   loading: "Loading more projects",
 };

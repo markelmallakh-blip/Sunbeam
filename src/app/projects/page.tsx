@@ -16,9 +16,9 @@ export default function ProjectsPage() {
     <>
       <section
         aria-labelledby="projects-title"
-        className="flex flex-col gap-8 px-edge pt-block pb-[4.5rem] lg:flex-row lg:items-end lg:justify-between"
+        className="flex flex-col items-center px-edge pt-block pb-[4.5rem] text-center"
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4">
           <p className="text-small font-medium tracking-[2px] text-slate uppercase">
             {projectsPage.eyebrow}
           </p>
@@ -26,9 +26,6 @@ export default function ProjectsPage() {
             {projectsPage.title}
           </h1>
         </div>
-        <p className="max-w-[27.5rem] text-heading-6 font-light tracking-[0.5px] text-slate">
-          {projectsPage.description}
-        </p>
       </section>
       <ProjectsExplorer projects={projects} />
       <Consultation />
