@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { getProject, getProjectDetail, projectSlugs } from "@/content/projects";
+import { getProject, projectSlugs } from "@/content/projects";
 import { ProjectHero } from "@/components/sections/project/ProjectHero";
-import { ProjectOverview } from "@/components/sections/project/ProjectOverview";
-import { ProjectDeliver } from "@/components/sections/project/ProjectDeliver";
+import { ProjectDetail } from "@/components/sections/project/ProjectDetail";
 import { ProjectGallery } from "@/components/sections/project/ProjectGallery";
-import { ProjectFeedback } from "@/components/sections/project/ProjectFeedback";
 import { MoreProjects } from "@/components/sections/project/MoreProjects";
 import { Consultation } from "@/components/sections/Consultation";
-import { PageMotion } from "@/components/animations/PageMotion";
 import { withBase } from "@/lib/base-path";
+
+/* The fully written case study that stands in for sections other projects don't have yet. */
+const TEMPLATE_SLUG = "baxters";
+const MIN_GALLERY = 3;
 
 export function generateStaticParams() {
   return projectSlugs.map((slug) => ({ slug }));
@@ -21,29 +22,28 @@ export async function generateMetadata({
 }: PageProps<"/projects/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const project = getProject(slug);
-  const detail = getProjectDetail(slug);
-  if (!project || !detail) return {};
+  if (!project) return {};
   return {
     title: project.title,
-    description: detail.summary,
+    description: project.summary,
     alternates: { canonical: withBase(`/projects/${slug}`) },
     openGraph: {
       url: withBase(`/projects/${slug}`),
       title: `${project.title} — Sunbeam Spaces`,
-      description: detail.summary,
+      description: project.summary,
       images: [{ url: project.cover.src, alt: project.cover.alt }],
     },
   };
 }
 
 /*
- * Figma "Single Project — Baxters" (60:803). The page reads its slug inside <Suspense>, so a
- * client navigation shows the shell at once (Next.js instant navigation) while the project
- * streams in; every known project is still prerendered in full.
+ * Figma "Single Project — Baxters" (90:3139): hero, Our Art in Detail, the Design Details gallery,
+ * Discover More and the consultation block. The slug is read inside <Suspense> so client
+ * navigation shows the shell at once; every project is still prerendered in full.
  */
 export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
   return (
-    <Suspense fallback={<div aria-hidden className="h-svh bg-stone" />}>
+    <Suspense fallback={<div aria-hidden className="h-svh bg-mist" />}>
       <Project params={params} />
     </Suspense>
   );
@@ -52,19 +52,20 @@ export default function ProjectPage({ params }: PageProps<"/projects/[slug]">) {
 async function Project({ params }: { params: PageProps<"/projects/[slug]">["params"] }) {
   const { slug } = await params;
   const project = getProject(slug);
-  const detail = getProjectDetail(slug);
-  if (!project || !detail) notFound();
+  if (!project) notFound();
+  // Until each case study has its own copy and renders, projects borrow the Baxters sections they
+  // are missing, so every project page shows the full structure to the client.
+  const sample = getProject(TEMPLATE_SLUG);
+  const detail = project.detail ?? sample?.detail;
+  const gallery = project.gallery.length >= MIN_GALLERY ? project.gallery : (sample?.gallery ?? []);
 
   return (
     <>
-      <ProjectHero project={project} detail={detail} />
-      {detail.overview && <ProjectOverview overview={detail.overview} />}
-      <ProjectDeliver deliver={detail.deliver} />
-      <ProjectGallery gallery={detail.gallery} />
-      {detail.feedback && <ProjectFeedback feedback={detail.feedback} />}
+      <ProjectHero project={project} />
+      {detail && <ProjectDetail detail={detail} />}
+      {gallery.length >= MIN_GALLERY && <ProjectGallery images={gallery} />}
       <MoreProjects current={slug} />
       <Consultation />
-      <PageMotion />
     </>
   );
 }

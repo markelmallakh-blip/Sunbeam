@@ -72,7 +72,7 @@ export function MobileNavigation() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: duration.base, ease: easeSoft, delay: 0.05 * index }}
                   >
-                    <Link href={item.href} onClick={close} className="font-display text-h3">
+                    <Link href={item.href} onClick={close} className="text-heading-4 font-semibold">
                       {item.label}
                     </Link>
                   </motion.li>

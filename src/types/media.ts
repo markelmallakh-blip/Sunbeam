@@ -9,6 +9,10 @@ export type ImageAsset = MediaBase & {
   type: "image";
   /** Empty string marks the image as decorative. */
   alt: string;
+  /** Where a cropped (filled) frame centres on the photo, as CSS object-position, e.g. "50% 80%". */
+  focus?: string;
+  /** Extra zoom for a filled frame (1 = none), scaled about the focus point. */
+  zoom?: number;
 };
 
 export type VideoAsset = MediaBase & {

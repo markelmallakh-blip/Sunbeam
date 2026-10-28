@@ -5,6 +5,7 @@ import { newsletter } from "@/content/homepage";
 import { Icon } from "@/components/ui/Icon";
 import { NewsletterForm } from "@/components/ui/NewsletterForm";
 import { CopyrightYear } from "@/components/layout/CopyrightYear";
+import { cn } from "@/lib/cn";
 
 const linkClass = "link-underline text-body tracking-[0.5px] text-white";
 
@@ -23,7 +24,13 @@ export function Footer() {
             className="grid grid-cols-2 gap-10 md:flex md:justify-between md:gap-8 lg:contents"
           >
             {footerNavigation.map((column) => (
-              <div key={column.title} className="flex flex-col items-start gap-6">
+              <div
+                key={column.title}
+                className={cn(
+                  "flex min-w-0 flex-col items-start gap-6",
+                  column.title === "Support" && "col-span-2 md:col-span-1",
+                )}
+              >
                 <h2 className="text-small font-medium tracking-[1px] text-stone uppercase">
                   {column.title}
                 </h2>

@@ -17,25 +17,29 @@ const image = (file: string, alt: string, width: number, height: number): ImageA
 
 export const hero = {
   eyebrow: "Residential & Commercial Interiors in Egypt",
-  title: ["Spaces Composed", "In Quiet Light."],
-  /*
-   * Figma fills the hero with a video of a pergola's fabric shades. Figma cannot export video
-   * fills, so the still frame plays the part until the film file is added as hero-v2.webm.
-   */
+  title: ["Spaces Composed", "in Quiet Light."],
+  /* Figma's hero film: a pergola's fabric shades, 720 × 1280, 14.6s, looping. */
   poster: image(
-    "hero-poster",
+    "hero-poster-v2",
     "Fabric shades stretched between timber beams of a pergola",
     720,
     1280,
   ),
-  video: null as VideoAsset | null,
+  video: {
+    type: "video",
+    src: withBase("/videos/hero-v2.webm"),
+    mimeType: "video/webm",
+    width: 720,
+    height: 1280,
+    label: "Fabric shades stretched between timber beams of a pergola, moving gently in the wind",
+  } as VideoAsset | null,
+  /* The original MP4 for browsers without WebM (VP9) playback, such as older Safari. */
+  videoFallback: withBase("/videos/hero-v2.mp4"),
 };
 
 export const story = {
-  title: "Sunbeam Story",
-  lead: "At Sunbeam Design Studio, we create spaces that blend style, comfort, ",
-  leadMuted:
-    "and function through thoughtful design, smart space planning, and carefully chosen furniture and finishes.",
+  title: "Our Story",
+  text: "Founded by Lina Magdy, Sunbeam Design Studio creates spaces that blend style, comfort and function through thoughtful design, smart space planning and carefully chosen furniture and finishes.",
   cta: { label: "About us", href: "/about" },
   image: image("story-founder", "Lina Magdy, founder of Sunbeam Design Studio", 1086, 1448),
 };
@@ -56,7 +60,7 @@ export const services = {
       title: "Interior Design",
       description:
         "We create thoughtful spaces through smart planning, creative concepts, and designs tailored to your needs.",
-      href: "/#services",
+      href: "/services/interior-design",
       image: image(
         "service-interior",
         "Open-plan dining and living room with pendant lights and timber finishes",
@@ -68,13 +72,16 @@ export const services = {
       title: "(FF&E) Solution",
       description:
         "We deliver turnkey FF&E, from furniture and lighting selection to the final finishing touches.",
-      href: "/#services",
-      image: image(
-        "service-ffe",
-        "Modular sofa with striped cushions around a round stone coffee table",
-        1600,
-        1778,
-      ),
+      href: "/services/ffe",
+      image: {
+        ...image(
+          "service-ffe-2k",
+          "Modular sofa with striped cushions around a round stone coffee table",
+          2000,
+          2222,
+        ),
+        focus: "50% 62%",
+      },
     },
   ] satisfies ServiceCard[],
 };
@@ -89,12 +96,12 @@ export type ProjectCard = {
 export const projects = {
   title: "Selected Projects",
   description: "Thoughtful design and refined details bring each space to life.",
-  cta: { label: "View all", href: "/#projects" },
+  cta: { label: "View all", href: "/projects" },
   items: [
     {
       title: "Sodic Villette",
       tags: ["Residential", "FF&E", "New Cairo"],
-      href: "/#projects",
+      href: "/projects/sodic-villette",
       image: image(
         "projects/sodic-villette",
         "Sodic Villette living room with a green lounge chair and a sculpted coffee table",
@@ -116,7 +123,7 @@ export const projects = {
     {
       title: "LA7 Zoya Clubhouse",
       tags: ["Commercial", "Interior Design", "North Coast"],
-      href: "/#projects",
+      href: "/projects/la7-zoya",
       image: image(
         "projects/la7-zoya",
         "LA7 Zoya clubhouse gym under a timber ceiling with exposed ducts",
@@ -127,7 +134,7 @@ export const projects = {
     {
       title: "Almaza Bay Villa",
       tags: ["Residential", "FF&E"],
-      href: "/#projects",
+      href: "/projects/almaza-bay",
       image: image(
         "projects/almaza-bay",
         "Almaza Bay villa living room opening onto a sea view",
@@ -138,7 +145,7 @@ export const projects = {
     {
       title: "FAMM Dental Clinic",
       tags: ["Commercial", "Interior Design", "El Sheikh Zayed"],
-      href: "/#projects",
+      href: "/projects/famm-dental",
       image: image(
         "projects/famm-dental",
         "FAMM dental clinic waiting area with a blue door and framed prints",
@@ -149,7 +156,7 @@ export const projects = {
     {
       title: "Kalethia Apartment",
       tags: ["Residential", "Interior Design", "Greece"],
-      href: "/#projects",
+      href: "/projects/kalethia",
       image: image(
         "projects/kalethia",
         "Kalethia apartment dining nook with a round timber table on a woven rug",
@@ -191,9 +198,9 @@ export const clients = {
 export type Faq = { question: string; answer: string };
 
 export const faqs = {
-  title: "Frequently asked questions",
+  title: "Frequently Asked Questions",
   description: "We believe great design starts with clarity and trust",
-  cta: { label: "View all FAQs", href: "/#faqs" },
+  cta: { label: "View all FAQs", href: "/faqs" },
   items: [
     {
       question: "What services does Sunbeam Design Studio offer?",
@@ -228,71 +235,23 @@ export const faqs = {
   ] satisfies Faq[],
 };
 
-export type BlogPost = {
-  category: string;
-  date: string;
-  title: string;
-  excerpt: string;
-  href: string;
-  image: ImageAsset;
-};
-
-const expoImage = image(
-  "blog/design-show-expo",
-  "Bright bedroom with a patterned throw and a mirrored wardrobe",
-  1200,
-  923,
-);
-
+/* The homepage shows the first three posts from src/content/blog.ts. */
 export const blog = {
   title: "Blog & News",
   description: "We believe great design starts with clarity and trust",
-  cta: { label: "Explore blog", href: "/#blog" },
-  items: [
-    {
-      category: "News",
-      date: "18 - 20 Nov 2026",
-      title: "Meet Us at The Design Show Expo",
-      excerpt:
-        "Explore how to combine aesthetics and practicality to create interiors that feel beautiful, comfortable, and effortless to live in.",
-      href: "/#blog",
-      image: expoImage,
-    },
-    {
-      category: "Blog",
-      date: "21 Oct 2026",
-      title: "5 Ways to Balance Your Space Colors",
-      excerpt:
-        "Explore how to combine aesthetics and practicality to create interiors that feel beautiful, comfortable, and effortless to live in.",
-      href: "/#blog",
-      image: expoImage,
-    },
-    {
-      category: "Blog",
-      date: "21 Oct 2026",
-      title: "2027 Bathrooms Trends",
-      excerpt:
-        "Discover how thoughtful design, natural materials, and carefully selected details create spaces that remain beautiful beyond trends.",
-      href: "/#blog",
-      image: image(
-        "blog/bathroom-trends",
-        "Bathroom vanity with a round mirror, brass taps and green tiles",
-        1200,
-        1333,
-      ),
-    },
-  ] satisfies BlogPost[],
+  cta: { label: "Explore blog", href: "/blog" },
+  count: 3,
 };
 
 export const consultation = {
   eyebrow: "Schedule consultation call",
-  title: "Words of Trust and Appreciation",
+  title: "Let’s Discuss Your Next Space Design",
   description:
     "Have a project in mind? schedule now consultation meeting or send us your inquiry and let's bring your vision to life,",
-  cta: { label: "Send us message", href: "mailto:hello@sunbeam.com" },
+  cta: { label: "Send us message", href: "/contact" },
 };
 
 export const newsletter = {
-  title: "Join our newsletter for exclusive updates and news",
+  title: "Join Our Newsletter for Exclusive Updates and News",
   note: "by subscribing you are agreeing on our privacy policy",
 };

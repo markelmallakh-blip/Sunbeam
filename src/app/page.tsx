@@ -14,8 +14,11 @@ import { Consultation } from "@/components/sections/Consultation";
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <Story />
+      {/* The hero stays pinned while the Story section slides up over it. */}
+      <div className="relative">
+        <Hero />
+        <Story />
+      </div>
       <Services />
       <Projects />
       <Clients />

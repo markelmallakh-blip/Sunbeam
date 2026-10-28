@@ -29,7 +29,12 @@ export function Services() {
               className="group relative isolate flex aspect-[4/5] flex-col items-center justify-end gap-3 overflow-hidden p-6 text-center text-white md:aspect-auto md:h-[min(46rem,80svh)]"
             >
               <div className="absolute inset-0 -z-10 transition-transform duration-1000 ease-soft group-hover:scale-[1.03]">
-                <ResponsiveImage asset={item.image} sizes="(min-width: 768px) 50vw, 100vw" fill />
+                <ResponsiveImage
+                  asset={item.image}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  quality={85}
+                  fill
+                />
               </div>
               <div
                 aria-hidden

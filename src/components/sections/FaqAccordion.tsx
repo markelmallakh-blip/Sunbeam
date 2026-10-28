@@ -9,8 +9,15 @@ import { cn } from "@/lib/cn";
  * Figma "FAQ Item" / "FAQ Item / Open": 24px rows split by Gray 2 rules, plus/minus on the right.
  * Answers slide open on a grid-rows transition, so no height is measured in script.
  */
-export function FaqAccordion({ items }: { items: Faq[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+export function FaqAccordion({
+  items,
+  defaultOpen = 0,
+}: {
+  items: Faq[];
+  /** Index of the answer open on load; null starts with every answer closed. */
+  defaultOpen?: number | null;
+}) {
+  const [openIndex, setOpenIndex] = useState<number | null>(defaultOpen);
   const baseId = useId();
 
   return (

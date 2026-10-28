@@ -1,63 +1,35 @@
 "use client";
 
 import { animate, useInView, useReducedMotion } from "framer-motion";
-import { useEffect, useLayoutEffect, useRef } from "react";
-
-type CountUpProps = {
-  value: number;
-  suffix?: string;
-  prefix?: string;
-  /** Minimum digits, zero-padded (2 → "06"). */
-  pad?: number;
-  /** Seconds the count takes. */
-  duration?: number;
-  className?: string;
-};
+import { useEffect, useRef, useState } from "react";
+import { easeSoft } from "@/lib/motion";
 
 /*
- * Number that counts up from zero each time it scrolls into view. The server renders the
- * final value (no-JS, crawlers, reduced motion), and the client resets it to zero before paint.
+ * A stat such as "20+" that counts up from zero the first time it scrolls into view. The final
+ * value is what renders on the server and without JavaScript, and reduced motion keeps it as is.
  */
-export function CountUp({
-  value,
-  suffix = "",
-  prefix = "",
-  pad = 0,
-  duration = 1.6,
-  className,
-}: CountUpProps) {
-  const format = (n: number) => `${prefix}${String(Math.round(n)).padStart(pad, "0")}${suffix}`;
+export function CountUp({ value, duration = 1.6 }: { value: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { margin: "0px 0px -15% 0px" });
+  const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
   const reduceMotion = useReducedMotion();
-
-  useLayoutEffect(() => {
-    if (ref.current && !reduceMotion) ref.current.textContent = format(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- format only depends on the props listed.
-  }, [reduceMotion, suffix, prefix, pad]);
+  const match = /^(\d+)(.*)$/.exec(value);
+  const target = match ? Number(match[1]) : null;
+  const suffix = match?.[2] ?? "";
+  const [shown, setShown] = useState<number | null>(null);
 
   useEffect(() => {
-    const element = ref.current;
-    if (!element || reduceMotion) return;
-    // Back to zero once off screen, so the count plays again on every visit.
-    if (!inView) {
-      element.textContent = format(0);
-      return;
-    }
-    const controls = animate(0, value, {
+    if (!inView || reduceMotion || target === null) return;
+    const controls = animate(0, target, {
       duration,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (latest) => {
-        element.textContent = format(latest);
-      },
+      ease: easeSoft,
+      onUpdate: (latest) => setShown(Math.round(latest)),
     });
     return () => controls.stop();
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- format only depends on the props listed.
-  }, [inView, reduceMotion, value, suffix, prefix, pad, duration]);
+  }, [inView, reduceMotion, target, duration]);
 
   return (
-    <span ref={ref} className={className}>
-      {format(value)}
+    <span ref={ref} className="tabular-nums">
+      {target === null || shown === null ? value : `${shown}${suffix}`}
     </span>
   );
 }

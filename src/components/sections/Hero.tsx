@@ -9,7 +9,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="relative isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-block text-center"
+      className="sticky top-0 isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-block text-center"
     >
       <div className="absolute inset-0 -z-10 bg-ink">
         {hero.video ? (
@@ -19,11 +19,12 @@ export function Hero() {
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster={hero.poster.src}
             aria-label={hero.video.label}
           >
             <source src={hero.video.src} type={hero.video.mimeType} />
+            <source src={hero.videoFallback} type="video/mp4" />
           </video>
         ) : (
           <ResponsiveImage asset={hero.poster} sizes="100vw" fill priority parallax={false} />

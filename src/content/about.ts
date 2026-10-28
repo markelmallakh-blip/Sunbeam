@@ -1,112 +1,141 @@
-import type { ImageAsset, VideoAsset } from "@/types/media";
+import type { ImageAsset } from "@/types/media";
 import { withBase } from "@/lib/base-path";
-import { story as homeStory } from "./home";
 
 /*
- * About page content, following the Figma "About Us" frame (54:687). Kept apart from
- * presentation so copy and media can be replaced (or moved to a CMS) without touching components.
+ * About page content for the 2026-10 redesign (Figma "About Us" 90:2460 on the "UI" page).
+ * Copy and sample images are taken from the Figma frame as-is.
  */
 
-const image = (src: string, alt: string, width: number, height: number): ImageAsset => ({
+const image = (file: string, alt: string, width: number, height: number): ImageAsset => ({
   type: "image",
-  src,
+  src: withBase(`/images/about-v2/${file}.webp`),
   alt,
   width,
   height,
 });
 
-const [teamImage, lightingImage] = homeStory.images;
-
 export const aboutHero = {
   eyebrow: "About Us",
   title: ["Story Behind", "Sunbeam Spaces"],
+  /* Used for the page's meta description. */
   intro:
     "Since 2021, Sunbeam Spaces Studio has shaped residential and commercial interiors across Egypt and beyond guided by light, material and the way people truly live.",
+  /*
+   * The clean photo from the previous About hero: the Figma sample has its fluted glass baked in,
+   * and the refraction effect needs a clear photo to reveal under the pointer.
+   */
   image: image(
-    withBase("/images/about/hero.webp"),
-    "A Sunbeam hospitality interior with sculpted timber ceiling ribbons, sheer curtains and sea views",
+    "hero-dining",
+    "Dining room with a dark timber table, leather chairs and sheer curtains",
     2400,
     1076,
   ),
-  /** `value` counts up from zero; `suffix` follows it unchanged. */
-  stats: [
-    { value: 5, suffix: "", label: "Years in the Market" },
-    { value: 20, suffix: "+", label: "Projects Delivered" },
-    { value: 30, suffix: "+", label: "Designers & specialists" },
-    { value: 5, suffix: "", label: "Countries worked in" },
-  ],
 };
+
+export type Stat = { value: string; label: string };
 
 export const companyOverview = {
   title: "Company Overview",
   paragraphs: [
+    "Since 2021, Sunbeam Spaces Studio has shaped residential and commercial interiors across Egypt and beyond guided by light, material and the way people truly live.",
     "At Sunbeam Design Studio, we believe great design is found in the balance between beauty, comfort, and purpose. We create thoughtful spaces that reflect each client's vision, bringing together creative interior design and turnkey FF&E solutions.",
     "From the first concept to the final detail, we take a considered approach to every project, carefully selecting materials, furniture, lighting, and finishes to ensure each element works in harmony. Our goal is to create spaces that feel cohesive, function effortlessly, and stand the test of time.",
   ],
-  image: image(
-    withBase("/images/about/overview.webp"),
-    "A Sunbeam workplace interior with a long meeting table, a textured artwork wall and exposed ceiling services",
-    920,
-    1150,
-  ),
+  stats: [
+    { value: "5+", label: "Years" },
+    { value: "20+", label: "Project" },
+    { value: "10+", label: "Specialist" },
+    { value: "5+", label: "Countries" },
+  ] satisfies Stat[],
 };
 
-export const ourStory = {
-  eyebrow: "Our Story",
-  title: "From a small studio to spaces across the region.",
-  text: "What began as a two-person studio with a love for natural light and honest materials has grown into a team trusted with homes, hospitality and workplaces without losing the care of a small practice.",
-  /* Silent landscape loop cut from the studio film until a dedicated reel is supplied. */
-  loop: {
-    type: "video",
-    src: withBase("/videos/story-loop.webm"),
-    mimeType: "video/webm",
-    label: "Sunbeam's founder in the studio",
-    poster: withBase("/images/about/story-loop-poster.webp"),
-    width: 720,
-    height: 468,
-  } satisfies VideoAsset,
-  film: homeStory.teaser.film,
-  filmLabel: "Watch the film",
+/*
+ * Figma "Container" Variant2 (152:2223) shows each value as a line illustration with a short
+ * description. It leaves out Thoughtful Design, which has no illustration yet, so it is skipped there.
+ */
+export type Value = {
+  title: string;
+  image: ImageAsset;
+  description: string;
+  icon?: ImageAsset;
 };
 
-/* Each line of the heading carries one value tag, tilted alternately (Figma 73:1457). */
+const valueIcon = (file: string) => image(`icon-${file}`, "", 280, 280);
+
+/* Images are 2× renders of the Figma cards (283 × 320), so their crops match exactly. */
+const valueImage = (file: string, alt: string) => image(`value-${file}`, alt, 566, 640);
+
 export const values = {
   eyebrow: "Why Choose Sunbeam",
-  lines: [
-    { word: "Values", tag: "Thoughtful Design", side: "end" },
-    { word: "Behind", tag: "Attention to Detail", side: "start" },
-    { word: "Our", tag: "Client-Centered Approach", side: "end" },
-    /* Figma repeats "Thoughtful Design" here — likely a placeholder for a fourth value. */
-    { word: "Work", tag: "Thoughtful Design", side: "start" },
-  ] as const,
+  title: "Values Behind Our Work",
+  items: [
+    {
+      title: "Thoughtful Design",
+      image: valueImage(
+        "thoughtful-design",
+        "Dining room framed by a planted screen and timber pendant lights",
+      ),
+      description:
+        "Every space starts with how it will be lived in, then takes shape around light, flow and proportion.",
+    },
+    {
+      title: "Attention to Detail",
+      image: valueImage("attention-to-detail", "Wall-mounted desk with a sculpted lamp and chair"),
+      icon: valueIcon("attention-to-detail"),
+      description:
+        "Every detail matters. We carefully consider every element to create refined, well-balanced spaces.",
+    },
+    {
+      title: "Client-Centered Approach",
+      image: valueImage("client-centered", "Sunbeam designers reviewing samples with clients"),
+      icon: valueIcon("client-centered"),
+      description:
+        "We listen first and keep you involved at every step, so the finished space truly feels like yours.",
+    },
+    {
+      title: "Lasting Quality",
+      image: valueImage("lasting-quality", "Terrace dining table under a woven pendant light"),
+      icon: valueIcon("lasting-quality"),
+      description:
+        "We choose materials, makers and finishes that hold up to daily life and age gracefully over time.",
+    },
+    {
+      title: "Transparency",
+      image: valueImage("transparency", "Two designers sharing a high-five across a meeting table"),
+      icon: valueIcon("transparency"),
+      description:
+        "Clear budgets, honest timelines and open updates, so there are no surprises along the way.",
+    },
+  ] satisfies Value[],
+};
+
+export const purpose = {
+  title: "Rooted in Purpose",
+  statements: [
+    {
+      label: "Our Vision",
+      text: "To be the region’s most trusted studio for calm, timeless interiors, homes and workplaces that age gracefully, where people feel at ease long after the reveal.",
+    },
+    {
+      label: "Our Mission",
+      text: "To design with intention, deliver with care and listen at every step — pairing thoughtful planning with carefully chosen materials, so our clients can simply enjoy the result.",
+    },
+  ],
 };
 
 export const founder = {
-  title: "Founder Message",
-  paragraphs: [
+  title: "Meet Our Founder",
+  letter: [
     "When I founded Sunbeam Design Studio, my vision was to create more than beautiful interiors. I wanted to create spaces that reflect the people who live and work in them, spaces that feel natural, serve a purpose, and leave a lasting impression.",
     "I believe great design begins with listening. Every client has a unique story, set of needs, and vision, and our role is to bring these together through thoughtful design and a clear sense of purpose. From the first ideas and space planning to the selection of furniture, materials, and finishing touches, every detail matters.",
     "For me, the true value of design lies in how a space makes you feel and how it becomes part of your everyday life. This is the vision that guides us, inspires our work, and continues to shape the future of Sunbeam Design Studio.",
   ],
   name: "Lina Magdy",
   role: "Founder of Sunbeam Design Studio",
-  portrait: image(
-    withBase("/images/about/founder.webp"),
-    "Lina Magdy, founder of Sunbeam Design Studio, seated in an ochre wingback chair",
-    720,
-    788,
+  image: image(
+    "founder-portrait",
+    "Lina Magdy, founder of Sunbeam Design Studio, resting her chin on her hand",
+    1512,
+    1418,
   ),
 };
-
-export const visionMission = [
-  {
-    title: "Our Vision",
-    text: "To be the region’s most trusted studio for calm, timeless interiors. We imagine homes and workplaces that age gracefully spaces people feel at ease in long after the reveal.",
-    images: [lightingImage, teamImage],
-  },
-  {
-    title: "Our Mission",
-    text: "To design with intention, deliver with care and listen at every step, We pair thoughtful planning with carefully chosen materials and furniture, managing every detail so our clients can simply enjoy the result.",
-    images: [lightingImage, teamImage],
-  },
-] satisfies { title: string; text: string; images: (ImageAsset | undefined)[] }[];

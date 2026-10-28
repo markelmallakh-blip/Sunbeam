@@ -31,6 +31,7 @@ const nextConfig: NextConfig = {
     ...(pages && {
       resolveAlias: {
         "@/actions/newsletter": "./src/actions/newsletter.static.ts",
+        "@/actions/contact": "./src/actions/contact.static.ts",
         "@/components/layout/CopyrightYear": "./src/components/layout/CopyrightYear.static.tsx",
       },
     }),

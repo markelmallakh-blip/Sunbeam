@@ -13,7 +13,7 @@ export default function NotFound() {
     <section className="bg-stone pt-header">
       <Container className="flex min-h-[70svh] flex-col items-start justify-center gap-6 py-section">
         <Eyebrow className="text-slate">Error 404</Eyebrow>
-        <h1 className="font-display text-h2">This space isn’t designed yet.</h1>
+        <h1 className="font-display text-h2">This Space Isn’t Designed Yet.</h1>
         <p className="max-w-md text-small text-slate">
           The page you are looking for has moved or does not exist.
         </p>

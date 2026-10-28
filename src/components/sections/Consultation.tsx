@@ -18,11 +18,14 @@ export function Consultation() {
           <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
             {consultation.eyebrow}
           </p>
-          <h2 id="consultation-title" className="text-heading-3 font-semibold text-ink">
+          <h2
+            id="consultation-title"
+            className="max-w-[32rem] text-heading-3 font-semibold text-balance text-ink"
+          >
             {consultation.title}
           </h2>
         </div>
-        <p className="max-w-[26.625rem] text-body tracking-[0.5px] text-slate">
+        <p className="max-w-[32rem] text-body tracking-[0.5px] text-slate">
           {consultation.description}
         </p>
         <Button href={consultation.cta.href} variant="outline-dark">

@@ -1,249 +1,591 @@
 import type { ImageAsset } from "@/types/media";
 import { withBase } from "@/lib/base-path";
-import { projects, testimonials, type Project } from "./home";
-import { projectRenders, type RenderFile } from "./project-renders";
 
 /*
- * Project detail pages (Figma "Single Project — Baxters", 60:803). The listing (title, tags,
- * cover) lives in home.ts; this adds the case-study content per slug. A project gets its own
- * page as soon as it has an entry here.
+ * Projects: the list page (Figma "Projects" 185:1587) and each case study (Figma "Single Project
+ * — Baxters" 90:3139). Baxters carries the real case-study content from Figma; the other five use
+ * their homepage card data and are marked `placeholder` until their copy and renders arrive.
  */
 
-const image = (src: string, alt: string, width: number, height: number): ImageAsset => ({
+type Size = [number, number];
+
+const asset = (slug: string, file: string, alt: string, [width, height]: Size): ImageAsset => ({
   type: "image",
-  src,
+  src: withBase(`/images/projects-v2/${slug}/${file}.webp`),
   alt,
   width,
   height,
 });
 
-const render = (file: string, alt: string, width = 1600, height = 1920) =>
-  image(withBase(`/images/projects/baxters/${file}.webp`), alt, width, height);
+/**
+ * A gallery photo. `wide` is an optional 16:9 crop of the same render that the full-screen viewer
+ * shows instead, so wide shots read as landscape there while the grid keeps its own crops.
+ */
+export type GalleryImage = ImageAsset & { wide?: ImageAsset };
 
-export type ProjectDetail = {
+/**
+ * Gallery files gallery-01 … gallery-NN with their sizes, all described by one alt line. Numbers
+ * listed in `wide` also have a gallery-NN-wide file (1600 × 900).
+ */
+const gallery = (slug: string, alt: string, sizes: Size[], wide: number[] = []) =>
+  sizes.map((size, index): GalleryImage => {
+    const file = `gallery-${String(index + 1).padStart(2, "0")}`;
+    const label = `${alt} — view ${index + 1}`;
+    const image = asset(slug, file, label, size);
+    return wide.includes(index + 1)
+      ? { ...image, wide: asset(slug, `${file}-wide`, label, [1600, 900]) }
+      : image;
+  });
+
+export type ProjectCategory = "Residential" | "Commercial";
+
+export type Project = {
   slug: string;
-  /** Tags shown on the hero card (the listing's tags plus the service). */
-  tags: string[];
+  title: string;
+  category: ProjectCategory;
+  /** Service line shown in the card and hero meta, e.g. "FF&E" or "Interior Design". */
+  services: string[];
+  location: string;
+  year: string;
+  /** Extra hero tag between category and services (e.g. "Food & Beverage"). */
+  sector?: string;
   summary: string;
-  /** Client logo on the hero card (optional). */
-  logo?: ImageAsset;
+  cover: ImageAsset;
   hero: ImageAsset;
-  /** Shown as the hero card opens up on scroll (Figma "expanded" variant, 70:4049). */
-  brief: {
+  logo?: ImageAsset;
+  /** "Our Art in Detail": material palette and selected pieces (hand-made case studies only). */
+  detail?: {
     title: string;
     text: string;
-    images: [ImageAsset, ImageAsset];
-    stats?: { value: number; prefix?: string; suffix?: string; pad?: number; label: string }[];
+    palette: string[];
+    pieces: ImageAsset[];
   };
-  /** Photos, statement and the "Our Art in Detail" bento (hand-made case studies only). */
-  overview?: {
-    images: [ImageAsset, ImageAsset];
-    statement: string;
-    detailTitle: string;
-    /** Material palette, as swatch colours. */
-    palette: { name: string; hex: string }[];
-    /** Product cut-outs (the pendant and table are white-background shots, multiplied into their tiles). */
-    pieces: {
-      oak: ImageAsset;
-      planter: ImageAsset;
-      pendant: ImageAsset;
-      table: ImageAsset;
-      sage: ImageAsset;
-    };
-  };
-  deliver: { title: string; items: { title: string; text: string; image: ImageAsset }[] };
-  gallery: { eyebrow: string; title: string; images: ImageAsset[] };
-  feedback?: { image: ImageAsset; quote: string; name: string; project: string };
+  gallery: GalleryImage[];
+  /** Copy and imagery still to be supplied by the studio. */
+  placeholder?: boolean;
 };
 
-const fallbackTestimonial = testimonials.items[0];
+const PLACEHOLDER_SUMMARY =
+  "Placeholder — the case-study description for this project will be added once the studio supplies its copy.";
 
-const details: ProjectDetail[] = [
+const baxtersGallery: Size[] = [
+  [1400, 1680],
+  [1400, 1680],
+  [1400, 1680],
+  [1200, 1440],
+  [1200, 1440],
+  [1200, 1440],
+  ...Array.from({ length: 8 }, (): Size => [1000, 1200]),
+  ...Array.from({ length: 6 }, (): Size => [1200, 1440]),
+];
+
+export const projects: Project[] = [
+  {
+    slug: "sodic-villette",
+    title: "Sodic Villette",
+    category: "Residential",
+    services: ["FF&E"],
+    location: "New Cairo",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "sodic-villette",
+      "cover",
+      "Sodic Villette living room with a green lounge chair and a sculpted coffee table",
+      [1200, 923],
+    ),
+    hero: asset(
+      "sodic-villette",
+      "cover",
+      "Sodic Villette living room with a green lounge chair and a sculpted coffee table",
+      [1200, 923],
+    ),
+    gallery: gallery("sodic-villette", "Sodic Villette interiors", [
+      [1200, 923],
+      [1200, 923],
+      [1200, 923],
+      [1200, 923],
+      [1000, 1111],
+      [1000, 563],
+      [1000, 563],
+      [1000, 1200],
+      [1000, 769],
+      [1000, 769],
+      [1000, 769],
+      [1000, 769],
+    ]),
+    placeholder: true,
+  },
   {
     slug: "baxters",
-    tags: ["Commercial", "Food & Beverage", "FF&E"],
+    title: "Baxters Restaurant",
+    category: "Commercial",
+    sector: "Food & Beverage",
+    services: ["FF&E"],
+    location: "Egypt",
+    year: "2025",
     summary:
       "A neighbourhood bakery-café where warm timber beams, graphic monochrome floors and soft pendant light create an easy, all-day atmosphere — designed to feel as good at 8am coffee as it does at a long weekend lunch.",
-    logo: image(
-      withBase("/images/projects/baxters/logo.webp"),
-      "Bäxters European Kitchen",
-      360,
-      274,
+    cover: asset(
+      "baxters",
+      "cover",
+      "Baxters restaurant with timber beams, pendant lights and a monochrome tiled floor",
+      [1200, 1440],
     ),
-    hero: render(
+    hero: asset(
+      "baxters",
       "hero",
-      "Baxters dining hall under timber beams, with tables on a monochrome tiled floor and the bäxters window beyond",
+      "Baxters dining hall under timber beams, with the bäxters window and the bakery counter",
+      [1600, 1920],
     ),
-    brief: {
-      title: "Project Overview",
-      text: "Baxters wanted a European-style bakery and kitchen that works from early breakfast to late dinner — open, bright and welcoming, with the bakery counter at the heart of the space.",
-      images: [
-        render(
-          "brief-terrace",
-          "Baxters terrace with umbrellas, planters and café tables between the buildings",
-          1400,
-          1680,
-        ),
-        render(
-          "brief-table",
-          "Baxters timber communal table beside a plaster column with a wall-arm lamp",
-          1400,
-          1680,
-        ),
-      ],
-      stats: [
-        { value: 200, label: "Square Meters" },
-        { value: 6, pad: 2, label: "Weeks" },
-        { value: 50, prefix: "+", label: "Units Delivered" },
+    logo: asset("baxters", "logo-mark", "Bäxters European Kitchen", [360, 274]),
+    detail: {
+      title: "Our Art in Detail",
+      text: "Explore the colors, textures, and carefully selected pieces that bring our design vision to life, creating spaces with character and timeless appeal.",
+      palette: ["#262626", "#e5e0d6", "#735438", "#99b299", "#b89961"],
+      pieces: [
+        asset("baxters", "piece-oak", "Oak café chair with black steel legs", [700, 810]),
+        asset("baxters", "piece-planter", "Fluted concrete planter with shrubs", [800, 730]),
+        asset("baxters", "piece-pendant", "Black enamel pendant lamp", [800, 926]),
+        asset("baxters", "piece-sage", "Sage green café chair", [800, 926]),
+        asset("baxters", "piece-table", "Timber communal table with a wall lamp", [800, 731]),
       ],
     },
-    overview: {
-      images: [
-        render(
-          "overview-interior",
-          "Baxters bakery counter and seating beneath exposed timber beams and black pendant lights",
-        ),
-        render(
-          "overview-exterior",
-          "Baxters street frontage with outdoor seating, umbrellas and planters",
-          1400,
-          1680,
-        ),
-      ],
-      statement: "A bakery that feels like the neighbourhood’s living room.",
-      detailTitle: "Our Art in Detail",
-      palette: [
-        { name: "Walnut", hex: "#735438" },
-        { name: "Charcoal", hex: "#262626" },
-        { name: "Linen", hex: "#E5E0D6" },
-        { name: "Sage", hex: "#99B299" },
-        { name: "Brass", hex: "#B89961" },
-      ],
-      pieces: {
-        oak: render("chair-oak", "Oak-veneer café chair with black steel legs", 800, 926),
-        planter: render("planter", "Fluted concrete planter with mixed greenery", 329, 300),
-        pendant: render("pendant", "Black enamel dome pendant light", 800, 926),
-        table: render(
-          "table",
-          "Timber communal table against a plaster column with a wall-arm lamp",
-          900,
-          822,
-        ),
-        sage: render("chair-sage", "Sage-green café chair", 800, 926),
-      },
-    },
-    deliver: {
-      title: "What We Deliver",
-      items: [
-        {
-          title: "Interior Design",
-          text: "We shaped Baxters through thoughtful space planning, a warm design concept, and a careful mix of natural materials, lighting, and furniture to create a welcoming European-inspired bakery and restaurant.",
-          image: render(
-            "deliver-design",
-            "The bäxters logo wall with blue plate details, pendant lights and café tables",
-          ),
-        },
-        {
-          title: "Furniture, Fixtures & Equipment (FF&E)",
-          text: "We brought the space together with a turnkey FF&E approach, coordinating furniture, lighting, fixtures, finishes, and decorative details to create a cohesive look and a comfortable, inviting atmosphere.",
-          image: render(
-            "deliver-ffe",
-            "Baxters seating with timber counters, sage chairs and black pendant lights",
-          ),
-        },
-      ],
-    },
-    gallery: {
-      eyebrow: "Gallery",
-      title: "Design Details",
-      images: [
-        render("gallery-01", "Baxters dining hall seen from the entrance", 1000, 1200),
-        render("gallery-02", "Baxters tables facing the bakery window", 1000, 1200),
-        render("gallery-03", "Baxters pastry counter and service area", 1000, 1200),
-        render("gallery-04", "Baxters counter with pendant lights", 1000, 1200),
-        render("gallery-05", "Baxters window seating with timber tables", 1000, 1200),
-        render("gallery-06", "Baxters bakery display shelving", 1000, 1200),
-        render("gallery-07", "Baxters shopfront with black signage", 1000, 1200),
-        render("gallery-08", "Baxters terrace among planters", 1000, 1200),
-      ],
-    },
-    feedback: {
-      image: render("deliver-ffe", ""),
-      /* Figma reuses the homepage testimonial here until the Baxters client quote is supplied. */
-      quote: fallbackTestimonial?.quote ?? "",
-      name: fallbackTestimonial?.author ?? "",
-      project: fallbackTestimonial?.project ?? "",
-    },
+    gallery: (() => {
+      // Figma order: exterior, counter, dining hall, terrace, table from above, bakery shelves.
+      const [g1, g2, g3, g4, g5, g6, ...rest] = gallery(
+        "baxters",
+        "Baxters restaurant",
+        baxtersGallery,
+        // Halls and counters that read best wide; the rest stay portrait in the viewer.
+        [3, 6, 7, 8, 10, 12, 15, 16, 20],
+      );
+      return [g1, g3, g6, g4, g5, g2, ...rest].filter((image): image is GalleryImage =>
+        Boolean(image),
+      );
+    })(),
+  },
+  {
+    slug: "la7-zoya",
+    title: "LA7 Zoya Clubhouse",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "North Coast",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "la7-zoya",
+      "cover",
+      "LA7 Zoya clubhouse gym under a timber ceiling with exposed ducts",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "la7-zoya",
+      "cover",
+      "LA7 Zoya clubhouse gym under a timber ceiling with exposed ducts",
+      [1145, 1374],
+    ),
+    gallery: gallery("la7-zoya", "LA7 Zoya clubhouse", [
+      [1200, 675],
+      [1200, 1440],
+      [1200, 675],
+      [1200, 1440],
+      [1000, 1200],
+      [1000, 1111],
+      [1000, 667],
+      [1000, 667],
+      [1000, 1111],
+      [1000, 1111],
+      [1000, 1111],
+      [1000, 1111],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "almaza-bay",
+    title: "Almaza Bay Villa",
+    category: "Residential",
+    services: ["FF&E"],
+    location: "Almaza Bay",
+    year: "2024",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "almaza-bay",
+      "cover",
+      "Almaza Bay villa living room opening onto a sea view",
+      [1200, 800],
+    ),
+    hero: asset(
+      "almaza-bay",
+      "cover",
+      "Almaza Bay villa living room opening onto a sea view",
+      [1200, 800],
+    ),
+    gallery: [],
+    placeholder: true,
+  },
+  {
+    slug: "famm-dental",
+    title: "FAMM Dental Clinic",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "El Sheikh Zayed",
+    year: "2024",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "famm-dental",
+      "cover",
+      "FAMM dental clinic waiting area with a blue door and framed prints",
+      [1200, 1440],
+    ),
+    hero: asset(
+      "famm-dental",
+      "cover",
+      "FAMM dental clinic waiting area with a blue door and framed prints",
+      [1200, 1440],
+    ),
+    gallery: [],
+    placeholder: true,
+  },
+  {
+    slug: "kalethia",
+    title: "Kalethia Apartment",
+    category: "Residential",
+    services: ["Interior Design"],
+    location: "Greece",
+    year: "2023",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "kalethia",
+      "cover",
+      "Kalethia apartment dining nook with a round timber table on a woven rug",
+      [1200, 1333],
+    ),
+    hero: asset(
+      "kalethia",
+      "cover",
+      "Kalethia apartment dining nook with a round timber table on a woven rug",
+      [1200, 1333],
+    ),
+    gallery: [],
+    placeholder: true,
+  },
+  // Added from the studio's render folders; services, locations and years are placeholders.
+  {
+    slug: "aspect-offices",
+    title: "Aspect Offices",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "aspect-offices",
+      "cover",
+      "Aspect office corridor with timber slats and glass partitions",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "aspect-offices",
+      "cover",
+      "Aspect office corridor with timber slats and glass partitions",
+      [1145, 1374],
+    ),
+    gallery: gallery("aspect-offices", "Aspect offices", [
+      [1200, 1333],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "dental-clinic",
+    title: "Dental Clinic",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "dental-clinic",
+      "cover",
+      "Dental clinic office with a dark desk, garden windows and sculptural art",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "dental-clinic",
+      "cover",
+      "Dental clinic office with a dark desk, garden windows and sculptural art",
+      [1145, 1374],
+    ),
+    gallery: gallery("dental-clinic", "Dental clinic", [
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 1440],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "pottery-cafe",
+    title: "Pottery Café",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "pottery-cafe",
+      "cover",
+      "Pottery café with a curved plaster ceiling and rattan seating",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "pottery-cafe",
+      "cover",
+      "Pottery café with a curved plaster ceiling and rattan seating",
+      [1145, 1374],
+    ),
+    gallery: gallery("pottery-cafe", "Pottery café", [
+      [1200, 800],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 800],
+      [1200, 800],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 800],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "wndr",
+    title: "Wonderville",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "wndr",
+      "cover",
+      "Wonderville dessert counter under a sculpted ribbon ceiling",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "wndr",
+      "cover",
+      "Wonderville dessert counter under a sculpted ribbon ceiling",
+      [1145, 1374],
+    ),
+    gallery: gallery("wndr", "Wonderville", [
+      [1200, 800],
+      [1200, 1412],
+      [1200, 800],
+      [1200, 1411],
+      [1200, 800],
+      [1200, 1411],
+      [1200, 1412],
+      [1200, 800],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "brass-monkeys",
+    title: "Brass Monkeys Gym",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "brass-monkeys",
+      "cover",
+      "Brass Monkeys gym lounge beneath a graffiti-covered column",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "brass-monkeys",
+      "cover",
+      "Brass Monkeys gym lounge beneath a graffiti-covered column",
+      [1145, 1374],
+    ),
+    gallery: gallery("brass-monkeys", "Brass Monkeys gym", [
+      [1200, 1412],
+      [1200, 1412],
+      [1200, 675],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 800],
+      [1200, 800],
+      [1200, 800],
+      [1200, 1440],
+      [1200, 1440],
+      [1200, 800],
+      [1200, 800],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "playa",
+    title: "Playa Chalet",
+    category: "Residential",
+    services: ["Interior Design"],
+    location: "North Coast",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "playa",
+      "cover",
+      "Playa chalet living room with a stone coffee table and a calm plaster wall",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "playa",
+      "cover",
+      "Playa chalet living room with a stone coffee table and a calm plaster wall",
+      [1145, 1374],
+    ),
+    gallery: gallery("playa", "Playa chalet", [
+      [1200, 800],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 800],
+      [1200, 800],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 800],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 1333],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "palm-hills-october",
+    title: "Palm Hills Villa",
+    category: "Residential",
+    services: ["Interior Design"],
+    location: "6th of October",
+    year: "2025",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "palm-hills-october",
+      "cover",
+      "Palm Hills villa stair with an indoor olive tree and travertine walls",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "palm-hills-october",
+      "cover",
+      "Palm Hills villa stair with an indoor olive tree and travertine walls",
+      [1145, 1374],
+    ),
+    gallery: gallery("palm-hills-october", "Palm Hills villa", [
+      [1200, 923],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 1333],
+      [1200, 923],
+      [1200, 1333],
+      [1200, 923],
+      [1200, 1333],
+      [1200, 923],
+      [1200, 1333],
+      [1200, 1333],
+    ]),
+    placeholder: true,
+  },
+  {
+    slug: "swanlake",
+    title: "Swanlake Concept Store",
+    category: "Commercial",
+    services: ["Interior Design"],
+    location: "Egypt",
+    year: "2026",
+    summary: PLACEHOLDER_SUMMARY,
+    cover: asset(
+      "swanlake",
+      "cover",
+      "Swanlake beach concept store, a pink-and-timber pavilion among palm trees",
+      [1145, 1374],
+    ),
+    hero: asset(
+      "swanlake",
+      "cover",
+      "Swanlake beach concept store, a pink-and-timber pavilion among palm trees",
+      [1145, 1374],
+    ),
+    gallery: gallery("swanlake", "Swanlake concept store", [
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+      [1151, 1380],
+    ]),
+    placeholder: true,
   },
 ];
 
-/*
- * Projects without a hand-made case study get a page built from their renders
- * (scripts/project-renders.mjs). The copy is a neutral placeholder until each project's own
- * story, client quote and numbers are supplied.
- */
-const fromRenders = (project: Project): ProjectDetail | undefined => {
-  const renders = projectRenders[project.slug];
-  if (!renders) return undefined;
-  const photo = (file: RenderFile | undefined, alt: string) =>
-    file ? image(withBase(file.src), alt, file.width, file.height) : project.cover;
-  const kind = project.tags.join(" · ").toLowerCase();
-  return {
-    slug: project.slug,
-    tags: [...project.tags, "FF&E"],
-    summary: `${project.title} is a ${kind} project by Sunbeam Design Studio — shaped from first concept and space planning through to the final furniture, lighting and styling.`,
-    hero: project.cover,
-    brief: {
-      title: "Project Overview",
-      text: "A calm, considered space built around how it is used every day, with natural materials, soft light and carefully chosen furniture bringing it together.",
-      images: [
-        photo(renders.brief[0], `${project.title} interior`),
-        photo(renders.brief[1], `${project.title} interior detail`),
-      ],
-    },
-    deliver: {
-      title: "What We Deliver",
-      items: [
-        {
-          title: "Interior Design",
-          text: "Thoughtful space planning, a clear design concept and a careful mix of materials, lighting and furniture, shaped around the people who use the space.",
-          image: photo(renders.deliver[0], `${project.title} interior design`),
-        },
-        {
-          title: "Furniture, Fixtures & Equipment (FF&E)",
-          text: "A turnkey FF&E approach — furniture, lighting, fixtures, finishes and decorative details coordinated into one cohesive, comfortable whole.",
-          image: photo(renders.deliver[1], `${project.title} furniture and fixtures`),
-        },
-      ],
-    },
-    gallery: {
-      eyebrow: "Gallery",
-      title: "Design Details",
-      images: renders.gallery.map((file, index) =>
-        photo(file, `${project.title} — view ${index + 1}`),
-      ),
-    },
-  };
+export const projectSlugs = projects.map((project) => project.slug);
+
+export const getProject = (slug: string) => projects.find((project) => project.slug === slug);
+
+export const projectHref = (slug: string) => `/projects/${slug}`;
+
+/** Card meta line: category, services, location (Figma Project Card "Tags"). */
+export const projectTags = (project: Project) => [
+  project.category,
+  ...project.services,
+  project.location,
+];
+
+export const projectsPage = {
+  eyebrow: "Our Work",
+  title: "Spaces We’ve Shaped",
+  description:
+    "A selection of homes, workplaces and hospitality interiors across Egypt and beyond — each one shaped by light, material and the way people truly live.",
+  /* Tabs filter on category or service; tabs without a matching project are left out. */
+  filters: ["All", "Residential", "Commercial", "Hospitality", "FF&E"],
+  pageSize: 9,
+  loading: "Loading more projects",
 };
 
-const generated = projects.items
-  .filter((project) => !details.some((detail) => detail.slug === project.slug))
-  .map(fromRenders)
-  .filter((detail): detail is ProjectDetail => Boolean(detail));
-
-const allDetails = [...details, ...generated];
-
-export function getProjectDetail(slug: string) {
-  return allDetails.find((detail) => detail.slug === slug);
-}
-
-export function getProject(slug: string): Project | undefined {
-  return projects.items.find((project) => project.slug === slug);
-}
-
-export const projectSlugs = allDetails.map((detail) => detail.slug);
-
-/** Detail page when one exists, otherwise the homepage projects section. */
-export function projectHref(slug: string) {
-  return projectSlugs.includes(slug) ? `/projects/${slug}` : "/#projects";
-}
+export const projectDetailCopy = {
+  galleryEyebrow: "Gallery",
+  galleryTitle: "Design Details",
+  showMore: "Show more",
+  showLess: "Show less",
+  discoverTitle: "Discover More",
+  discoverCta: { label: "View all", href: "/projects" },
+};

@@ -16,7 +16,7 @@ const variants = {
 
 const sizes = {
   sm: "h-9 gap-2 px-4 text-small",
-  md: "h-[2.6875rem] gap-2.5 px-5 text-body",
+  md: "h-10 gap-2 px-[1.125rem] text-[0.9375rem]",
   lg: "h-[3.625rem] gap-3 px-8 text-subtitle",
 } as const;
 
@@ -65,7 +65,7 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const iconSize = size === "lg" ? 16 : size === "md" ? 14 : 12;
+  const iconSize = size === "lg" ? 16 : size === "md" ? 13 : 12;
   const classes = buttonClasses({ variant, size, className });
   const content = (
     <>

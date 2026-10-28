@@ -36,6 +36,11 @@ export function ResponsiveImage({
         sizes={sizes}
         quality={quality}
         data-parallax={parallax || undefined}
+        style={
+          asset.focus || asset.zoom
+            ? { objectPosition: asset.focus, scale: asset.zoom, transformOrigin: asset.focus }
+            : undefined
+        }
         className={cn("object-cover", className)}
         {...loading}
       />
