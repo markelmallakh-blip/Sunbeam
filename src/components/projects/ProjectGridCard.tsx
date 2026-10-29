@@ -127,8 +127,9 @@ export function ProjectGridCard({
             {tags.map((tag, index) => (
               <li
                 key={tag}
-                style={{ transitionDelay: `${300 + index * 80}ms` }}
-                className="translate-y-2 opacity-0 transition-[opacity,translate] duration-700 ease-soft group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100"
+                // The stagger applies only on the way in; leaving, every tag fades out at once.
+                style={{ "--tag-delay": `${300 + index * 80}ms` } as CSSProperties}
+                className="translate-y-2 opacity-0 transition-[opacity,translate] duration-200 ease-soft group-hover:translate-y-0 group-hover:opacity-100 group-hover:delay-(--tag-delay) group-hover:duration-700 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:delay-(--tag-delay) group-focus-visible:duration-700"
               >
                 {tag}
               </li>

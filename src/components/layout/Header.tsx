@@ -153,17 +153,22 @@ export function Header({ booking }: { booking: ReactNode }) {
           <nav
             aria-label="Main"
             className={cn(
-              "hidden transition-[filter] duration-500 lg:block",
+              "hidden h-full transition-[filter] duration-500 lg:block",
               bookingOpen && "pointer-events-none blur-[11px]",
             )}
           >
-            <ul className="flex items-center gap-6">
+            {/*
+             * No gaps between items: each one carries its spacing as side padding and fills the
+             * header's height, so moving from Services to Projects never crosses dead space that
+             * would start closing the open menu.
+             */}
+            <ul className="flex h-full items-stretch">
               {mainNavigation.map((item) => {
                 const itemClass =
                   "link-underline flex items-center gap-0.5 text-small font-medium tracking-[1px] uppercase";
                 if (!item.menu) {
                   return (
-                    <li key={item.label}>
+                    <li key={item.label} className="flex items-center px-3">
                       <Link href={item.href} className={itemClass}>
                         {item.label}
                       </Link>
@@ -175,6 +180,7 @@ export function Header({ booking }: { booking: ReactNode }) {
                 return (
                   <li
                     key={item.label}
+                    className="flex items-center px-3"
                     onMouseEnter={() => openOnHover(menu)}
                     onMouseLeave={scheduleClose}
                   >
@@ -226,7 +232,9 @@ export function Header({ booking }: { booking: ReactNode }) {
         <AnimatePresence>
           {openMenu && (
             <motion.div
-              key={openMenu}
+              // One shell for both menus: switching between Services and Projects keeps the
+              // white panel in place and only cross-fades its contents (see MenuPanel).
+              key="header-menu"
               id="header-menu"
               data-lenis-prevent
               // The pointer is already inside the header, so its onMouseEnter never fires when
@@ -238,7 +246,7 @@ export function Header({ booking }: { booking: ReactNode }) {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: duration.fast, ease: easeSoft }}
             >
-              <HeaderMenu menu={openMenu} onNavigate={closeMenu} />
+              <MenuPanel menu={openMenu} onNavigate={closeMenu} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -248,5 +256,43 @@ export function Header({ booking }: { booking: ReactNode }) {
         {booking}
       </ScheduleOverlay>
     </>
+  );
+}
+
+/*
+ * The open dropdown's contents. Its height glides to fit whichever menu is showing, and on a
+ * switch the new menu simply fades in (CSS @starting-style) — the panel itself never closes,
+ * so hovering from Services to Projects reads as one continuous surface.
+ */
+function MenuPanel({ menu, onNavigate }: { menu: MenuKey; onNavigate: () => void }) {
+  const contentRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState<number | "auto">("auto");
+
+  useEffect(() => {
+    const element = contentRef.current;
+    if (!element) return;
+    const observer = new ResizeObserver(([entry]) => {
+      if (entry) setHeight(entry.contentRect.height);
+    });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      className="overflow-hidden"
+      initial={false}
+      animate={{ height }}
+      transition={{ duration: 0.45, ease: easeSoft }}
+    >
+      <div ref={contentRef}>
+        <div
+          key={menu}
+          className="transition-[opacity,translate] duration-500 ease-soft starting:translate-y-1 starting:opacity-0"
+        >
+          <HeaderMenu menu={menu} onNavigate={onNavigate} />
+        </div>
+      </div>
+    </motion.div>
   );
 }
