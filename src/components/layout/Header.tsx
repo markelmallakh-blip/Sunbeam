@@ -11,7 +11,7 @@ import { HeaderMenu } from "@/components/navigation/HeaderMenu";
 import { MobileNavigation } from "@/components/navigation/MobileNavigation";
 import { ScheduleOverlay } from "@/components/booking/ScheduleOverlay";
 import { cn } from "@/lib/cn";
-import { duration, easeSoft } from "@/lib/motion";
+import { easeSoft } from "@/lib/motion";
 
 /*
  * Figma "Header" (101:2267). At the top of the homepage it is transparent on a black-to-clear
@@ -109,7 +109,7 @@ export function Header({ booking }: { booking: ReactNode }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: duration.fast, ease: easeSoft }}
+            transition={{ duration: 0.15, ease: easeSoft }}
           />
         )}
       </AnimatePresence>
@@ -241,10 +241,11 @@ export function Header({ booking }: { booking: ReactNode }) {
               // moving from a nav item down into the panel; cancel the item's pending close here.
               onMouseEnter={cancelClose}
               className="absolute inset-x-0 top-full hidden max-h-[calc(100svh-100%)] overflow-y-auto border-t border-mist bg-white text-ink lg:block"
-              initial={{ opacity: 0, y: -8 }}
+              // Opens almost at once with a slight drop, so it doesn't read as loading.
+              initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: duration.fast, ease: easeSoft }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.15, ease: easeSoft }}
             >
               <MenuPanel menu={openMenu} onNavigate={closeMenu} />
             </motion.div>
@@ -260,13 +261,20 @@ export function Header({ booking }: { booking: ReactNode }) {
 }
 
 /*
- * The open dropdown's contents. Its height glides to fit whichever menu is showing, and on a
- * switch the new menu simply fades in (CSS @starting-style) — the panel itself never closes,
- * so hovering from Services to Projects reads as one continuous surface.
+ * The open dropdown's contents. Its height glides to fit whichever menu is showing. The first
+ * menu appears with the panel; on a switch the new menu fades in (CSS @starting-style) and the
+ * panel itself never closes, so hovering from Services to Projects reads as one surface.
  */
 function MenuPanel({ menu, onNavigate }: { menu: MenuKey; onNavigate: () => void }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [height, setHeight] = useState<number | "auto">("auto");
+  // The first menu shows as soon as the panel opens; only a later switch cross-fades.
+  const [previous, setPrevious] = useState(menu);
+  const [switched, setSwitched] = useState(false);
+  if (menu !== previous) {
+    setPrevious(menu);
+    setSwitched(true);
+  }
 
   useEffect(() => {
     const element = contentRef.current;
@@ -288,7 +296,10 @@ function MenuPanel({ menu, onNavigate }: { menu: MenuKey; onNavigate: () => void
       <div ref={contentRef}>
         <div
           key={menu}
-          className="transition-[opacity,translate] duration-500 ease-soft starting:translate-y-1 starting:opacity-0"
+          className={cn(
+            switched &&
+              "transition-[opacity,translate] duration-300 ease-soft starting:translate-y-1 starting:opacity-0",
+          )}
         >
           <HeaderMenu menu={menu} onNavigate={onNavigate} />
         </div>

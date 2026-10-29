@@ -66,7 +66,7 @@ export function MobileNavigation() {
       aria-modal="true"
       aria-label="Menu"
       data-lenis-prevent
-      className="fixed inset-0 z-[60] flex flex-col bg-white text-ink transition-opacity duration-300 ease-soft lg:hidden starting:opacity-0"
+      className="fixed inset-0 z-[60] flex flex-col bg-white text-ink transition-opacity duration-150 ease-soft lg:hidden starting:opacity-0"
     >
       <div className="flex h-16 shrink-0 items-center justify-between border-b border-mist px-edge">
         <Link href="/" onClick={close} aria-label="Sunbeam Spaces — home">
@@ -86,8 +86,8 @@ export function MobileNavigation() {
         <div
           key={view.menu === "category" ? `category-${view.index}` : String(view.menu)}
           className={cn(
-            "px-edge pb-6 transition-[opacity,translate] duration-400 ease-soft starting:opacity-0",
-            direction === 1 ? "starting:translate-x-12" : "starting:-translate-x-12",
+            "px-edge pb-6 transition-[opacity,translate] duration-250 ease-soft starting:opacity-0",
+            direction === 1 ? "starting:translate-x-6" : "starting:-translate-x-6",
           )}
         >
           <Panel view={view} go={go} close={close} />
