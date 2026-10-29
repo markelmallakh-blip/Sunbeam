@@ -232,7 +232,7 @@ function LoadMore({ onLoad }: { onLoad: () => void }) {
 function ServiceMenu({ value, onChange }: { value: Service; onChange: (next: Service) => void }) {
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger className="group flex items-center gap-2 self-start text-small tracking-[0.5px] text-slate outline-none sm:self-auto">
+      <DropdownMenuTrigger className="group -my-2 flex min-h-11 items-center gap-2 self-start py-2 text-small tracking-[0.5px] text-slate outline-none sm:self-auto">
         Service
         <span className="font-medium text-ink">{value}</span>
         <Icon

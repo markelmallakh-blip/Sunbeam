@@ -17,7 +17,7 @@ type PageIntroProps = {
  */
 export function PageIntro({ id, eyebrow, title, intro, children, className }: PageIntroProps) {
   return (
-    <header className={cn("flex flex-col items-center gap-2 text-center", className)}>
+    <header className={cn("flex w-full flex-col items-center gap-2 text-center", className)}>
       <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">{eyebrow}</p>
       <h1 id={id} className="text-heading-2 font-semibold text-ink">
         {title}
@@ -25,7 +25,9 @@ export function PageIntro({ id, eyebrow, title, intro, children, className }: Pa
       {intro && (
         <p className="mt-2 max-w-[43.625rem] text-body tracking-[0.5px] text-slate">{intro}</p>
       )}
-      {children && <div className="mt-8 flex flex-wrap justify-center gap-3">{children}</div>}
+      {children && (
+        <div className="mt-8 flex w-full flex-wrap justify-center gap-3">{children}</div>
+      )}
     </header>
   );
 }

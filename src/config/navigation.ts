@@ -48,8 +48,8 @@ export const servicesMenu = [
 ] as const;
 
 /*
- * Figma "Projects menu" (116:6109): a photo and project list per sector. Projects without a page
- * yet link to the projects list. `position` reproduces each photo's crop in the Figma frame.
+ * Figma "Projects menu" (116:6109): a photo and project list per sector, each linking to its
+ * project page. `position` reproduces each photo's crop in the Figma frame.
  */
 export const projectsMenu = {
   cta: { label: "View all projects", href: "/projects" },
@@ -61,9 +61,9 @@ export const projectsMenu = {
       links: [
         { label: "Sodic Villette", href: "/projects/sodic-villette" },
         { label: "Kalethia Greece", href: "/projects/kalethia" },
-        { label: "Palm Hills October", href: "/projects" },
+        { label: "Palm Hills October", href: "/projects/palm-hills-october" },
         { label: "Almaza Bay Villa", href: "/projects/almaza-bay" },
-        { label: "Playa Chalet", href: "/projects" },
+        { label: "Playa Chalet", href: "/projects/playa" },
       ],
     },
     {
@@ -72,8 +72,8 @@ export const projectsMenu = {
       position: "50% 50%",
       links: [
         { label: "Baxters Restaurant", href: "/projects/baxters" },
-        { label: "Pottery Cafe", href: "/projects" },
-        { label: "Wonderville Patisserie", href: "/projects" },
+        { label: "Pottery Cafe", href: "/projects/pottery-cafe" },
+        { label: "Wonderville Patisserie", href: "/projects/wndr" },
       ],
     },
     {
@@ -82,22 +82,25 @@ export const projectsMenu = {
       position: "50% 50%",
       links: [
         { label: "LA7 Zoya Clubhouse", href: "/projects/la7-zoya" },
-        { label: "Brass Monkeys Clubhouse", href: "/projects" },
+        { label: "Brass Monkeys Clubhouse", href: "/projects/brass-monkeys" },
       ],
     },
     {
       title: "Clinics",
       image: withBase("/images/menus/clinics.webp"),
       position: "50% 62%",
-      links: [{ label: "FAMM Dental Clinic", href: "/projects/famm-dental" }],
+      links: [
+        { label: "FAMM Dental Clinic", href: "/projects/famm-dental" },
+        { label: "Dental Clinic", href: "/projects/dental-clinic" },
+      ],
     },
     {
       title: "Administrative & Retail",
       image: withBase("/images/menus/office.webp"),
       position: "50% 43%",
       links: [
-        { label: "Aspect Working Space", href: "/projects" },
-        { label: "Mother Naked & Humanity Code", href: "/projects" },
+        { label: "Aspect Working Space", href: "/projects/aspect-offices" },
+        { label: "Mother Naked & Humanity Code", href: "/projects/swanlake" },
       ],
     },
   ],

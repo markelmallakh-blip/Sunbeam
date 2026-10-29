@@ -95,7 +95,7 @@ async function PostContent({ params }: { params: PageProps<"/blog/[slug]">["para
       {related.length > 0 && (
         <section
           aria-labelledby="related-title"
-          className="flex flex-col items-center gap-stack border-t border-hairline bg-white px-edge py-block"
+          className="flex flex-col items-center gap-stack overflow-hidden border-t border-hairline bg-white px-edge py-block"
         >
           <div className="flex flex-col items-center gap-2 text-center">
             <h2 id="related-title" className="text-heading-4 font-semibold text-ink">
@@ -105,9 +105,13 @@ async function PostContent({ params }: { params: PageProps<"/blog/[slug]">["para
               More ideas and news from the studio
             </p>
           </div>
-          <ul className="grid w-full gap-x-4 gap-y-12 md:grid-cols-3">
+          {/* Phones: a swipeable row where the next post peeks in; three columns from tablets up. */}
+          <ul
+            data-lenis-prevent-horizontal
+            className="flex w-[calc(100%+2*var(--spacing-edge))] snap-x snap-mandatory scroll-px-edge [scrollbar-width:none] gap-4 overflow-x-auto px-edge md:grid md:w-full md:grid-cols-3 md:gap-x-4 md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden"
+          >
             {related.map((item) => (
-              <li key={item.slug}>
+              <li key={item.slug} className="w-[80vw] shrink-0 snap-start md:w-auto">
                 <PostCard post={item} />
               </li>
             ))}

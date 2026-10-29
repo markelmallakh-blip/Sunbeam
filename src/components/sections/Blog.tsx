@@ -9,7 +9,7 @@ export function Blog() {
     <section
       id="blog"
       aria-labelledby="blog-title"
-      className="flex scroll-mt-header flex-col items-center gap-stack bg-white px-edge py-block"
+      className="flex scroll-mt-header flex-col items-center gap-stack overflow-hidden bg-white px-edge py-block"
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <h2 id="blog-title" className="text-heading-4 font-semibold text-ink">
@@ -17,9 +17,13 @@ export function Blog() {
         </h2>
         <p className="text-body tracking-[0.5px] text-slate">{blog.description}</p>
       </div>
-      <ul className="grid w-full gap-10 md:grid-cols-3 md:gap-2">
+      {/* Phones: a swipeable row where the next post peeks in; three columns from tablets up. */}
+      <ul
+        data-lenis-prevent-horizontal
+        className="flex w-[calc(100%+2*var(--spacing-edge))] snap-x snap-mandatory scroll-px-edge [scrollbar-width:none] gap-4 overflow-x-auto px-edge md:grid md:w-full md:grid-cols-3 md:gap-2 md:overflow-visible md:px-0 [&::-webkit-scrollbar]:hidden"
+      >
         {posts.slice(0, blog.count).map((post) => (
-          <li key={post.slug}>
+          <li key={post.slug} className="w-[80vw] shrink-0 snap-start md:w-auto">
             <PostCard post={post} />
           </li>
         ))}

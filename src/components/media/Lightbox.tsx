@@ -221,7 +221,7 @@ export function Lightbox({ images, index, onIndexChange }: LightboxProps) {
           </button>
 
           {count > 1 && (
-            <div className="pointer-events-none absolute inset-x-4 top-[calc(50%-2.5rem)] flex -translate-y-1/2 justify-between">
+            <div className="pointer-events-none absolute inset-x-4 top-[calc(50%-2.5rem)] hidden -translate-y-1/2 justify-between sm:flex">
               {(
                 [
                   ["arrow-left", -1, "Previous photo"],

@@ -35,7 +35,7 @@ export function FaqAccordion({
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => setOpenIndex(open ? null : index)}
-                className="flex w-full items-center gap-6 text-left text-body font-medium tracking-[0.5px] text-ink"
+                className="-my-3 flex w-full items-center gap-6 py-3 text-left text-body font-medium tracking-[0.5px] text-ink"
               >
                 <span className="flex-1">{item.question}</span>
                 <Icon name={open ? "minus" : "plus"} size={24} className="shrink-0" />

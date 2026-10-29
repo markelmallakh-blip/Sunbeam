@@ -43,9 +43,15 @@ export function buttonClasses({
   variant = "dark",
   size = "md",
   className,
-}: Pick<ButtonOwnProps, "variant" | "size" | "className">) {
+  fullOnPhones = true,
+}: Pick<ButtonOwnProps, "variant" | "size" | "className"> & {
+  /** Phones: span the content width (default). Off for buttons that sit inside a field. */
+  fullOnPhones?: boolean;
+}) {
   return cn(
     "group/btn inline-flex shrink-0 items-center justify-center rounded-[4px] font-medium tracking-[0.5px] whitespace-nowrap uppercase",
+    // Phones: CTAs span the content width, which leaves the 16px page gutter either side.
+    fullOnPhones && "max-sm:w-full",
     "transition-colors duration-300 ease-soft disabled:pointer-events-none disabled:opacity-50",
     variants[variant],
     sizes[size],
