@@ -8,7 +8,7 @@ import { easeSoft } from "@/lib/motion";
  * A stat such as "20+" that counts up from zero the first time it scrolls into view. The final
  * value is what renders on the server and without JavaScript, and reduced motion keeps it as is.
  */
-export function CountUp({ value, duration = 1.6 }: { value: string; duration?: number }) {
+export function CountUp({ value, duration = 1 }: { value: string; duration?: number }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "0px 0px -15% 0px" });
   const reduceMotion = useReducedMotion();

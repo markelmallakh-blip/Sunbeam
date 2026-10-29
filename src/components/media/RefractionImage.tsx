@@ -2,7 +2,7 @@
 
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from "framer-motion";
 import Image from "next/image";
-import { useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useLayoutEffect, useRef, useState, type PointerEvent } from "react";
 import type { ImageAsset } from "@/types/media";
 import { cn } from "@/lib/cn";
 
@@ -19,9 +19,9 @@ type RefractionImageProps = {
 
 /** How much wider than its flute each slice of the photo is (higher = stronger refraction). */
 const SQUEEZE = 1.6;
-/* Slow, well-damped springs so the lens glides rather than snaps. */
-const FOLLOW = { stiffness: 70, damping: 18, mass: 0.8 };
-const GROW = { stiffness: 90, damping: 20, mass: 0.8 };
+/* Quick, well-damped springs: the lens keeps up with the pointer without overshooting. */
+const FOLLOW = { stiffness: 320, damping: 32, mass: 0.6 };
+const GROW = { stiffness: 300, damping: 30, mass: 0.6 };
 
 type Size = { width: number; height: number };
 
@@ -29,8 +29,9 @@ type Size = { width: number; height: number };
  * A photo behind fluted (reeded) glass that clears in a soft round lens around the pointer —
  * after the hero visual on evelienlulofs.nl, drawn in code so it works on any uploaded image.
  * Every flute shows a wider vertical slice of the photo squeezed into its width, like real
- * reeded glass. Hovering grows a feathered circle of the clear photo that glides after the mouse
- * and fades away on leave; touch shows it under the finger. Reduced motion keeps the glass only.
+ * reeded glass, which stays still. Hovering grows a feathered circle of the clear photo that
+ * quickly follows the mouse and fades away on leave; touch shows it under the finger. Reduced
+ * motion keeps the glass only.
  *
  * All layers read the same file (unoptimized), so replacing the image updates every layer at once.
  */
@@ -59,9 +60,6 @@ export function RefractionImage({
     () =>
       `radial-gradient(circle ${Math.max(springRadius.get(), 0.01)}px at ${springX.get()}px ${springY.get()}px, #000 62%, rgb(0 0 0 / 0.5) 84%, transparent 100%)`,
   );
-  /* The glass drifts slightly against the pointer, as if the lens moved behind it. */
-  const centre = useMotionValue(0);
-  const drift = useTransform(() => `${(-(springX.get() - centre.get()) * 0.04).toFixed(2)}px`);
 
   useLayoutEffect(() => {
     const element = ref.current;
@@ -69,11 +67,10 @@ export function RefractionImage({
     const observer = new ResizeObserver(([entry]) => {
       if (!entry) return;
       setBox({ width: entry.contentRect.width, height: entry.contentRect.height });
-      centre.set(entry.contentRect.width / 2);
     });
     observer.observe(element);
     return () => observer.disconnect();
-  }, [centre]);
+  }, []);
 
   const place = (event: PointerEvent<HTMLDivElement>, jump: boolean) => {
     if (!ref.current) return;
@@ -126,13 +123,9 @@ export function RefractionImage({
         className="object-cover"
       />
       {box && (
-        <motion.div
-          aria-hidden
-          className="absolute inset-0 brightness-[0.94] saturate-[0.8]"
-          style={{ "--drift": drift } as unknown as CSSProperties}
-        >
+        <div aria-hidden className="absolute inset-0 brightness-[0.94] saturate-[0.8]">
           <Flutes src={image.src} natural={natural} box={box} flute={flute} />
-        </motion.div>
+        </div>
       )}
       {box && (
         <motion.div
@@ -184,7 +177,7 @@ function Flutes({
               backgroundImage: `url("${src}")`,
               backgroundRepeat: "no-repeat",
               backgroundSize: `${coverWidth / SQUEEZE}px ${coverHeight}px`,
-              backgroundPosition: `calc(${position}px + var(--drift, 0px)) ${-offsetY}px`,
+              backgroundPosition: `${position}px ${-offsetY}px`,
             }}
           >
             <span className="absolute inset-0 bg-[linear-gradient(90deg,rgb(255_255_255/0.24),transparent_32%,transparent_68%,rgb(0_0_0/0.16))]" />
