@@ -49,30 +49,39 @@ export function ProjectsCarousel({ items }: { items: ProjectCard[] }) {
         className="flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto max-lg:scroll-px-edge max-lg:px-edge [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
-          <li key={item.title} className="w-[80vw] shrink-0 snap-start sm:w-[45vw] lg:w-[31.55%]">
-            <Link href={item.href} className="group flex flex-col gap-4">
+          <li
+            key={item.title}
+            className="w-[calc((100vw-2*var(--spacing-edge)-0.5rem)/2.25)] shrink-0 snap-start sm:w-[45vw] lg:w-[31.55%]"
+          >
+            <Link href={item.href} className="group flex flex-col gap-2.5 sm:gap-4">
               <div className="relative aspect-[477/620] overflow-hidden">
                 <div className="absolute inset-0 transition-transform duration-1000 ease-soft group-hover:scale-[1.04]">
                   <ResponsiveImage
                     asset={item.image}
-                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 45vw, 80vw"
+                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 45vw, 45vw"
                     fill
                     parallax={false}
                   />
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <p className="flex flex-wrap items-center gap-2 text-caption font-medium tracking-[0.5px] text-slate">
+              <div className="flex flex-col gap-1 sm:gap-2">
+                <p className="flex flex-wrap items-center gap-2 text-[0.625rem] font-medium tracking-[0.5px] text-slate sm:text-caption">
+                  {/* Two cards share a phone's width, so there only the first tag shows. */}
                   {item.tags.map((tag, index) => (
                     <Fragment key={tag}>
                       {index > 0 && (
-                        <span aria-hidden className="size-[3px] rounded-full bg-slate" />
+                        <span
+                          aria-hidden
+                          className="size-[3px] rounded-full bg-slate max-sm:hidden"
+                        />
                       )}
-                      <span>{tag}</span>
+                      <span className={cn(index > 0 && "max-sm:hidden")}>{tag}</span>
                     </Fragment>
                   ))}
                 </p>
-                <h3 className="text-heading-4 font-semibold text-ink">{item.title}</h3>
+                <h3 className="text-[0.9375rem] leading-tight font-semibold text-ink sm:text-heading-4">
+                  {item.title}
+                </h3>
               </div>
             </Link>
           </li>

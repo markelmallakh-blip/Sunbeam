@@ -101,16 +101,25 @@ function Rows({
           return (
             <div key={blockIndex} className="grid gap-2 md:h-[36.625rem] md:grid-cols-2">
               {tile(first, base, cn("aspect-[720/586] md:aspect-auto", mirrored && "md:order-2"))}
-              <div className="grid grid-rows-2 gap-2">
-                {tile(second, base + 1, "aspect-[720/289] md:aspect-auto")}
-                {tile(third, base + 2, "aspect-[720/289] md:aspect-auto")}
+              {/* Phones set the pair side by side, so the gallery stays short. */}
+              <div className="grid grid-cols-2 gap-2 md:grid-cols-1 md:grid-rows-2">
+                {tile(second, base + 1, "aspect-square sm:aspect-[720/289] md:aspect-auto")}
+                {tile(third, base + 2, "aspect-square sm:aspect-[720/289] md:aspect-auto")}
               </div>
             </div>
           );
         }
         return (
-          <div key={blockIndex} className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {block.map((image, i) => tile(image, base + i, "aspect-[477/289]"))}
+          <div key={blockIndex} className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+            {block.map((image, i) =>
+              tile(
+                image,
+                base + i,
+                block.length % 2 === 1 && i === 0
+                  ? "col-span-2 aspect-[477/289] sm:col-span-1"
+                  : "aspect-square sm:aspect-[477/289]",
+              ),
+            )}
           </div>
         );
       })}

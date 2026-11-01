@@ -28,7 +28,7 @@ export function Blog() {
           </li>
         ))}
       </ul>
-      <Button href={blog.cta.href} variant="light">
+      <Button href={blog.cta.href} variant="outline-dark">
         {blog.cta.label}
       </Button>
     </section>

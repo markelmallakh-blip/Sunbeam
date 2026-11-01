@@ -14,7 +14,7 @@ export function Founder() {
           <h2 id="founder-title" className="text-heading-4 font-semibold">
             {founder.title}
           </h2>
-          <div className="flex max-w-[35.5rem] flex-col gap-[1.3em] text-body tracking-[0.5px]">
+          <div className="flex max-w-[35.5rem] flex-col gap-[1em] text-body tracking-[0.5px] sm:gap-[1.3em]">
             {founder.letter.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}

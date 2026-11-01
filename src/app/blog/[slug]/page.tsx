@@ -116,7 +116,7 @@ async function PostContent({ params }: { params: PageProps<"/blog/[slug]">["para
               </li>
             ))}
           </ul>
-          <Button href="/blog" variant="light">
+          <Button href="/blog" variant="outline-dark">
             View all
           </Button>
         </section>

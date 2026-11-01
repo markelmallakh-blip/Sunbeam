@@ -38,7 +38,6 @@ export function NewsletterForm({ note }: { note?: string }) {
             size: "md",
             className: "h-auto py-2.5",
             // Sits inside the email field, so it keeps its own width on phones too.
-            fullOnPhones: false,
           })}
         >
           {pending ? "Sending…" : "Subscribe"}

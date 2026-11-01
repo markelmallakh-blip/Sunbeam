@@ -26,7 +26,7 @@ export function Services() {
           <li key={item.title}>
             <Link
               href={item.href}
-              className="group relative isolate flex aspect-[4/5] flex-col items-center justify-end gap-3 overflow-hidden p-6 text-center text-white md:aspect-auto md:h-[min(46rem,80svh)]"
+              className="group relative isolate flex aspect-square flex-col items-center justify-end gap-2 overflow-hidden p-5 text-center text-white sm:aspect-[4/5] sm:gap-3 sm:p-6 md:aspect-auto md:h-[min(46rem,80svh)]"
             >
               <div className="absolute inset-0 -z-10 transition-transform duration-1000 ease-soft group-hover:scale-[1.03]">
                 <ResponsiveImage
@@ -41,7 +41,9 @@ export function Services() {
                 className="absolute inset-0 -z-10 bg-linear-to-b from-transparent from-50% to-black/60"
               />
               <h3 className="text-heading-4 font-semibold">{item.title}</h3>
-              <p className="max-w-[34rem] text-body tracking-[0.5px]">{item.description}</p>
+              <p className="max-w-[34rem] text-small tracking-[0.5px] sm:text-body">
+                {item.description}
+              </p>
             </Link>
           </li>
         ))}

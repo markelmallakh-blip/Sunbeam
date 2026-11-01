@@ -15,20 +15,20 @@ export function ProjectDetail({ detail }: { detail: NonNullable<Project["detail"
         <h2 id="detail-title" className="text-heading-4 font-semibold text-ink">
           {detail.title}
         </h2>
-        <p className="max-w-[37rem] text-heading-6 font-normal tracking-[0.5px] text-ink">
+        <p className="max-w-[37rem] text-body font-normal tracking-[0.5px] text-ink sm:text-heading-6">
           {detail.text}
         </p>
       </div>
-      <ul aria-label="Material palette" className="flex flex-wrap justify-center gap-3">
+      <ul aria-label="Material palette" className="flex flex-wrap justify-center gap-2 sm:gap-3">
         {detail.palette.map((color) => (
-          <li key={color} className="size-16 sm:size-[6.25rem]" style={{ backgroundColor: color }}>
+          <li key={color} className="size-12 sm:size-[6.25rem]" style={{ backgroundColor: color }}>
             <span className="sr-only">{color}</span>
           </li>
         ))}
       </ul>
-      <ul className="grid w-full grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5 lg:gap-[1.9375rem]">
+      <ul className="grid w-full grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 sm:gap-8 lg:grid-cols-5 lg:gap-[1.9375rem]">
         {detail.pieces.map((piece) => (
-          <li key={piece.src} className="relative h-[12.5rem]">
+          <li key={piece.src} className="relative h-36 sm:h-[12.5rem]">
             <Image
               src={piece.src}
               alt={piece.alt}

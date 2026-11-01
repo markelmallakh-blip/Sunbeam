@@ -17,7 +17,7 @@ export function Faq() {
         <p className="text-body tracking-[0.5px] text-slate">{faqs.description}</p>
       </div>
       <FaqAccordion items={faqs.items} />
-      <Button href={faqs.cta.href} variant="light">
+      <Button href={faqs.cta.href} variant="outline-dark">
         {faqs.cta.label}
       </Button>
     </section>

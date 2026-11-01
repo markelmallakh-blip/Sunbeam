@@ -75,19 +75,19 @@ export function BookingWidget() {
   return (
     <div className="overflow-hidden rounded-xl border border-rule bg-white text-ink">
       <div className="grid md:grid-cols-[13rem_1fr] lg:grid-cols-[13rem_1fr_13.75rem]">
-        <div className="flex flex-col gap-2 border-rule p-6 md:border-r">
+        <div className="flex flex-col gap-1.5 border-b border-rule p-4 sm:gap-2 sm:p-6 md:border-r md:border-b-0">
           <Image
             src={booking.hostImage.src}
             alt=""
             width={booking.hostImage.width}
             height={booking.hostImage.height}
             sizes="48px"
-            className="size-12 rounded-full object-cover"
+            className="size-10 rounded-full object-cover sm:size-12"
           />
-          <p className="mt-2 text-small text-slate">{booking.host}</p>
+          <p className="mt-1 text-small text-slate sm:mt-2">{booking.host}</p>
           <h3 className="text-subtitle font-semibold">{booking.event}</h3>
-          <p className="mt-2 text-small text-slate">{booking.summary}</p>
-          <ul className="mt-3 flex flex-col gap-2 text-small font-medium">
+          <p className="text-small text-slate sm:mt-2">{booking.summary}</p>
+          <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-small font-medium sm:mt-3 sm:flex-col">
             {booking.details.map((detail) => (
               <li key={detail.label} className="flex items-center gap-2">
                 <Icon name={detail.icon} size={16} />
@@ -97,7 +97,7 @@ export function BookingWidget() {
           </ul>
         </div>
 
-        <div className="border-rule p-6 lg:border-r">
+        <div className="border-rule p-4 sm:p-6 lg:border-r">
           <div className="flex items-center justify-between">
             <p className="text-body font-semibold" aria-live="polite">
               {month?.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
@@ -125,7 +125,7 @@ export function BookingWidget() {
           <div
             role="group"
             aria-label="Choose a day"
-            className="mt-4 grid grid-cols-7 gap-1 text-center"
+            className="mt-3 grid grid-cols-7 gap-1 text-center sm:mt-4"
           >
             {WEEKDAYS.map((weekday) => (
               <span key={weekday} className="pb-2 text-caption text-slate uppercase">
@@ -145,7 +145,7 @@ export function BookingWidget() {
                     setSlot(null);
                   }}
                   className={cn(
-                    "aspect-square rounded-md text-small font-semibold transition-colors",
+                    "h-10 rounded-md text-small font-semibold transition-colors sm:aspect-square sm:h-auto",
                     "disabled:bg-transparent disabled:font-normal disabled:text-slate/50",
                     day && sameDay(date, day) ? "bg-ink text-white" : "bg-stone hover:bg-rule",
                   )}
@@ -159,7 +159,7 @@ export function BookingWidget() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-rule p-6 md:col-span-2 lg:col-span-1 lg:border-t-0">
+        <div className="flex flex-col gap-3 border-t border-rule p-4 sm:p-6 md:col-span-2 lg:col-span-1 lg:border-t-0">
           <div className="flex items-center justify-between">
             <p className="text-body font-semibold">
               {day?.toLocaleDateString("en-GB", { weekday: "short" })}{" "}
@@ -183,7 +183,7 @@ export function BookingWidget() {
               ))}
             </div>
           </div>
-          <ul className="flex flex-col gap-2" aria-label="Available times">
+          <ul className="grid grid-cols-3 gap-2 sm:flex sm:flex-col" aria-label="Available times">
             {SLOTS.map((minutes) => (
               <li key={minutes}>
                 <button
@@ -192,14 +192,14 @@ export function BookingWidget() {
                   aria-pressed={slot === minutes}
                   onClick={() => setSlot(minutes)}
                   className={cn(
-                    "flex h-11 w-full items-center justify-center gap-2 rounded-md border text-small font-semibold transition-colors",
+                    "flex h-11 w-full items-center justify-center gap-1.5 rounded-md border text-small font-semibold transition-colors",
                     slot === minutes
                       ? "border-ink bg-ink text-white"
                       : "border-rule hover:border-ink",
                   )}
                 >
                   {slot !== minutes && (
-                    <span className="size-1.5 rounded-full bg-ink/60" aria-hidden />
+                    <span className="size-1.5 rounded-full bg-ink/60 max-sm:hidden" aria-hidden />
                   )}
                   {formatSlot(minutes, hour12)}
                 </button>
@@ -209,7 +209,7 @@ export function BookingWidget() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 border-t border-rule px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 border-t border-rule px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <p className="text-caption text-slate">Times shown in Africa/Cairo (GMT+3)</p>
         {request ? (
           <Button href={request} variant="dark" size="sm">

@@ -79,7 +79,7 @@ export function HeaderMenu({ menu, onNavigate }: HeaderMenuProps) {
           </div>
         ))}
       </div>
-      <Button href={projectsMenu.cta.href} onClick={onNavigate} variant="light">
+      <Button href={projectsMenu.cta.href} onClick={onNavigate} variant="outline-dark">
         {projectsMenu.cta.label}
       </Button>
     </div>

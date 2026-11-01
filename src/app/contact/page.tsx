@@ -33,8 +33,8 @@ export default function ContactPage() {
       >
         <div className="grid w-full max-w-[80rem] gap-2 lg:grid-cols-[30rem_1fr]">
           {/* Grey panel: the page heading at the top, our contact details at the bottom. */}
-          <aside className="flex flex-col gap-12 rounded-[4px] bg-mist p-8 lg:p-10">
-            <header className="flex flex-col gap-3">
+          <aside className="flex flex-col gap-8 rounded-[4px] bg-mist p-5 sm:gap-12 sm:p-8 lg:p-10">
+            <header className="flex flex-col gap-2 sm:gap-3">
               <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
                 {contactPage.eyebrow}
               </p>
@@ -44,11 +44,14 @@ export default function ContactPage() {
               <p className="text-body tracking-[0.5px] text-slate">{contactPage.intro}</p>
             </header>
 
-            <section aria-labelledby="studio-title" className="mt-auto flex flex-col gap-6">
+            <section
+              aria-labelledby="studio-title"
+              className="mt-auto flex flex-col gap-4 sm:gap-6"
+            >
               <h2 id="studio-title" className="text-heading-6 font-semibold text-ink">
                 {contactPage.details.title}
               </h2>
-              <ul className="flex flex-col gap-5 text-body tracking-[0.5px] text-ink">
+              <ul className="flex flex-col gap-3 text-small tracking-[0.5px] text-ink sm:gap-5 sm:text-body">
                 <li>
                   <a
                     href={`mailto:${email}`}
@@ -85,7 +88,7 @@ export default function ContactPage() {
             </section>
           </aside>
 
-          <div className="flex flex-col gap-6 rounded-[4px] border border-hairline p-6 sm:p-8">
+          <div className="flex flex-col gap-5 rounded-[4px] border border-hairline p-5 sm:gap-6 sm:p-8">
             <h2 className="text-heading-6 font-semibold text-ink">{contactPage.form.title}</h2>
             <ContactForm />
           </div>

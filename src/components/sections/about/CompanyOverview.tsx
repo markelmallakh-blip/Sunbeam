@@ -11,7 +11,7 @@ export function CompanyOverview() {
       aria-labelledby="overview-title"
       className="flex flex-col items-center gap-stack px-edge py-block text-center"
     >
-      <div className="flex flex-col items-center gap-8">
+      <div className="flex flex-col items-center gap-5 sm:gap-8">
         <h2 id="overview-title" className="text-heading-4 font-semibold text-ink">
           {companyOverview.title}
         </h2>
@@ -21,11 +21,13 @@ export function CompanyOverview() {
           ))}
         </div>
       </div>
-      <dl className="grid grid-cols-2 gap-x-16 gap-y-10 sm:flex sm:gap-[7.5rem]">
+      <dl className="grid w-full grid-cols-2 gap-x-6 gap-y-6 sm:flex sm:w-auto sm:gap-[7.5rem]">
         {companyOverview.stats.map((stat) => (
           <div key={stat.label} className="flex flex-col-reverse items-center">
-            <dt className="text-body tracking-[0.5px] text-slate">{stat.label}</dt>
-            <dd className="text-[clamp(2.75rem,2.3rem+1.9vw,3.875rem)] leading-none font-semibold text-[#262626]">
+            <dt className="mt-1 text-small tracking-[0.5px] text-slate sm:mt-0 sm:text-body">
+              {stat.label}
+            </dt>
+            <dd className="text-[clamp(2rem,1.24rem+3.12vw,3.875rem)] leading-none font-semibold text-[#262626]">
               <CountUp value={stat.value} />
             </dd>
           </div>

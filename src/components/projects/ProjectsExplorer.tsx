@@ -78,16 +78,16 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   return (
     <>
       <div className="px-edge">
-        <div className="flex flex-col gap-4 border-y border-hairline py-4 sm:flex-row sm:items-center sm:justify-between sm:py-0">
+        <div className="flex flex-col border-y border-hairline sm:flex-row sm:items-center sm:justify-between">
           <ul
             role="tablist"
             aria-label="Filter projects"
-            className="flex flex-wrap gap-x-10 gap-y-2"
+            className="flex [scrollbar-width:none] gap-x-5 overflow-x-auto shadow-[inset_0_-1px_0_var(--color-hairline)] sm:flex-wrap sm:gap-x-10 sm:gap-y-2 sm:overflow-visible sm:shadow-none [&::-webkit-scrollbar]:hidden"
           >
             {filters.map((tab) => {
               const active = tab.name === filter;
               return (
-                <li key={tab.name} role="presentation">
+                <li key={tab.name} role="presentation" className="shrink-0">
                   <button
                     type="button"
                     role="tab"
@@ -97,8 +97,8 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
                       setVisible(projectsPage.pageSize);
                     }}
                     className={cn(
-                      // -mb-px lays the active rule over the bar's own grey bottom line.
-                      "-mb-px flex gap-1.5 border-b pt-6 pb-[1.4375rem] text-body font-medium tracking-[1.5px] uppercase transition-colors duration-300",
+                      // On phones the rule sits on the row's inset line; from sm, -mb-px lays it over the bar's own grey bottom line.
+                      "flex gap-1.5 border-b pt-4 pb-3.5 text-small font-medium tracking-[1px] uppercase transition-colors duration-300 sm:-mb-px sm:pt-6 sm:pb-[1.4375rem] sm:text-body sm:tracking-[1.5px]",
                       active
                         ? "border-ink text-ink"
                         : "border-transparent text-slate hover:text-ink",
@@ -118,7 +118,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
               );
             })}
           </ul>
-          <div className="flex items-center gap-8">
+          <div className="flex items-center gap-8 py-2 sm:py-0">
             {/* Temporary: compares the two card hovers with the client. Remove once chosen. */}
             <div
               role="group"
@@ -159,7 +159,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
         ref={gridRef}
         role="tabpanel"
         aria-label={`${filter} projects`}
-        className="grid gap-12 px-edge pt-[4.5rem] pb-24 sm:grid-cols-2 lg:flex lg:flex-wrap lg:justify-center lg:gap-x-12 lg:gap-y-20"
+        className="grid gap-8 px-edge pt-8 pb-16 sm:grid-cols-2 sm:gap-12 sm:pt-[4.5rem] sm:pb-24 lg:flex lg:flex-wrap lg:justify-center lg:gap-x-12 lg:gap-y-20"
       >
         {shown.map((project) => (
           <div key={project.slug} className="lg:w-[calc((100%-6rem)/3)]">

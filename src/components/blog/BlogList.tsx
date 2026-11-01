@@ -28,7 +28,7 @@ export function BlogList({ posts, categories }: { posts: Post[]; categories: Pos
         <div
           role="tablist"
           aria-label="Filter posts"
-          className="flex [scrollbar-width:none] gap-10 overflow-x-auto border-b border-hairline"
+          className="flex [scrollbar-width:none] gap-6 overflow-x-auto border-b border-hairline sm:gap-10"
         >
           {tabs.map((tab) => {
             const active = tab.label === filter;
@@ -41,13 +41,15 @@ export function BlogList({ posts, categories }: { posts: Post[]; categories: Pos
                 aria-controls="blog-grid"
                 onClick={() => setFilter(tab.label)}
                 className={cn(
-                  "-mb-px flex shrink-0 items-start gap-1.5 border-b-2 pt-6 pb-[1.375rem] font-medium transition-colors duration-300",
+                  "-mb-px flex shrink-0 items-start gap-1.5 border-b-2 pt-4 pb-3.5 font-medium transition-colors duration-300 sm:pt-6 sm:pb-[1.375rem]",
                   active
                     ? "border-[#262626] text-[#262626]"
                     : "border-transparent text-slate hover:text-[#262626]",
                 )}
               >
-                <span className="text-body tracking-[1.5px] uppercase">{tab.label}</span>
+                <span className="text-small tracking-[1.5px] uppercase sm:text-body">
+                  {tab.label}
+                </span>
                 <span className="text-[0.625rem] leading-[1.3] tracking-[0.5px] text-slate">
                   {String(tab.count).padStart(2, "0")}
                 </span>
@@ -60,7 +62,7 @@ export function BlogList({ posts, categories }: { posts: Post[]; categories: Pos
       <ul
         id="blog-grid"
         role="tabpanel"
-        className="grid gap-x-4 gap-y-12 px-edge pt-8 pb-24 md:grid-cols-2 lg:grid-cols-3"
+        className="grid gap-x-4 gap-y-10 px-edge pt-6 pb-16 sm:gap-y-12 sm:pt-8 sm:pb-24 md:grid-cols-2 lg:grid-cols-3"
       >
         {visible.map((post) => (
           <li key={post.slug}>

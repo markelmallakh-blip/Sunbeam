@@ -42,13 +42,13 @@ export function ContactForm() {
   const errors = state.errors ?? {};
 
   return (
-    <form action={formAction} noValidate className="flex flex-col gap-4">
+    <form action={formAction} noValidate className="flex flex-col gap-3 sm:gap-4">
       <FormFields key={state.attempt ?? 0} id={id} values={values} errors={errors} />
-      <div className="flex flex-col items-start gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col items-center gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
         <p
           role="status"
           className={cn(
-            "min-h-5 text-small tracking-[0.5px]",
+            "min-h-5 text-center text-small tracking-[0.5px] sm:text-left",
             state.status === "error" ? "text-rust" : "text-slate",
           )}
         >
@@ -85,8 +85,8 @@ function FormFields({
         : null;
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+    <div className="flex flex-col gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
         <Field
           id={`${id}-first`}
           name="firstName"

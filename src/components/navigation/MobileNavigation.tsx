@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { mainNavigation, primaryCta, projectsMenu, servicesMenu } from "@/config/navigation";
 import { siteConfig } from "@/config/site";
@@ -24,11 +24,17 @@ type View =
  * Services and Projects drill into their own panel, and each project category into its list,
  * easing in from the right with a Back row; Back eases in from the left. It is portalled to the
  * body so the header's slide-away transform can never clip it. Escape closes it.
+ *
+ * The sheet stays mounted so opening and closing both animate: it wipes down from the top while
+ * its bar copies the header's height, so the menu lines morph into the close cross in place and
+ * the rows rise in one after another. Closing wipes it back up, faster.
  */
 export function MobileNavigation() {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<View>({ menu: null });
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [bar, setBar] = useState({ height: 64, logo: 40 });
+  const [mounted, setMounted] = useState(false);
   const panelId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -38,6 +44,10 @@ export function MobileNavigation() {
     setView(next);
   };
   const close = () => setOpen(false);
+
+  // Portals need the document, which only exists after hydration.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     if (!open) return;
@@ -56,21 +66,29 @@ export function MobileNavigation() {
     };
   }, [open]);
 
-  // Entrances use @starting-style transitions and nothing waits on an exit animation, so the
-  // sheet and every panel change apply at once and simply ease in.
-  const sheet = open && (
+  const sheet = (
     <div
       ref={sheetRef}
       id={panelId}
       role="dialog"
       aria-modal="true"
       aria-label="Menu"
+      aria-hidden={!open}
+      inert={!open}
       data-lenis-prevent
-      className="fixed inset-0 z-[60] flex flex-col bg-white text-ink transition-opacity duration-150 ease-soft lg:hidden starting:opacity-0"
+      data-open={open || undefined}
+      style={{ "--bar-h": `${bar.height}px`, "--logo-h": `${bar.logo}px` } as CSSProperties}
+      className={cn(
+        "group/sheet fixed inset-0 z-[60] flex flex-col bg-white text-ink ease-soft lg:hidden",
+        "transition-[clip-path,visibility]",
+        open
+          ? "visible duration-600 [clip-path:inset(0_0_0_0)]"
+          : "invisible duration-400 [clip-path:inset(0_0_100%_0)]",
+      )}
     >
-      <div className="flex h-16 shrink-0 items-center justify-between border-b border-mist px-edge">
+      <div className="flex h-(--bar-h) shrink-0 items-center justify-between border-b border-mist px-edge">
         <Link href="/" onClick={close} aria-label="Sunbeam Spaces — home">
-          <Logo decorative className="h-10 w-auto" />
+          <Logo decorative className="h-(--logo-h) w-auto" />
         </Link>
         <button
           type="button"
@@ -78,7 +96,7 @@ export function MobileNavigation() {
           aria-label="Close menu"
           className="-mr-2 grid size-11 place-items-center"
         >
-          <Icon name="close" />
+          <MenuMark open={open} />
         </button>
       </div>
 
@@ -94,7 +112,14 @@ export function MobileNavigation() {
         </div>
       </nav>
 
-      <div className="flex shrink-0 flex-col gap-4 border-t border-mist px-edge pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+      <div
+        className={cn(
+          "flex shrink-0 flex-col gap-3 border-t border-mist px-edge pt-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] transition-[opacity,translate] ease-soft",
+          open
+            ? "translate-y-0 opacity-100 delay-300 duration-500"
+            : "translate-y-3 opacity-0 duration-200",
+        )}
+      >
         <Button href={primaryCta.href} onClick={close} variant="dark" className="w-full">
           {primaryCta.label}
         </Button>
@@ -118,16 +143,25 @@ export function MobileNavigation() {
         aria-controls={panelId}
         aria-label="Open menu"
         onClick={() => {
-          // Each open starts from the main list, easing in from the right.
+          // Each open starts from the main list, and the sheet's bar matches the header's so
+          // the lines morph into the cross exactly where they are.
+          const header = toggleRef.current?.closest("header");
+          const logo = header?.querySelector("svg, img");
+          if (header && logo) {
+            setBar({
+              height: Math.round(header.getBoundingClientRect().height),
+              logo: Math.round(logo.getBoundingClientRect().height),
+            });
+          }
           setView({ menu: null });
           setDirection(1);
           setOpen(true);
         }}
         className="-mr-2 grid size-11 place-items-center"
       >
-        <Icon name="menu" />
+        <MenuMark open={false} />
       </button>
-      {typeof document !== "undefined" && createPortal(sheet, document.body)}
+      {mounted && createPortal(sheet, document.body)}
     </div>
   );
 }
@@ -144,10 +178,14 @@ function Panel({
   if (view.menu === null) {
     return (
       <ul>
-        {mainNavigation.map((item) => {
+        {mainNavigation.map((item, index) => {
           const menu = item.menu;
           return (
-            <li key={item.label} className="border-b border-mist">
+            <li
+              key={item.label}
+              style={{ "--row-delay": `${120 + index * 50}ms` } as CSSProperties}
+              className="translate-y-3 border-b border-mist opacity-0 transition-[opacity,translate] duration-200 ease-soft group-data-open/sheet:translate-y-0 group-data-open/sheet:opacity-100 group-data-open/sheet:delay-(--row-delay) group-data-open/sheet:duration-500"
+            >
               {menu ? (
                 <Row onClick={() => go({ menu }, 1)} trailing="arrow-right">
                   {item.label}
@@ -300,5 +338,20 @@ function Back({ onClick, children }: { onClick: () => void; children: ReactNode 
       </button>
       <p className="text-heading-4 font-semibold">{children}</p>
     </div>
+  );
+}
+
+/*
+ * Two lines that turn into a cross: each slides to the middle and rotates. The sheet's copy is
+ * drawn as lines on open and then eases into the cross, so the icon seems to morph in place.
+ */
+function MenuMark({ open }: { open: boolean }) {
+  const line =
+    "absolute left-1 h-[1.5px] w-4 rounded-full bg-current transition-[translate,rotate] duration-500 ease-soft";
+  return (
+    <span aria-hidden className="relative block size-6">
+      <span className={cn(line, "top-[7.25px]", open && "translate-y-[4px] rotate-45")} />
+      <span className={cn(line, "top-[15.25px]", open && "-translate-y-[4px] -rotate-45")} />
+    </span>
   );
 }

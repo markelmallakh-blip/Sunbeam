@@ -29,7 +29,7 @@ export function ProjectHero({ project }: { project: Project }) {
         />
       </div>
 
-      <div className="flex flex-1 flex-col items-start gap-4">
+      <div className="flex flex-1 flex-col items-start gap-3 sm:gap-4">
         <div className="flex flex-col gap-2">
           <h1 id="project-title" className="text-heading-4 font-semibold">
             {project.title}
@@ -43,7 +43,9 @@ export function ProjectHero({ project }: { project: Project }) {
             ))}
           </p>
         </div>
-        <p className="max-w-[43.125rem] text-body tracking-[0.5px]">{project.summary}</p>
+        <p className="max-w-[43.125rem] text-small tracking-[0.5px] sm:text-body">
+          {project.summary}
+        </p>
       </div>
 
       {project.logo && (

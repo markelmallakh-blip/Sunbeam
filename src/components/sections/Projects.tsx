@@ -19,7 +19,7 @@ export function Projects() {
         </p>
       </div>
       <ProjectsCarousel items={projects.items} />
-      <Button href={projects.cta.href} variant="light">
+      <Button href={projects.cta.href} variant="outline-dark">
         {projects.cta.label}
       </Button>
     </section>

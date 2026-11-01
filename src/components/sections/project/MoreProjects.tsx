@@ -27,7 +27,7 @@ export function MoreProjects({ current }: { current: string }) {
       <ProjectsCarousel items={items} />
       <Button
         href={projectDetailCopy.discoverCta.href}
-        variant="light"
+        variant="outline-dark"
         className="bg-white! hover:bg-mist-strong!"
       >
         {projectDetailCopy.discoverCta.label}

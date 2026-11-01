@@ -51,13 +51,13 @@ export function Values() {
           className={
             layout === "photos"
               ? "grid w-full grid-cols-2 gap-x-2 gap-y-6 md:grid-cols-3 lg:grid-cols-5"
-              : "grid w-full gap-x-4 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+              : "grid w-full gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-y-12 lg:grid-cols-4"
           }
         >
           {layout === "photos"
             ? values.items.map((value) => (
-                <li key={value.title} className="group flex flex-col gap-3">
-                  <div className="relative h-80 overflow-hidden">
+                <li key={value.title} className="group flex flex-col gap-2 sm:gap-3">
+                  <div className="relative aspect-[4/5] overflow-hidden sm:aspect-auto sm:h-80">
                     <div className="absolute inset-0 transition-transform duration-1000 ease-soft group-hover:scale-[1.04]">
                       <ResponsiveImage
                         asset={value.image}
@@ -67,7 +67,7 @@ export function Values() {
                       />
                     </div>
                   </div>
-                  <h3 className="text-body font-semibold tracking-[0.5px] text-slate">
+                  <h3 className="text-small font-semibold tracking-[0.5px] text-slate sm:text-body">
                     {value.title}
                   </h3>
                 </li>
@@ -77,14 +77,14 @@ export function Values() {
                   ? [
                       <li
                         key={value.title}
-                        className="flex flex-col gap-[3.75rem] px-4 lg:border-l lg:border-[#c4c5c7] lg:first:border-l-0"
+                        className="flex items-start gap-4 sm:flex-col sm:gap-[3.75rem] sm:px-4 lg:border-l lg:border-[#c4c5c7] lg:first:border-l-0"
                       >
-                        <div className="relative h-[8.625rem] w-[8.6875rem] shrink-0 overflow-hidden rounded-lg">
+                        <div className="relative size-16 shrink-0 overflow-hidden rounded-lg sm:h-[8.625rem] sm:w-[8.6875rem]">
                           <ResponsiveImage asset={value.icon} sizes="139px" fill parallax={false} />
                         </div>
-                        <div className="flex flex-col gap-4 tracking-[0.5px]">
+                        <div className="flex flex-col gap-1.5 tracking-[0.5px] sm:gap-4">
                           <h3 className="text-heading-6 font-bold text-ink">{value.title}</h3>
-                          <p className="text-body text-slate">{value.description}</p>
+                          <p className="text-small text-slate sm:text-body">{value.description}</p>
                         </div>
                       </li>,
                     ]

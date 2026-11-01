@@ -21,11 +21,11 @@ export function ServiceHero({ service }: { service: Service }) {
         title={service.title}
         intro={service.intro}
       >
-        <Button href="/contact" variant="light">
+        <Button href="/contact" variant="outline-dark">
           Start your project
         </Button>
       </PageIntro>
-      <div className="relative aspect-[4/5] w-full overflow-hidden sm:aspect-[1448/700]">
+      <div className="relative aspect-square w-full overflow-hidden sm:aspect-[1448/700]">
         <ResponsiveImage
           asset={service.hero}
           sizes="100vw"
@@ -58,7 +58,7 @@ export function ServiceIncluded({ service }: { service: Service }) {
   return (
     <section
       aria-labelledby="included-title"
-      className="flex flex-col items-center gap-16 bg-mist px-edge py-[clamp(5rem,4rem+2.6vw,7.5rem)]"
+      className="flex flex-col items-center gap-10 bg-mist px-edge py-[clamp(3.5rem,2.5rem+2.6vw,7.5rem)] sm:gap-16"
     >
       <h2 id="included-title" className="text-heading-4 font-semibold text-ink">
         {service.included.title}
@@ -67,15 +67,17 @@ export function ServiceIncluded({ service }: { service: Service }) {
         {service.included.items.map((item, index) => (
           <li
             key={item.title}
-            className="grid grid-cols-[3.5rem_1fr] items-start gap-x-5 border-t border-hairline py-7 first:border-t-0 first:pt-0 last:pb-0 sm:grid-cols-[4.5rem_3rem_1fr] sm:gap-x-6"
+            className="grid grid-cols-[2.5rem_1fr] items-start gap-x-4 border-t border-hairline py-5 first:border-t-0 first:pt-0 last:pb-0 sm:grid-cols-[4.5rem_3rem_1fr] sm:gap-x-6 sm:py-7"
           >
             <span className="text-heading-3 leading-none font-light text-silver">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span aria-hidden className="mt-5 hidden h-px bg-ash sm:block" />
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1 sm:gap-2">
               <h3 className="text-heading-6 font-semibold text-ink">{item.title}</h3>
-              <p className="text-body tracking-[0.5px] text-slate">{item.description}</p>
+              <p className="text-small tracking-[0.5px] text-slate sm:text-body">
+                {item.description}
+              </p>
             </div>
           </li>
         ))}
@@ -92,7 +94,7 @@ export function ServiceDetails({ service }: { service: Service }) {
   return (
     <section aria-label="Service details" className="grid gap-2 px-edge pt-edge md:grid-cols-2">
       {service.details.map((asset) => (
-        <div key={asset.src} className="relative aspect-[4/5] overflow-hidden md:aspect-[4/3]">
+        <div key={asset.src} className="relative aspect-[4/3] overflow-hidden">
           <ResponsiveImage
             asset={asset}
             sizes="(min-width: 768px) 50vw, 100vw"
@@ -121,7 +123,7 @@ export function ServiceProjects({ service }: { service: Service }) {
         </p>
       </div>
       <ProjectsCarousel items={service.projects} />
-      <Button href="/projects" variant="light">
+      <Button href="/projects" variant="outline-dark">
         View all projects
       </Button>
     </section>

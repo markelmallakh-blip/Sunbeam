@@ -16,7 +16,7 @@ export default function ProjectsPage() {
     <>
       <section
         aria-labelledby="projects-title"
-        className="flex flex-col items-center px-edge pt-block pb-[4.5rem] text-center"
+        className="flex flex-col items-center px-edge pt-block pb-8 text-center sm:pb-[4.5rem]"
       >
         <div className="flex flex-col items-center gap-4">
           <p className="text-small font-medium tracking-[2px] text-slate uppercase">

@@ -13,8 +13,8 @@ export function Consultation() {
       aria-labelledby="consultation-title"
       className="flex scroll-mt-header flex-col gap-stack bg-linen px-edge py-block lg:flex-row lg:items-center"
     >
-      <div className="flex flex-1 flex-col items-start gap-8">
-        <div className="flex flex-col gap-2">
+      <div className="flex flex-1 flex-col items-center gap-5 text-center sm:items-start sm:gap-8 sm:text-left">
+        <div className="flex flex-col items-center gap-2 sm:items-start">
           <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
             {consultation.eyebrow}
           </p>
