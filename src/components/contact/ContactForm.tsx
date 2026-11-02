@@ -10,7 +10,6 @@ import {
   serviceNeeds,
   unitTypes,
   type ProjectType,
-  type ServiceNeed,
 } from "@/content/contact";
 import { buttonClasses } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
@@ -31,9 +30,9 @@ async function submit(previous: ContactState, formData: FormData): Promise<Conta
 
 /*
  * Inquiry form posted to the contact Server Action: first and last name, email, phone with its
- * country code, residential or commercial (which then asks for the unit type or the business
- * field), what the client needs, and a message. Values come back with any errors, so a failed
- * attempt keeps what was typed.
+ * country code, which of the three services they need (a dropdown), residential or commercial
+ * (which then asks for the unit type or the business field), and a message. Values come back
+ * with any errors, so a failed attempt keeps what was typed.
  */
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(submit, initialState);
@@ -123,6 +122,15 @@ function FormFields({
         />
       </div>
 
+      <SelectField
+        id={`${id}-service`}
+        name="service"
+        label="Service"
+        options={serviceNeeds}
+        defaultValue={values?.service}
+        error={errors.service}
+      />
+
       <SegmentedControl
         name="projectType"
         label="Project type"
@@ -155,14 +163,6 @@ function FormFields({
           </motion.div>
         )}
       </AnimatePresence>
-
-      <SegmentedControl
-        name="service"
-        label="I need"
-        options={serviceNeeds}
-        defaultValue={values?.service as ServiceNeed | undefined}
-        error={errors.service}
-      />
 
       <Field
         id={`${id}-message`}

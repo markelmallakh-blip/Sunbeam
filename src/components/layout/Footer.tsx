@@ -53,9 +53,20 @@ export function Footer() {
                           {siteConfig.contact.email}
                         </a>
                       </li>
-                      <li className="flex items-center gap-2 text-body tracking-[0.5px]">
-                        <Icon name="location" size={20} className="shrink-0" />
-                        <address className="not-italic">{siteConfig.contact.address}</address>
+                      <li className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2 text-body tracking-[0.5px]">
+                          <Icon name="location" size={20} className="shrink-0" />
+                          <address className="not-italic">{siteConfig.contact.address}</address>
+                        </div>
+                        <a
+                          href={siteConfig.contact.directions}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="link-underline ml-7 flex w-fit items-center gap-1 text-caption font-medium tracking-[1px] text-silver uppercase hover:text-white"
+                        >
+                          Get Directions
+                          <Icon name="arrow-right" size={13} />
+                        </a>
                       </li>
                     </>
                   )}

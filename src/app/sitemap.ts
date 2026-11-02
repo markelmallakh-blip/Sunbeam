@@ -3,6 +3,7 @@ import { siteConfig } from "@/config/site";
 import { projectSlugs } from "@/content/projects";
 import { postSlugs } from "@/content/blog";
 import { serviceSlugs } from "@/content/services";
+import { roleSlugs } from "@/content/careers";
 import { withBase } from "@/lib/base-path";
 
 type Route = {
@@ -29,6 +30,12 @@ const routes: Route[] = [
   })),
   { path: "/faqs", priority: 0.6, changeFrequency: "yearly" },
   { path: "/contact", priority: 0.8, changeFrequency: "yearly" },
+  { path: "/careers", priority: 0.6, changeFrequency: "monthly" },
+  ...roleSlugs.map((slug): Route => ({
+    path: `/careers/${slug}`,
+    priority: 0.5,
+    changeFrequency: "monthly",
+  })),
   ...projectSlugs.map((slug): Route => ({
     path: `/projects/${slug}`,
     priority: 0.7,

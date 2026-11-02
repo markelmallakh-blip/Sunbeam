@@ -3,6 +3,7 @@ import { aboutHero } from "@/content/about";
 import { AboutHero } from "@/components/sections/about/AboutHero";
 import { CompanyOverview } from "@/components/sections/about/CompanyOverview";
 import { Values } from "@/components/sections/about/Values";
+import { Team } from "@/components/sections/about/Team";
 import { Purpose } from "@/components/sections/about/Purpose";
 import { Founder } from "@/components/sections/about/Founder";
 import { Clients } from "@/components/sections/Clients";
@@ -30,8 +31,12 @@ export default function AboutPage() {
       <AboutHero />
       <CompanyOverview />
       <Values />
-      <Purpose />
-      <Founder />
+      <Team />
+      {/* One parent, so the pinned purpose cards stay put while the founder slides over them. */}
+      <div>
+        <Purpose />
+        <Founder />
+      </div>
       <Clients />
       <Consultation />
     </>

@@ -145,7 +145,7 @@ export function BookingWidget() {
                     setSlot(null);
                   }}
                   className={cn(
-                    "h-10 rounded-md text-small font-semibold transition-colors sm:aspect-square sm:h-auto",
+                    "h-10 rounded-md text-small font-semibold transition-colors sm:h-12",
                     "disabled:bg-transparent disabled:font-normal disabled:text-slate/50",
                     day && sameDay(date, day) ? "bg-ink text-white" : "bg-stone hover:bg-rule",
                   )}

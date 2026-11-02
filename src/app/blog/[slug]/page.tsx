@@ -84,10 +84,10 @@ async function PostContent({ params }: { params: PageProps<"/blog/[slug]">["para
           </div>
         </div>
 
-        <div className="mx-auto flex max-w-[45rem] flex-col gap-stack px-edge py-block">
+        <div className="mx-auto flex max-w-[66rem] flex-col gap-stack px-edge py-block">
           <PostArticle post={post} />
           <div className="border-t border-hairline pt-8">
-            <ShareLinks url={url} title={post.title} />
+            <ShareLinks url={url} />
           </div>
         </div>
       </article>

@@ -23,23 +23,18 @@ function Tile({
   total,
   onOpen,
   className,
-  more,
 }: {
   image: ImageAsset;
   index: number;
   total: number;
   onOpen: Open;
   className?: string;
-  /** Photos left beyond this tile: draws the "+N" cover from Figma's second layout. */
-  more?: number;
 }) {
   return (
     <button
       type="button"
       onClick={() => onOpen(index)}
-      aria-label={
-        more ? `View all ${total} photos` : `Open photo ${index + 1} of ${total}: ${image.alt}`
-      }
+      aria-label={`Open photo ${index + 1} of ${total}: ${image.alt}`}
       className={cn("group relative block cursor-zoom-in overflow-hidden bg-mist", className)}
     >
       <Image
@@ -49,14 +44,6 @@ function Tile({
         sizes="(min-width: 768px) 50vw, 100vw"
         className="object-cover transition-transform duration-1000 ease-soft group-hover:scale-[1.03]"
       />
-      {more ? (
-        <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/50 text-white transition-colors duration-500 group-hover:bg-black/60">
-          <span className="text-body-xl font-medium tracking-[0.5px]">+{more}</span>
-          <span className="text-small font-medium tracking-[1px] uppercase">
-            {more === 1 ? "Photo" : "Photos"}
-          </span>
-        </span>
-      ) : null}
     </button>
   );
 }
@@ -65,21 +52,9 @@ function Tile({
  * Figma "Row 2" (169:4189): a large photo beside two stacked ones, then three in a row. `offset`
  * is the index of the first photo in the whole gallery, so each tile opens the right one.
  */
-function Rows({
-  images,
-  total,
-  onOpen,
-  more,
-}: {
-  images: ImageAsset[];
-  total: number;
-  onOpen: Open;
-  /** Count shown over the last tile instead of a Show more button. */
-  more?: number;
-}) {
+function Rows({ images, total, onOpen }: { images: ImageAsset[]; total: number; onOpen: Open }) {
   const blocks: ImageAsset[][] = [];
   for (let i = 0; i < images.length; i += 3) blocks.push(images.slice(i, i + 3));
-  const last = images.length - 1;
   const tile = (image: ImageAsset, index: number, className: string) => (
     <Tile
       key={image.src}
@@ -88,7 +63,6 @@ function Rows({
       total={total}
       onOpen={onOpen}
       className={className}
-      more={index === last ? more : undefined}
     />
   );
   return (
@@ -127,32 +101,21 @@ function Rows({
   );
 }
 
-type Layout = "expand" | "count";
-
-const layouts: { key: Layout; label: string }[] = [
-  { key: "expand", label: "Show more" },
-  { key: "count", label: "Photo count" },
-];
-
 /*
- * Figma "Design Details" gallery, in two layouts that a temporary switch flips between so they can
- * be compared with the client:
- * - "Show more": the "Gallery Collapsed / Expanded" frames (174:3050, 174:3262). The first six
- *   photos show with the last row fading out under "Show more (+N)"; expanded, every photo shows
- *   and "Show less" stays pinned to the bottom of the screen while the gallery is in view.
- * - "Photo count": 169:4185. Only the first six photos show, and the last one carries a dark
- *   "+N" cover that opens the viewer there.
- * Either way, every photo opens the full-screen Lightbox (169:4223).
+ * Figma "Design Details" gallery, "Show more" layout (the "Gallery Collapsed / Expanded" frames,
+ * 174:3050 and 174:3262). The first six photos show with the last row fading into black under a
+ * white "Show more (+N)"; expanded, every photo shows and "Show less" stays pinned to the bottom
+ * of the screen while the gallery is in view. Every photo opens the full-screen Lightbox
+ * (169:4223).
  */
 export function ProjectGallery({ images }: { images: GalleryImage[] }) {
-  const [layout, setLayout] = useState<Layout>("expand");
   const [expanded, setExpanded] = useState(false);
   const [viewing, setViewing] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const listId = useId();
   const extra = images.length - SHOWN;
   const canExpand = extra > 0;
-  const showAll = layout === "expand" && (expanded || !canExpand);
+  const showAll = expanded || !canExpand;
 
   // Lenis drives scrolling, so native scrollIntoView is ignored. Once the extra rows are gone,
   // glide back up to the gallery, leaving room for the header that reappears on the way up.
@@ -181,45 +144,17 @@ export function ProjectGallery({ images }: { images: GalleryImage[] }) {
         </h2>
       </div>
 
-      {canExpand && (
-        // Temporary: compares the two gallery layouts. Remove once the client has chosen.
-        <div
-          role="group"
-          aria-label="Gallery layout"
-          className="-mt-2 flex gap-1 rounded-[4px] bg-mist p-1"
-        >
-          {layouts.map(({ key, label }) => (
-            <button
-              key={key}
-              type="button"
-              aria-pressed={layout === key}
-              onClick={() => {
-                setLayout(key);
-                setExpanded(false);
-              }}
-              className={cn(
-                "rounded-[2px] px-3 py-1.5 text-caption font-medium tracking-[1px] uppercase transition-colors duration-300",
-                layout === key ? "bg-white text-ink" : "text-slate hover:text-ink",
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-      )}
-
       <div id={listId} className="relative w-full">
         <Rows
           images={showAll ? images : images.slice(0, SHOWN)}
           total={images.length}
           onOpen={setViewing}
-          more={layout === "count" && canExpand ? extra : undefined}
         />
 
-        {layout === "expand" && canExpand && !expanded && (
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-[15rem] items-end justify-center bg-linear-to-b from-white/0 via-white/70 via-60% to-white pb-8">
+        {canExpand && !expanded && (
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-[15rem] items-end justify-center bg-linear-to-b from-black/0 via-black/60 via-55% to-black/90 pb-8">
             <Button
-              variant="dark"
+              variant="white"
               icon="none"
               aria-expanded={false}
               aria-controls={listId}
@@ -234,7 +169,7 @@ export function ProjectGallery({ images }: { images: GalleryImage[] }) {
           </div>
         )}
 
-        {layout === "expand" && canExpand && expanded && (
+        {canExpand && expanded && (
           <div className="pointer-events-none sticky bottom-6 mt-6 flex justify-center">
             <Button
               variant="dark"

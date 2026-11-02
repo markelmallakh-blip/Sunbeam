@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/DropdownMenu";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { ProjectGridCard, type CardHover } from "./ProjectGridCard";
+import { ProjectGridCard } from "./ProjectGridCard";
 
-const SERVICES = ["All", "Interior Design", "FF&E"] as const;
+const SERVICES = ["All", "Interior Design", "FF&E", "Architecture"] as const;
 type Service = (typeof SERVICES)[number];
 
 const offers = (project: Project, service: Service) =>
@@ -33,7 +33,6 @@ const matches = (project: Project, filter: string) =>
 export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState("All");
   const [service, setService] = useState<Service>("All");
-  const [hover, setHover] = useState<CardHover>("frame");
   const [visible, setVisible] = useState(projectsPage.pageSize);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -52,8 +51,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   useGsap(
     ({ reduceMotion }) => {
       if (reduceMotion || !gridRef.current) return;
-      // Each card frame scrubs a --parallax percentage that its photo layers translate by, so the
-      // full photo and the flipping crop on top of it (ProjectGridCard) always stay in register.
+      // Each card frame scrubs a --parallax percentage that its photo translates by.
       gsap.utils.toArray<HTMLElement>("[data-parallax-frame]").forEach((frame) => {
         gsap.fromTo(
           frame,
@@ -119,27 +117,6 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
             })}
           </ul>
           <div className="flex items-center gap-8 py-2 sm:py-0">
-            {/* Temporary: compares the two card hovers with the client. Remove once chosen. */}
-            <div
-              role="group"
-              aria-label="Card hover"
-              className="hidden gap-1 rounded-[4px] bg-mist p-1 lg:flex"
-            >
-              {(["frame", "flip", "zoom"] as const).map((option) => (
-                <button
-                  key={option}
-                  type="button"
-                  aria-pressed={hover === option}
-                  onClick={() => setHover(option)}
-                  className={cn(
-                    "rounded-[2px] px-3 py-1 text-caption font-medium tracking-[1px] uppercase transition-colors duration-300",
-                    hover === option ? "bg-white text-ink" : "text-slate hover:text-ink",
-                  )}
-                >
-                  {option[0]?.toUpperCase() + option.slice(1)}
-                </button>
-              ))}
-            </div>
             <ServiceMenu
               value={service}
               onChange={(next) => {
@@ -163,7 +140,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
       >
         {shown.map((project) => (
           <div key={project.slug} className="lg:w-[calc((100%-6rem)/3)]">
-            <ProjectGridCard project={project} hover={hover} />
+            <ProjectGridCard project={project} />
           </div>
         ))}
       </div>

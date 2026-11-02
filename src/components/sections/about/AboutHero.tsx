@@ -13,10 +13,9 @@ export function AboutHero() {
         <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
           {aboutHero.eyebrow}
         </p>
-        <h1 id="about-title" className="text-heading-2 font-semibold text-ink">
-          {aboutHero.title[0]}
-          <br />
-          {aboutHero.title[1]}
+        {/* One line on desktop; phones wrap it evenly. */}
+        <h1 id="about-title" className="text-heading-2 font-semibold text-balance text-ink">
+          {aboutHero.title.join(" ")}
         </h1>
       </div>
       <RefractionImage

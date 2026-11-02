@@ -6,8 +6,8 @@ import { Icon } from "@/components/ui/Icon";
 const tileClass =
   "grid size-[2.625rem] place-items-center rounded-[4px] bg-mist text-ink transition-colors duration-300 hover:bg-mist-strong";
 
-/* Share row for a post: Facebook, email and copy-link, on the light-grey tiles used for CTAs. */
-export function ShareLinks({ url, title }: { url: string; title: string }) {
+/* Share row for a post: Facebook, LinkedIn and copy-link, on the light-grey tiles used for CTAs. */
+export function ShareLinks({ url }: { url: string }) {
   const [copied, setCopied] = useState(false);
   const encoded = encodeURIComponent(url);
 
@@ -38,11 +38,13 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
         </li>
         <li>
           <a
-            href={`mailto:?subject=${encodeURIComponent(title)}&body=${encoded}`}
-            aria-label="Share by email"
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encoded}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Share on LinkedIn (opens in a new tab)"
             className={tileClass}
           >
-            <Icon name="mail" size={18} />
+            <Icon name="linkedin" size={17} />
           </a>
         </li>
         <li>

@@ -109,8 +109,20 @@ export const values = {
   ] satisfies Value[],
 };
 
+/* Full-width team photo between the values and the purpose cards. */
+export const team = {
+  /* Names the section for screen readers; nothing is drawn over the photo. */
+  title: "Our team",
+  image: image(
+    "team-office",
+    "The Sunbeam team at work in the studio, at desks under warm-lit timber shelving",
+    1672,
+    941,
+  ),
+};
+
+/* Vision and mission as two rows that stack on scroll; the founder slides over them. */
 export const purpose = {
-  title: "Rooted in Purpose",
   statements: [
     {
       label: "Our Vision",

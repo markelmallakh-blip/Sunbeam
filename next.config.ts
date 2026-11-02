@@ -14,6 +14,8 @@ const nextConfig: NextConfig = {
   cacheComponents: !pages,
   partialPrefetching: !pages,
   poweredByHeader: false,
+  // Job applications post a CV of up to 20 MB through a Server Action (default limit 1 MB).
+  experimental: { serverActions: { bodySizeLimit: "21mb" } },
   ...(pages && { output: "export", basePath, trailingSlash: true }),
   env: { NEXT_PUBLIC_BASE_PATH: basePath },
   images: {
@@ -32,6 +34,7 @@ const nextConfig: NextConfig = {
       resolveAlias: {
         "@/actions/newsletter": "./src/actions/newsletter.static.ts",
         "@/actions/contact": "./src/actions/contact.static.ts",
+        "@/actions/application": "./src/actions/application.static.ts",
         "@/components/layout/CopyrightYear": "./src/components/layout/CopyrightYear.static.tsx",
       },
     }),

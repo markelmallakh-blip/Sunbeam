@@ -21,7 +21,7 @@ const image = (file: string, alt: string, width: number, height: number): ImageA
  * Related work for the carousel: the projects that used this service first, then the rest of the
  * portfolio, so there is always enough to move through.
  */
-const related = (service: "Interior Design" | "FF&E"): ProjectCard[] =>
+const related = (service: "Interior Design" | "FF&E" | "Architecture"): ProjectCard[] =>
   [...portfolio]
     .sort((a, b) => Number(b.services.includes(service)) - Number(a.services.includes(service)))
     .map((project) => ({
@@ -209,6 +209,81 @@ export const services: Service[] = [
       },
     ],
     projects: related("FF&E"),
+  },
+  {
+    slug: "architecture",
+    eyebrow: "Our services",
+    title: "Architecture",
+    intro:
+      "We shape buildings from the outside in, with facades, massing and landscape that suit how they are used.",
+    hero: image(
+      "architecture-hero",
+      "Clubhouse facade with timber fins, a palm tree and sculpted planters",
+      1920,
+      1080,
+    ),
+    statement: {
+      lead: "A building sets the tone before anyone steps inside, ",
+      muted:
+        "so we design its form, facade and setting together with the interiors, as one calm and coherent place.",
+    },
+    /* Placeholder scope — confirm with the studio. */
+    included: {
+      title: "What’s Included",
+      items: [
+        {
+          title: "Site & Brief Study",
+          description: "Site visits, constraints and a clear brief before the first sketch.",
+        },
+        {
+          title: "Concept Design",
+          description: "Massing, orientation and facade studies that set the building’s character.",
+        },
+        {
+          title: "Facade & Materials",
+          description: "Cladding, openings and shading chosen for climate, light and longevity.",
+        },
+        {
+          title: "Landscape Integration",
+          description: "Courtyards, planting and outdoor spaces that tie the building to its site.",
+        },
+        {
+          title: "Permit Drawings",
+          description: "Full drawing sets for approvals, prepared with the relevant consultants.",
+        },
+        {
+          title: "Construction Follow-up",
+          description: "Site visits and coordination so the build stays true to the design.",
+        },
+      ],
+    },
+    details: [
+      image(
+        "architecture-detail-1",
+        "Long, low clubhouse with timber screens across a lawn and palm trees",
+        1920,
+        1080,
+      ),
+      image(
+        "architecture-detail-2",
+        "Clubhouse entrance between lattice screens with the LA7 sign",
+        1600,
+        1920,
+      ),
+      image(
+        "architecture-detail-3",
+        "Glazed corner of the clubhouse with a lattice panel and planting",
+        1600,
+        1920,
+      ),
+      image(
+        "architecture-detail-4",
+        "Clubhouse wing with a dark sign, glazing and garden planting",
+        1600,
+        1920,
+      ),
+    ],
+    projects: related("Architecture"),
   },
 ];
 

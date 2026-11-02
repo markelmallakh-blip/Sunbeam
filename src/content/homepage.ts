@@ -54,7 +54,7 @@ export type ServiceCard = {
 export const services = {
   title: "Our Services",
   description:
-    "We create cohesive spaces through thoughtful interior design and carefully selected furniture, fixtures, and finishes.",
+    "We create cohesive spaces through thoughtful architecture, interior design and carefully selected furniture, fixtures, and finishes.",
   items: [
     {
       title: "Interior Design",
@@ -82,6 +82,18 @@ export const services = {
         ),
         focus: "50% 62%",
       },
+    },
+    {
+      title: "Architecture",
+      description:
+        "We shape buildings from the outside in, with facades, massing and landscape that suit how they are used.",
+      href: "/services/architecture",
+      image: image(
+        "service-architecture",
+        "Clubhouse facade with timber fins, a palm tree and sculpted planters",
+        1600,
+        1920,
+      ),
     },
   ] satisfies ServiceCard[],
 };

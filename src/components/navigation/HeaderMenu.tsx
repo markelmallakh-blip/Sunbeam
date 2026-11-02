@@ -16,7 +16,7 @@ type HeaderMenuProps = {
 export function HeaderMenu({ menu, onNavigate }: HeaderMenuProps) {
   if (menu === "services") {
     return (
-      <div className="grid gap-4 p-8 md:grid-cols-2">
+      <div className="grid grid-cols-3 gap-4 p-8">
         {servicesMenu.map((service) => (
           <Link
             key={service.href}
@@ -28,7 +28,7 @@ export function HeaderMenu({ menu, onNavigate }: HeaderMenuProps) {
               src={service.image}
               alt={service.alt}
               fill
-              sizes="50vw"
+              sizes="33vw"
               quality={85}
               style={"focus" in service ? { objectPosition: service.focus } : undefined}
               className="-z-10 object-cover transition-transform duration-1000 ease-soft group-hover:scale-[1.03]"
@@ -38,7 +38,9 @@ export function HeaderMenu({ menu, onNavigate }: HeaderMenuProps) {
               className="absolute inset-0 -z-10 bg-linear-to-b from-transparent from-50% to-black/60"
             />
             <span className="text-heading-4 font-semibold">{service.title}</span>
-            <span className="max-w-[34rem] text-body tracking-[0.5px]">{service.description}</span>
+            <span className="min-h-[3lh] max-w-[26rem] text-small tracking-[0.5px]">
+              {service.description}
+            </span>
           </Link>
         ))}
       </div>

@@ -24,7 +24,8 @@ export const unitTypes = [
   "Other",
 ] as const;
 
-export const serviceNeeds = ["Interior Design", "FF&E", "Can't decide yet"] as const;
+/* The studio's three services, offered in the "Service" dropdown. */
+export const serviceNeeds = ["Interior Design", "(FF&E) Solution", "Architecture"] as const;
 export type ServiceNeed = (typeof serviceNeeds)[number];
 
 /* Country calling codes for the phone field; Egypt first as the default. */
@@ -46,12 +47,16 @@ export const countryCodes = [
 ] as const;
 
 export const contactPage = {
+  reach: {
+    eyebrow: "Visit the studio",
+    title: "Reach Sunbeam",
+    directions: "Get Directions",
+  },
   eyebrow: "Contact us",
   title: "Let’s Talk About Your Space",
   intro:
     "Have a project in mind? Send us your inquiry and we’ll get back to you within two working days, or book a consultation call below.",
   details: {
-    title: "Our Contacts",
     /* Placeholder — confirm the studio's working hours. */
     hours: "Sunday – Thursday, 10:00am – 6:30pm",
   },

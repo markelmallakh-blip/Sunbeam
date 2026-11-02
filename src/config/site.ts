@@ -13,6 +13,9 @@ export const siteConfig = {
   contact: {
     email: "hello@sunbeam.com",
     address: "7 El-Marwa, Nabil Al Wakkad, Cairo, Egypt",
+    /* "Get Directions" in the footer: a Maps search for the address until the studio's pin is shared. */
+    directions:
+      "https://www.google.com/maps/search/?api=1&query=7%20El-Marwa%2C%20Nabil%20Al%20Wakkad%2C%20Cairo%2C%20Egypt",
   },
   /*
    * Cal.com event used by "Schedule Meeting" and the consultation section, as "user/event".
@@ -22,5 +25,12 @@ export const siteConfig = {
   social: [
     { network: "facebook", label: "Facebook", href: "https://www.facebook.com/sunbeamspaces" },
     { network: "instagram", label: "Instagram", href: "https://www.instagram.com/sunbeam_spaces" },
+    /* Placeholder profile links — confirm with the studio. */
+    {
+      network: "linkedin",
+      label: "LinkedIn",
+      href: "https://www.linkedin.com/company/sunbeamspaces",
+    },
+    { network: "behance", label: "Behance", href: "https://www.behance.net/sunbeamspaces" },
   ],
 } as const;

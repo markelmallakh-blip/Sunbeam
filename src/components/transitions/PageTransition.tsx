@@ -204,7 +204,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
         aria-hidden
         className="invisible fixed inset-0 z-0 grid place-items-center bg-white opacity-0"
       >
-        <WindowShape ref={shapeRef} className="h-[min(48svh,70vw)] w-auto text-ink" />
+        <WindowShape ref={shapeRef} className="h-[min(22svh,34vw)] w-auto text-ink" />
       </div>
       <div ref={shellRef} className="relative z-[1] bg-white">
         {children}

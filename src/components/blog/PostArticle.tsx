@@ -3,7 +3,7 @@ import type { Post, PostBlock } from "@/content/blog";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 
 /*
- * Single post (no Figma frame yet): a centred 720px reading column in the redesign's type —
+ * Single post (no Figma frame yet): a centred 1000px reading column in the redesign's type —
  * 18px body on a relaxed 1.7 line height, SemiBold subheads, a rust-ruled pull quote and
  * full-column images with captions.
  */
@@ -34,7 +34,7 @@ function Block({ block }: { block: PostBlock }) {
           <div className="relative aspect-[3/2] overflow-hidden">
             <ResponsiveImage
               asset={block.image}
-              sizes="(min-width: 768px) 720px, 100vw"
+              sizes="(min-width: 1056px) 1000px, 100vw"
               fill
               parallax={false}
             />

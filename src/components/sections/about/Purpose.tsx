@@ -1,143 +1,109 @@
 "use client";
 
 import {
-  AnimatePresence,
   motion,
+  useMotionValue,
   useMotionValueEvent,
   useReducedMotion,
   useScroll,
-  type Variants,
 } from "framer-motion";
-import { Fragment, useRef, useState } from "react";
+import { useRef, type CSSProperties, type RefObject } from "react";
 import { purpose } from "@/content/about";
-import { easeSoft } from "@/lib/motion";
+import { cn } from "@/lib/cn";
 
-/*
- * Figma "Vision & Mission" (90:2524), one statement at a time. The section pins while it is
- * scrolled through; past the midpoint the vision gives way to the mission (and back when
- * scrolling up). The leaving statement fades and softens away at once while the arriving one
- * builds word by word — each word rising into focus in a quick ripple — starting as the old one
- * leaves, so the screen is never empty. The vision is on screen from the start; with reduced
- * motion the two are simply shown stacked.
- */
 type Statement = (typeof purpose.statements)[number];
 
-const statementVariants: Variants = {
-  hidden: {},
-  shown: { transition: { staggerChildren: 0.03 } },
-  gone: {
-    opacity: 0,
-    y: -12,
-    filter: "blur(6px)",
-    // Ease in, so the old words hold while the new ones start arriving, then slip away.
-    transition: { duration: 0.6, ease: [0.4, 0, 1, 1] },
-  },
-};
-
-const wordVariants: Variants = {
-  hidden: { opacity: 0, y: "0.4em", filter: "blur(8px)" },
-  shown: {
-    opacity: 1,
-    y: "0em",
-    filter: "blur(0px)",
-    transition: { duration: 0.55, ease: easeSoft },
-  },
-};
-
+/*
+ * Vision and mission as minimal rows (after Lama Lama's services list): a hairline, the title in
+ * the founder heading's style on the left and the statement large on the right. Each row pins as
+ * it reaches the top and the next pins one strip lower, so the covered row stays visible as a
+ * tab: just its title, with equal space above and below it. To get that, a pinned row rises by
+ * part of its top padding (`--lift`) and its statement fades out as the next row arrives. The
+ * founder section (rendered right after, in the same wrapper on the about page) then slides up
+ * over both. The rows are siblings of the founder section because a sticky element only stays
+ * pinned while its parent is on screen. With reduced motion they simply sit one after another.
+ */
 export function Purpose() {
-  const sectionRef = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
-  const [active, setActive] = useState(0);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    setActive(progress < 0.5 ? 0 : 1);
-  });
-
-  if (reduceMotion) {
-    return (
-      <section aria-label="Our vision and mission" className="bg-white px-edge py-block">
-        <div className="mx-auto flex max-w-[60rem] flex-col gap-20 text-center text-[#262626]">
-          {purpose.statements.map((statement) => (
-            <StatementBlock key={statement.label} statement={statement} />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  const statement = purpose.statements[active];
+  const nextRef = useRef<HTMLElement>(null);
+  const count = purpose.statements.length;
 
   return (
-    <section
-      ref={sectionRef}
-      aria-label="Our vision and mission"
-      className="relative h-[180svh] bg-white"
-    >
-      <div className="sticky top-0 grid h-svh place-items-center px-edge text-center text-[#262626]">
-        <AnimatePresence initial={false}>
-          {statement && (
-            <motion.div
-              key={statement.label}
-              variants={statementVariants}
-              initial="hidden"
-              animate="shown"
-              exit="gone"
-              className="col-start-1 row-start-1 max-w-[60rem]"
-            >
-              <StatementBlock statement={statement} animated />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </section>
+    <>
+      {purpose.statements.map((statement, index) => (
+        <Row
+          key={statement.label}
+          ref={index === 1 ? nextRef : undefined}
+          next={index === 0 ? nextRef : null}
+          statement={statement}
+          index={index}
+          count={count}
+          pinned={!reduceMotion}
+        />
+      ))}
+    </>
   );
 }
 
-function StatementBlock({ statement, animated }: { statement: Statement; animated?: boolean }) {
-  const words = statement.text.split(" ");
+function Row({
+  ref,
+  next,
+  statement,
+  index,
+  count,
+  pinned,
+}: {
+  ref?: RefObject<HTMLElement | null>;
+  /** The row that slides over this one; null for the last row. */
+  next: RefObject<HTMLElement | null> | null;
+  statement: Statement;
+  index: number;
+  count: number;
+  pinned: boolean;
+}) {
+  // The next row's place on screen drives the fade: fully shown until it is about a third of a
+  // screen from its pin, gone as it pins. (A scroll-progress range would track its resting
+  // position, which a sticky element leaves behind.)
+  const fade = useMotionValue(1);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", () => {
+    const below = next?.current;
+    if (!below) return;
+    const { top } = below.getBoundingClientRect();
+    const pin = parseFloat(getComputedStyle(below).top) || 0;
+    fade.set(Math.min(1, Math.max(0, (top - pin) / (window.innerHeight * 0.35))));
+  });
+
   return (
-    <div className="flex flex-col items-center gap-6">
-      {animated ? (
-        <motion.h2
-          variants={wordVariants}
-          className="text-small font-semibold tracking-[1px] text-slate uppercase"
-        >
-          {statement.label}
-        </motion.h2>
-      ) : (
-        <h2 className="text-small font-semibold tracking-[1px] text-slate uppercase">
-          {statement.label}
-        </h2>
+    <article
+      ref={ref}
+      aria-labelledby={`purpose-${index}`}
+      style={
+        {
+          // Pinned under the compact header (64px) while it shows, at the very top while it is
+          // hidden, and lifted so the tab's spacing is even.
+          "--row-top": `calc(var(--bar) - var(--lift) + ${index} * (var(--lift) + var(--strip)))`,
+          // A pinned row stops where the wrapper ends, so without this the rows would line up
+          // there; the shrinking margin keeps each earlier row's tab in view.
+          "--row-after": `calc(${count - 1 - index} * (var(--lift) + var(--strip)))`,
+        } as CSSProperties
+      }
+      className={cn(
+        // Tab = space + title line + the same space: 1.25rem + ~1.875rem + 1.25rem on phones,
+        // 1.75rem + 2.275rem + 1.75rem on desktop. `--lift` is the top padding minus that space.
+        "grid min-h-[22rem] gap-y-5 border-t border-hairline bg-white px-edge py-12 [--bar:4rem] [--lift:1.75rem] [--strip:4.375rem] lg:min-h-[min(36rem,64svh)] lg:grid-cols-12 lg:gap-x-8 lg:py-24 lg:[--lift:4.25rem] lg:[--strip:5.775rem] [html[data-header-hidden]_&]:[--bar:0rem]",
+        pinned && "sticky top-(--row-top) mb-(--row-after) transition-[top] duration-700 ease-soft",
       )}
-      <p className="text-heading-3 leading-[1.3] font-medium">
-        {animated ? (
-          <>
-            {/* The whole sentence for screen readers; the words below are visual only. */}
-            <span className="sr-only">{statement.text}</span>
-            <span aria-hidden>
-              {words.map((word, index) => (
-                <Fragment key={index}>
-                  {/*
-                   * Not the `inline-block` utility: with the theme's `--spacing-block` token,
-                   * Tailwind also reads it as `inline-size: var(--spacing-block)` (~79px).
-                   */}
-                  <motion.span variants={wordVariants} className="[display:inline-block]">
-                    {word}
-                  </motion.span>
-                  {/* The space sits between words: inline-block would swallow a trailing one. */}
-                  {index < words.length - 1 && " "}
-                </Fragment>
-              ))}
-            </span>
-          </>
-        ) : (
-          statement.text
-        )}
-      </p>
-    </div>
+    >
+      <h2 id={`purpose-${index}`} className="text-heading-4 font-semibold text-ink lg:col-span-5">
+        {statement.label}
+      </h2>
+      <motion.p
+        style={pinned && next ? { opacity: fade } : undefined}
+        className="max-w-[56rem] text-[clamp(1.375rem,0.9rem+1.95vw,2.5rem)] leading-[1.3] font-medium text-ink lg:col-span-6 lg:col-start-7"
+      >
+        {statement.text}
+      </motion.p>
+    </article>
   );
 }

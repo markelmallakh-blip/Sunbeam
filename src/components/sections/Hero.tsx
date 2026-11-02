@@ -9,7 +9,7 @@ export function Hero() {
   return (
     <section
       aria-labelledby="hero-title"
-      className="sticky top-0 isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-block text-center"
+      className="sticky top-0 isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-8 text-center sm:pb-12"
     >
       <div className="absolute inset-0 -z-10 bg-ink">
         {hero.video ? (
@@ -40,7 +40,10 @@ export function Hero() {
         <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-offwhite uppercase">
           {hero.eyebrow}
         </p>
-        <h1 id="hero-title" className="text-heading-1 font-semibold text-white">
+        <h1
+          id="hero-title"
+          className="text-[clamp(1.625rem,1.067rem+2.286vw,3.125rem)] leading-[1.08] font-semibold text-white"
+        >
           {hero.title[0]}
           <br />
           {hero.title[1]}

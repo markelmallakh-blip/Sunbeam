@@ -15,8 +15,8 @@ import { easeSoft } from "@/lib/motion";
 
 /*
  * Figma "Header" (101:2267). At the top of the homepage it is transparent on a black-to-clear
- * gradient with white type (90px, 66px logo). It is not sticky: scrolling down glides it up out
- * of view, scrolling up glides it back in from the top as a compact bar (64px, 40px logo). It
+ * gradient with white type (90px, 56px logo). It is not sticky: scrolling down glides it up out
+ * of view, scrolling up glides it back in from the top as a compact bar (64px, 36px logo). It
  * stays transparent while over the hero photo and turns solid white with ink type ("Variant3")
  * once past it. Other pages start solid. "Services" and "Projects" open their dropdowns (Figma
  * "Services menu" / "Projects menu") on hover or click: the header turns solid, the page dims to
@@ -71,6 +71,12 @@ export function Header({ booking }: { booking: ReactNode }) {
     return () => window.removeEventListener("scroll", update);
   }, []);
 
+  // Lets pinned content elsewhere (the About purpose rows) sit under the bar only while it shows.
+  const barHidden = hidden && !bookingOpen && !openMenu;
+  useEffect(() => {
+    document.documentElement.toggleAttribute("data-header-hidden", barHidden);
+  }, [barHidden]);
+
   useEffect(() => {
     if (!openMenu) return;
     const onKeyDown = (event: KeyboardEvent) => {
@@ -121,7 +127,7 @@ export function Header({ booking }: { booking: ReactNode }) {
         className={cn(
           // Tailwind's translate utilities set `translate`, so that is the property to animate.
           "fixed inset-x-0 top-0 z-50 transition-[height,translate,background-color,color,box-shadow] duration-700 ease-soft",
-          hidden && !bookingOpen && !openMenu && "-translate-y-full",
+          barHidden && "-translate-y-full",
           solid ? "bg-white text-ink shadow-[0_1px_0_var(--color-mist)]" : "text-white",
         )}
       >
@@ -145,7 +151,7 @@ export function Header({ booking }: { booking: ReactNode }) {
               decorative
               className={cn(
                 "w-auto transition-[height] duration-500 ease-soft",
-                compact ? "h-10" : "h-12 lg:h-[4.125rem]",
+                compact ? "h-9" : "h-10 lg:h-14",
               )}
             />
           </Link>
@@ -165,7 +171,7 @@ export function Header({ booking }: { booking: ReactNode }) {
             <ul className="flex h-full items-stretch">
               {mainNavigation.map((item) => {
                 const itemClass =
-                  "link-underline flex items-center gap-0.5 text-small font-medium tracking-[1px] uppercase";
+                  "link-underline flex items-center gap-0.5 text-[0.8125rem] font-medium tracking-[1px] uppercase";
                 if (!item.menu) {
                   return (
                     <li key={item.label} className="flex items-center px-3">

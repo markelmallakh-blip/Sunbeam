@@ -9,6 +9,8 @@ import { Icon } from "./Icon";
  */
 const variants = {
   dark: "bg-ink text-white hover:bg-black",
+  /* Solid white, for use over photos and dark fades. */
+  white: "bg-white text-ink hover:bg-mist",
   "outline-light": "border border-white text-white hover:bg-white hover:text-ink",
   "outline-dark": "border border-ink text-ink hover:bg-ink hover:text-white",
 } as const;

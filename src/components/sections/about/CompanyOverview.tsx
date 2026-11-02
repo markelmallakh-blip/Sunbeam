@@ -27,7 +27,7 @@ export function CompanyOverview() {
             <dt className="mt-1 text-small tracking-[0.5px] text-slate sm:mt-0 sm:text-body">
               {stat.label}
             </dt>
-            <dd className="text-[clamp(2rem,1.24rem+3.12vw,3.875rem)] leading-none font-semibold text-[#262626]">
+            <dd className="text-[clamp(1.75rem,1.054rem+2.857vw,3.25rem)] leading-none font-semibold text-[#262626]">
               <CountUp value={stat.value} />
             </dd>
           </div>

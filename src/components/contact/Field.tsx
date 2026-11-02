@@ -10,7 +10,7 @@ type FieldProps = {
   defaultValue?: string;
   required?: boolean;
 } & (
-  | { as?: "input"; type?: "text" | "email" | "tel"; autoComplete?: string }
+  | { as?: "input"; type?: "text" | "email" | "tel" | "url"; autoComplete?: string }
   | { as: "textarea" }
   | { as: "select"; options: readonly string[] }
 );

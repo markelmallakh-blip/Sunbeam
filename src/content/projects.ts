@@ -169,7 +169,7 @@ export const projects: Project[] = [
     slug: "la7-zoya",
     title: "LA7 Zoya Clubhouse",
     category: "Commercial",
-    services: ["Interior Design"],
+    services: ["Architecture", "Interior Design"],
     location: "North Coast",
     year: "2025",
     summary: PLACEHOLDER_SUMMARY,

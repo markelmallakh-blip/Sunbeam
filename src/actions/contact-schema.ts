@@ -77,7 +77,7 @@ export function validateContact(formData: FormData) {
   } else if (projectType === "Residential" && !oneOf(unitTypes, values.unitType)) {
     errors.unitType = "Please choose your unit type.";
   }
-  if (!oneOf(serviceNeeds, values.service)) errors.service = "Please choose what you need.";
+  if (!oneOf(serviceNeeds, values.service)) errors.service = "Please choose a service.";
   if (values.message.length < 10) errors.message = "Please tell us a little more (10+ characters).";
 
   return { values, errors, valid: Object.keys(errors).length === 0 };

@@ -8,7 +8,10 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
  */
 export function Founder() {
   return (
-    <section aria-labelledby="founder-title" className="flex flex-col bg-linen lg:flex-row">
+    <section
+      aria-labelledby="founder-title"
+      className="relative z-10 flex flex-col bg-linen lg:flex-row"
+    >
       <div className="flex flex-1 flex-col items-center justify-center gap-stack px-edge py-block text-center">
         <div className="flex flex-col items-center gap-4 text-ink">
           <h2 id="founder-title" className="text-heading-4 font-semibold">

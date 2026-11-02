@@ -3,6 +3,9 @@ import { siteConfig } from "@/config/site";
 import { contactPage } from "@/content/contact";
 import { ContactForm } from "@/components/contact/ContactForm";
 import { CalEmbed } from "@/components/booking/CalEmbed";
+import { PageIntro } from "@/components/services/PageIntro";
+import { StudioMap } from "@/components/contact/StudioMap";
+import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { withBase } from "@/lib/base-path";
 
@@ -18,9 +21,10 @@ export const metadata: Metadata = {
 };
 
 /*
- * Contact page: a grey panel with the page heading at the top and our contact details and
- * socials at the bottom, beside the inquiry form, then the Cal.com booking embed for anyone who
- * would rather talk.
+ * Contact page: the page heading over the inquiry form; then "Reach Sunbeam", a map pinned on the
+ * studio with every contact detail (email, address, hours and directions) in a card on
+ * its right, clear of the map's "Open in Maps" link; then the Cal.com booking embed for anyone
+ * who would rather talk. Form, map and booking share one 1280px width so the page lines up.
  */
 export default function ContactPage() {
   const { email, address } = siteConfig.contact;
@@ -31,66 +35,61 @@ export default function ContactPage() {
         aria-labelledby="contact-title"
         className="flex flex-col items-center gap-stack px-edge py-block"
       >
-        <div className="grid w-full max-w-[80rem] gap-2 lg:grid-cols-[30rem_1fr]">
-          {/* Grey panel: the page heading at the top, our contact details at the bottom. */}
-          <aside className="flex flex-col gap-8 rounded-[4px] bg-mist p-5 sm:gap-12 sm:p-8 lg:p-10">
-            <header className="flex flex-col gap-2 sm:gap-3">
-              <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
-                {contactPage.eyebrow}
+        <PageIntro
+          id="contact-title"
+          eyebrow={contactPage.eyebrow}
+          title={contactPage.title}
+          intro={contactPage.intro}
+        />
+        <div className="flex w-full max-w-[80rem] flex-col gap-5 rounded-[4px] border border-hairline p-5 sm:gap-6 sm:p-8">
+          <h2 className="text-heading-6 font-semibold text-ink">{contactPage.form.title}</h2>
+          <ContactForm />
+        </div>
+      </section>
+
+      <section aria-labelledby="reach-title" className="px-edge pb-block">
+        <div className="relative mx-auto w-full max-w-[80rem] overflow-hidden rounded-[4px] bg-mist">
+          <StudioMap
+            title={`Map showing Sunbeam Spaces at ${address}`}
+            mapsHref={siteConfig.contact.directions}
+          />
+          <div className="flex flex-col gap-5 bg-white p-5 sm:absolute sm:top-1/2 sm:right-6 sm:z-[500] sm:w-[24rem] sm:-translate-y-1/2 sm:rounded-[4px] sm:p-7 sm:shadow-[0_8px_30px_rgb(0_0_0/0.12)]">
+            <div className="flex flex-col gap-1.5">
+              <p className="text-small font-medium tracking-[1px] text-slate uppercase">
+                {contactPage.reach.eyebrow}
               </p>
-              <h1 id="contact-title" className="text-heading-3 font-semibold text-ink">
-                {contactPage.title}
-              </h1>
-              <p className="text-body tracking-[0.5px] text-slate">{contactPage.intro}</p>
-            </header>
-
-            <section
-              aria-labelledby="studio-title"
-              className="mt-auto flex flex-col gap-4 sm:gap-6"
-            >
-              <h2 id="studio-title" className="text-heading-6 font-semibold text-ink">
-                {contactPage.details.title}
+              <h2 id="reach-title" className="text-heading-4 font-semibold text-ink">
+                {contactPage.reach.title}
               </h2>
-              <ul className="flex flex-col gap-3 text-small tracking-[0.5px] text-ink sm:gap-5 sm:text-body">
-                <li>
-                  <a
-                    href={`mailto:${email}`}
-                    className="link-underline inline-flex items-center gap-2"
-                  >
-                    <Icon name="mail" size={20} className="shrink-0" />
-                    {email}
-                  </a>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Icon name="location" size={20} className="mt-0.5 shrink-0" />
-                  <address className="not-italic lg:whitespace-nowrap">{address}</address>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Icon name="clock" size={20} className="mt-0.5 shrink-0" />
-                  <span className="lg:whitespace-nowrap">{contactPage.details.hours}</span>
-                </li>
-              </ul>
-              <ul className="flex gap-2">
-                {siteConfig.social.map((social) => (
-                  <li key={social.network}>
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${social.label} (opens in a new tab)`}
-                      className="grid size-[2.625rem] place-items-center rounded-[4px] border border-ash text-ink transition-colors duration-300 hover:border-ink hover:bg-ink hover:text-white"
-                    >
-                      <Icon name={social.network} size={19} />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          </aside>
-
-          <div className="flex flex-col gap-5 rounded-[4px] border border-hairline p-5 sm:gap-6 sm:p-8">
-            <h2 className="text-heading-6 font-semibold text-ink">{contactPage.form.title}</h2>
-            <ContactForm />
+            </div>
+            <ul className="flex flex-col gap-3 text-small tracking-[0.5px] text-ink sm:gap-4 sm:text-body">
+              <li>
+                <a
+                  href={`mailto:${email}`}
+                  className="link-underline inline-flex items-center gap-2"
+                >
+                  <Icon name="mail" size={20} className="shrink-0" />
+                  {email}
+                </a>
+              </li>
+              <li className="flex items-start gap-2">
+                <Icon name="location" size={20} className="mt-0.5 shrink-0" />
+                <address className="not-italic">{address}</address>
+              </li>
+              <li className="flex items-start gap-2">
+                <Icon name="clock" size={20} className="mt-0.5 shrink-0" />
+                <span>{contactPage.details.hours}</span>
+              </li>
+            </ul>
+            <Button
+              href={siteConfig.contact.directions}
+              target="_blank"
+              rel="noopener noreferrer"
+              variant="outline-dark"
+              className="self-start"
+            >
+              {contactPage.reach.directions}
+            </Button>
           </div>
         </div>
       </section>
@@ -111,7 +110,7 @@ export default function ContactPage() {
             {contactPage.booking.description}
           </p>
         </div>
-        <div className="w-full max-w-[55.625rem] overflow-hidden rounded-xl border border-hairline bg-white">
+        <div className="w-full max-w-[80rem] overflow-hidden rounded-[4px] border border-hairline bg-white">
           <CalEmbed />
         </div>
       </section>

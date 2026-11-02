@@ -20,6 +20,7 @@ export const mainNavigation: readonly NavItem[] = [
   { label: "Projects", href: "/projects", menu: "projects" },
   { label: "FAQs", href: "/faqs" },
   { label: "Blog", href: "/blog" },
+  { label: "Careers", href: "/careers" },
   { label: "Contact Us", href: "/contact" },
 ];
 
@@ -44,6 +45,14 @@ export const servicesMenu = [
     /* Frames the sofa and the round stone table. */
     focus: "50% 62%",
     alt: "Modular sofa with striped cushions around a round stone coffee table",
+  },
+  {
+    title: "Architecture",
+    description:
+      "We shape buildings from the outside in, with facades, massing and landscape that suit how they are used.",
+    href: "/services/architecture",
+    image: withBase("/images/home-v2/service-architecture.webp"),
+    alt: "Clubhouse facade with timber fins, a palm tree and sculpted planters",
   },
 ] as const;
 
@@ -113,6 +122,7 @@ export const footerNavigation: readonly FooterColumn[] = [
       { label: "Home", href: "/" },
       { label: "About", href: "/about" },
       { label: "Blog", href: "/blog" },
+      { label: "Careers", href: "/careers" },
     ],
   },
   {
@@ -120,6 +130,7 @@ export const footerNavigation: readonly FooterColumn[] = [
     links: [
       { label: "Interior Design", href: "/services/interior-design" },
       { label: "(FF&E) Solution", href: "/services/ffe" },
+      { label: "Architecture", href: "/services/architecture" },
     ],
   },
   {

@@ -36,8 +36,9 @@ export async function generateMetadata({
 }
 
 /*
- * Single service page (/services/interior-design, /services/ffe). The slug is read inside
- * <Suspense> so client navigations show the shell at once; both services are prerendered.
+ * Single service page (/services/interior-design, /services/ffe, /services/architecture). The slug
+ * is read inside <Suspense> so client navigations show the shell at once; every service is
+ * prerendered.
  */
 export default function ServicePage({ params }: PageProps<"/services/[slug]">) {
   return (
