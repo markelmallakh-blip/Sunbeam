@@ -33,7 +33,7 @@ export const careersPage = {
    * photo sits.
    */
   statement: {
-    text: "Do you love {0} light, material and detail? Come shape {1} calm, lasting spaces with a team {2} that cares as much as you do.",
+    text: "We are a small team {0} of architects and interior designers who care about light, {1} material and detail. If that sounds like you, {2} we would love to hear from you.",
     photos: [
       {
         src: "/images/about-v2/value-client-centered.webp",

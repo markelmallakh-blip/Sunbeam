@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { careersPage, roles } from "@/content/careers";
-import { team } from "@/content/about";
-import { ParallaxBanner } from "@/components/media/ParallaxBanner";
 import { RoleList } from "@/components/careers/RoleList";
 import { InlineStatement } from "@/components/careers/InlineStatement";
 import { StudioBadge } from "@/components/careers/StudioBadge";
-import { Button } from "@/components/ui/Button";
 import { withBase } from "@/lib/base-path";
 
 export const metadata: Metadata = {
@@ -22,8 +19,7 @@ export const metadata: Metadata = {
 
 /*
  * Careers: a hanging studio badge visitors can drag and flip with the centred intro beneath it, a
- * large statement with small studio photos set into its lines, a full-bleed photo of the team,
- * why the studio is a good place to work, then the open roles.
+ * large statement with small studio photos set into its lines and the roles button, why the studio is a good place to work, then the open roles.
  */
 export default function CareersPage() {
   const { why } = careersPage;
@@ -41,29 +37,16 @@ export default function CareersPage() {
           strap={withBase(careersPage.badge.strap)}
           spacerClassName="h-[24rem] w-full sm:h-[28rem] lg:h-[min(32rem,52svh)]"
         />
-        <div className="pointer-events-none relative mt-8 flex flex-col items-center gap-4 text-center sm:mt-10">
+        <div className="pointer-events-none relative -mt-2 flex flex-col items-center gap-4 text-center sm:-mt-4">
           <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
             {careersPage.eyebrow}
           </p>
           <h1 id="careers-title" className="text-heading-1 font-semibold text-ink">
             {careersPage.title}
           </h1>
-          <p className="max-w-[38rem] text-body tracking-[0.5px] text-slate sm:text-subtitle">
-            {careersPage.intro}
-          </p>
-          <Button href="#roles" variant="dark" className="pointer-events-auto mt-2">
-            {careersPage.browseRoles}
-          </Button>
         </div>
+        <InlineStatement />
       </section>
-
-      <InlineStatement />
-
-      <ParallaxBanner
-        asset={team.image}
-        label="The Sunbeam team"
-        frameClassName="aspect-[4/3] sm:aspect-[16/8] lg:aspect-auto lg:h-[min(38rem,58svh)]"
-      />
 
       {/* Laid out like the About values: an illustration over each title and description. */}
       <section

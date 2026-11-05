@@ -49,7 +49,7 @@ export function StudioBadge({
 
   const size = Math.round(SIZE * ratio * 1000) / 1000;
   const strapLength =
-    Math.round(Math.max(0, (strapOffset(STRAP_LENGTH) * ratio - 0.12) / 0.3) * 1000) / 1000;
+    Math.round(Math.max(-0.38, (strapOffset(STRAP_LENGTH) * ratio - 0.12) / 0.3) * 1000) / 1000;
 
   return (
     <>

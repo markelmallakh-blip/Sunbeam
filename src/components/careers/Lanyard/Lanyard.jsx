@@ -1026,7 +1026,14 @@ const Lanyard = ({
         .transformDirection(camera.matrixWorldInverse);
       const anchorX = ((ANCHORS[s.anchor] ?? 0.5) - 0.5) * viewWidth;
       const anchorY = viewHeight / 2 + 0.2;
-      const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      const cardTop =
+        viewHeight / 2 -
+        viewHeight *
+          mix(
+            0.12,
+            0.42,
+            clamp(s.strapLength, -0.38, 1),
+          ); /* Sunbeam: negative allowed for a tall canvas */
       const hangTop = cardTop + (layout.hangY - layout.height / 2);
       sim.anchor.set(anchorX, anchorY, 0);
       configureSimulation(sim, layout, anchorY - hangTop);
