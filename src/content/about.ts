@@ -121,16 +121,30 @@ export const team = {
   ),
 };
 
-/* Vision and mission as two rows that stack on scroll; the founder slides over them. */
+/* Vision and mission, each with a photo for the pinned swap layout (Purpose option A). */
 export const purpose = {
   statements: [
     {
       label: "Our Vision",
-      text: "To be the region’s most trusted studio for calm, timeless interiors, homes and workplaces that age gracefully, where people feel at ease long after the reveal.",
+      image: {
+        type: "image",
+        src: withBase("/images/services/interior-detail-stair.webp"),
+        alt: "Villa reception with a travertine wall, a floating stair and an indoor olive tree",
+        width: 2000,
+        height: 1538,
+      } satisfies ImageAsset,
+      text: "To be the region’s most trusted studio for calm, timeless interiors — homes, workplaces and hospitality spaces shaped by light and natural materials, designed to age gracefully and to make the people in them feel at ease long after the reveal.",
     },
     {
       label: "Our Mission",
-      text: "To design with intention, deliver with care and listen at every step — pairing thoughtful planning with carefully chosen materials, so our clients can simply enjoy the result.",
+      image: {
+        type: "image",
+        src: withBase("/images/services/ffe-detail-2.webp"),
+        alt: "Round oak dining table with curved chairs on a jute rug in afternoon light",
+        width: 1980,
+        height: 2200,
+      } satisfies ImageAsset,
+      text: "To design with intention and deliver with care: listening closely at every step, pairing thoughtful planning with carefully chosen materials and makers, and guiding each project from the first sketch to the final detail, so our clients can simply enjoy the result.",
     },
   ],
 };

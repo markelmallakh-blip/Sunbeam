@@ -21,6 +21,62 @@ export const careersPage = {
   title: "Join the Studio",
   intro:
     "We are a small team of architects and interior designers who care about light, material and detail. If that sounds like you, we would love to hear from you.",
+  browseRoles: "View open roles",
+  /* The hanging studio badge in the hero (React Bits Lanyard); drag it, click to flip. */
+  badge: {
+    front: "/images/careers/lanyard-front.svg",
+    back: "/images/careers/lanyard-back.svg",
+    strap: "/images/careers/lanyard-strap.svg",
+  },
+  /*
+   * Large statement with studio photos set between its words. `{0}`, `{1}`, `{2}` mark where each
+   * photo sits.
+   */
+  statement: {
+    text: "Do you love {0} light, material and detail? Come shape {1} calm, lasting spaces with a team {2} that cares as much as you do.",
+    photos: [
+      {
+        src: "/images/about-v2/value-client-centered.webp",
+        alt: "Designers discussing a project on a sofa",
+      },
+      { src: "/images/about-v2/team-office.webp", alt: "The team at work in the studio" },
+      { src: "/images/about-v2/value-transparency.webp", alt: "Two designers sharing a high-five" },
+    ],
+  },
+  why: {
+    eyebrow: "Life at the studio",
+    title: "Why Work at Sunbeam Studio",
+    intro:
+      "A small, close team where good ideas travel fast and every project gets the care it deserves.",
+    /* Placeholder reasons — confirm with the studio. `icon`: a square WebP line illustration
+     (like the About values), e.g. "/images/careers/icon-growth.webp"; empty shows a blank tile. */
+    reasons: [
+      {
+        title: "Meaningful projects",
+        icon: "",
+        description:
+          "Homes, clinics, cafés, clubhouses and new buildings, followed from the first sketch to handover.",
+      },
+      {
+        title: "Room to grow",
+        icon: "",
+        description:
+          "Mentoring from senior designers, real ownership of your work and a clear path to lead projects.",
+      },
+      {
+        title: "One team, three crafts",
+        icon: "",
+        description:
+          "Architecture, interiors and FF&E under one roof, so you learn how every part of a space comes together.",
+      },
+      {
+        title: "A calm studio",
+        icon: "",
+        description:
+          "Focused days, flexible hours and hybrid weeks, with time to think and a team that shares what it learns.",
+      },
+    ],
+  },
   rolesTitle: "Open Roles",
   applyNow: "Apply Now",
   otherRolesTitle: "Other Open Roles",

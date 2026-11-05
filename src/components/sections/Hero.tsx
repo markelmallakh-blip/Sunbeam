@@ -42,7 +42,7 @@ export function Hero() {
         </p>
         <h1
           id="hero-title"
-          className="text-[clamp(1.625rem,1.067rem+2.286vw,3.125rem)] leading-[1.08] font-semibold text-white"
+          className="text-[clamp(1.375rem,1.06rem+1.29vw,2.125rem)] leading-[1.08] font-semibold text-white"
         >
           {hero.title[0]}
           <br />

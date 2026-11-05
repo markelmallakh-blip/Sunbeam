@@ -15,8 +15,8 @@ import { easeSoft } from "@/lib/motion";
 
 /*
  * Figma "Header" (101:2267). At the top of the homepage it is transparent on a black-to-clear
- * gradient with white type (90px, 56px logo). It is not sticky: scrolling down glides it up out
- * of view, scrolling up glides it back in from the top as a compact bar (64px, 36px logo). It
+ * gradient with white type (90px, 36px logo). It is not sticky: scrolling down glides it up out
+ * of view, scrolling up glides it back in from the top as a compact bar (64px, same logo). It
  * stays transparent while over the hero photo and turns solid white with ink type ("Variant3")
  * once past it. Other pages start solid. "Services" and "Projects" open their dropdowns (Figma
  * "Services menu" / "Projects menu") on hover or click: the header turns solid, the page dims to
@@ -149,10 +149,8 @@ export function Header({ booking }: { booking: ReactNode }) {
           >
             <Logo
               decorative
-              className={cn(
-                "w-auto transition-[height] duration-500 ease-soft",
-                compact ? "h-9" : "h-10 lg:h-14",
-              )}
+              // The same 36px whether the bar is tall (top of the page) or compact.
+              className="h-9 w-auto"
             />
           </Link>
 

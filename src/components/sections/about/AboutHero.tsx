@@ -14,7 +14,7 @@ export function AboutHero() {
           {aboutHero.eyebrow}
         </p>
         {/* One line on desktop; phones wrap it evenly. */}
-        <h1 id="about-title" className="text-heading-2 font-semibold text-balance text-ink">
+        <h1 id="about-title" className="text-heading-3 font-semibold text-balance text-ink">
           {aboutHero.title.join(" ")}
         </h1>
       </div>
