@@ -54,7 +54,7 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
   return (
     <>
       <article aria-labelledby="role-title" className="px-edge pt-block pb-block">
-        <div className="mx-auto flex w-full max-w-[90.5rem] flex-col gap-stack">
+        <div className="mx-auto flex w-full max-w-[56rem] flex-col gap-stack">
           <header className="flex flex-col gap-6 border-b border-hairline pb-stack lg:flex-row lg:items-end lg:justify-between">
             <div className="flex flex-col gap-4">
               <Link
@@ -68,9 +68,6 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
                 {role.title}
               </h1>
               <RoleMeta role={role} />
-              <p className="max-w-[44rem] text-body tracking-[0.5px] text-slate sm:text-subtitle">
-                {role.summary}
-              </p>
             </div>
             <Button href="#apply" variant="dark" size="lg" className="self-start lg:self-end">
               {careersPage.applyNow}
@@ -90,7 +87,7 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
         aria-labelledby="apply-title"
         className="scroll-mt-header bg-white px-edge pb-block"
       >
-        <div className="mx-auto flex w-full max-w-[90.5rem] flex-col items-center gap-8 border-t border-hairline pt-block sm:gap-10">
+        <div className="mx-auto flex w-full max-w-[56rem] flex-col items-center gap-8 border-t border-hairline pt-block sm:gap-10">
           <h2 id="apply-title" className="text-center text-heading-3 font-semibold text-ink">
             {careersPage.applyNow}
           </h2>
@@ -118,12 +115,12 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
   );
 }
 
-/* One part of the role as a row: its title on the left, the points listed one under another. */
+/* One part of the role: its title with the points listed one under another beneath it. */
 function RoleSection({ title, items }: { title: string; items: readonly string[] }) {
   return (
-    <section className="grid gap-4 py-8 first:pt-0 last:pb-0 lg:grid-cols-12 lg:gap-8 lg:py-10">
-      <h2 className="text-heading-5 font-semibold text-ink lg:col-span-4">{title}</h2>
-      <ul className="flex flex-col divide-y divide-mist lg:col-span-8">
+    <section className="flex flex-col gap-3 py-8 first:pt-0 last:pb-0 sm:gap-4 lg:py-10">
+      <h2 className="text-heading-5 font-semibold text-ink">{title}</h2>
+      <ul className="flex flex-col divide-y divide-mist">
         {items.map((item) => (
           <li
             key={item}
