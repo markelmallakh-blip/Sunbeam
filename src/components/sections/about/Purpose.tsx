@@ -1,11 +1,10 @@
 "use client";
 
 import { motion, useReducedMotion, useScroll, useSpring, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { purpose } from "@/content/about";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { cn } from "@/lib/cn";
-import { smoothScroll } from "@/lib/smooth-scroll";
 
 type Statement = (typeof purpose.statements)[number];
 
@@ -16,9 +15,8 @@ const options: Option[] = ["A", "B"];
 /*
  * Vision and mission, in two layouts behind a temporary switch so they can be compared. Both
  * keep the section compact.
- * - A: one screen that switches its content in place: once it reaches the top of the window, the
- *   next scroll changes the vision (photo left) to the mission (photo right) instead of moving
- *   the page; the scroll after that carries on.
+ * - A: a pinned screen of two masked columns; scrolling carries the vision (photo left) up and
+ *   out while the mission (photo right) rises in, and plays back on the way up.
  * - B: no images. A scroll-scrubbed vertical carousel, centred: the current statement large in the
  *   middle, the next small and cropped at the bottom; scrolling carries the first up (shrinking,
  *   cropped at the top) as the second grows into the middle.
@@ -84,135 +82,76 @@ function Plain({ className }: { className?: string }) {
 }
 
 /*
- * A: one screen whose content switches in place. When the section reaches the top of the window,
- * the page stops scrolling: the next wheel or trackpad scroll changes the slide instead (one eased
- * glide inside the frame) from the vision, photo left and statement right, to the mission,
- * statement left and photo right. One more scroll in the same direction carries on down the page;
- * scrolling up switches back first. A thin centre rule with a dot marks each statement.
+ * A: one pinned screen split into two masked columns, scrubbed by the scroll. The vision shows its
+ * photo on the left and statement on the right. Scrolling carries both up inside their masks while
+ * the mission rises in behind them: its statement into the left column, its photo into the right.
+ * Scrolling up plays it back. A thin centre rule with a dot stays put between the columns.
  */
 function Swap() {
-  const sectionRef = useRef<HTMLDivElement>(null);
+  const { ref, progress } = useTrack();
   const reduceMotion = useReducedMotion();
   const [vision, mission] = purpose.statements;
-  const [step, setStep] = useState(0);
-  const stepRef = useRef(0);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || reduceMotion) return;
-    const GLIDE = 1000; // the slide change, matching the CSS transition
-    const QUIET = 350; // trackpad momentum counts as one gesture until it pauses this long
-    let blockedUntil = 0;
-
-    const go = (next: number) => {
-      stepRef.current = next;
-      setStep(next);
-    };
-    // Bring the section exactly to the top of the window (a locked glide ignores extra input).
-    const align = () => {
-      const top = section.getBoundingClientRect().top + window.scrollY;
-      const lenis = smoothScroll.get();
-      if (lenis) lenis.scrollTo(top, { duration: 0.8, lock: true, force: true });
-      else window.scrollTo({ top, behavior: "smooth" });
-    };
-
-    const onWheel = (event: WheelEvent) => {
-      if (!window.matchMedia("(min-width: 1024px)").matches || event.deltaY === 0) return;
-      const now = performance.now();
-      const take = () => {
-        event.preventDefault();
-        event.stopImmediatePropagation();
-        // Keep absorbing the same gesture's momentum until it pauses.
-        blockedUntil = Math.max(blockedUntil, now + QUIET);
-      };
-      const top = section.getBoundingClientRect().top;
-      const near = Math.abs(top) < window.innerHeight * 0.5;
-      if (now < blockedUntil && near) return take();
-
-      const down = event.deltaY > 0;
-      const aligned = Math.abs(top) < 4;
-      if (aligned) {
-        if (down && stepRef.current === 0) {
-          go(1);
-          take();
-          blockedUntil = now + GLIDE + QUIET;
-        } else if (!down && stepRef.current === 1) {
-          go(0);
-          take();
-          blockedUntil = now + GLIDE + QUIET;
-        }
-        return; // otherwise let the page scroll on, out of the section
-      }
-      // Arriving: from above it opens on the vision, from below on the mission.
-      if (down && top > 0 && top < window.innerHeight * 0.5) {
-        go(0);
-        align();
-        take();
-        blockedUntil = now + 800 + QUIET;
-      } else if (!down && top < 0 && top > -window.innerHeight * 0.5) {
-        go(1);
-        align();
-        take();
-        blockedUntil = now + 800 + QUIET;
-      }
-    };
-
-    // Capture on the window so this runs before the smooth-scroll library sees the wheel.
-    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
-    return () => window.removeEventListener("wheel", onWheel, { capture: true });
-  }, [reduceMotion]);
+  // Short holds at each end, so each pair settles fully before and after the change.
+  const t = useSpring(useTransform(progress, [0.15, 0.85], [0, 1], { clamp: true }), {
+    stiffness: 120,
+    damping: 26,
+  });
+  const y = useTransform(t, [0, 1], ["0%", "-50%"]);
+  // The dark half of the divider: the top half on the vision, sliding to the bottom half for the mission.
+  const marker = useTransform(t, [0, 1], ["0%", "100%"]);
 
   if (!vision || !mission) return null;
 
-  if (reduceMotion) {
-    return (
-      <div className="flex flex-col gap-stack bg-white px-edge py-block">
-        {[vision, mission].map((statement) => (
-          <SwapPanel key={statement.label} statement={statement} />
-        ))}
-      </div>
-    );
-  }
+  const panels = (
+    <div className="flex flex-col gap-stack bg-white px-edge py-block">
+      {[vision, mission].map((statement) => (
+        <SwapPanel key={statement.label} statement={statement} />
+      ))}
+    </div>
+  );
+  if (reduceMotion) return panels;
+
+  const photo = (statement: Statement) => (
+    <div className="relative h-1/2 overflow-hidden">
+      <ResponsiveImage asset={statement.image} sizes="50vw" fill parallax={false} />
+    </div>
+  );
+  const text = (statement: Statement, index: number) => (
+    <div className="h-1/2">
+      <SwapText statement={statement} id={`purpose-${index}`} />
+    </div>
+  );
 
   return (
     <>
       {/* Phones: the two pairs one after another. */}
-      <div className="flex flex-col gap-stack bg-white px-edge py-block lg:hidden">
-        {[vision, mission].map((statement) => (
-          <SwapPanel key={statement.label} statement={statement} />
-        ))}
-      </div>
-      <div
-        ref={sectionRef}
-        className="hidden h-svh bg-white px-edge py-[max(var(--spacing-edge),5rem)] lg:block"
-      >
-        <div className="relative h-full overflow-hidden">
-          <div
-            // The strip is one screen tall with the second slide 6rem below it, so the move is
-            // one full slide plus that gap.
-            style={{ transform: step ? "translateY(calc(-100% - 6rem))" : "translateY(0)" }}
-            className="flex h-full flex-col gap-24 transition-transform duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)] will-change-transform"
-          >
-            {[vision, mission].map((statement, index) => (
-              <div
-                key={statement.label}
-                aria-hidden={step !== index}
-                className="relative grid h-full shrink-0 grid-cols-2 gap-16"
-              >
-                {/* The vision has its photo on the left; the mission on the right. */}
-                <div className={cn("relative overflow-hidden", index === 1 && "order-2")}>
-                  <ResponsiveImage asset={statement.image} sizes="50vw" fill parallax={false} />
-                </div>
-                <SwapText statement={statement} id={`purpose-${index}`} />
-                {/* Centre rule with a dot, between the photo and the statement. */}
-                <span
-                  aria-hidden
-                  className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15"
-                >
-                  <span className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ink" />
-                </span>
-              </div>
-            ))}
+      <div className="lg:hidden">{panels}</div>
+      <div ref={ref} className="hidden h-[220svh] bg-white lg:block">
+        <div className="sticky top-0 h-svh px-edge py-[max(var(--spacing-edge),5rem)]">
+          <div className="relative grid h-full grid-cols-2 gap-16">
+            {/* Left mask: vision photo, then mission statement. */}
+            <div className="relative overflow-hidden">
+              <motion.div style={{ y }} className="h-[200%] will-change-transform">
+                {photo(vision)}
+                {text(mission, 1)}
+              </motion.div>
+            </div>
+            {/* Right mask: vision statement, then mission photo. */}
+            <div className="relative overflow-hidden">
+              <motion.div style={{ y }} className="h-[200%] will-change-transform">
+                {text(vision, 0)}
+                {photo(mission)}
+              </motion.div>
+            </div>
+            <span
+              aria-hidden
+              className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-ink/15"
+            >
+              <motion.span
+                style={{ y: marker }}
+                className="absolute inset-x-0 top-0 h-1/2 bg-ink"
+              />
+            </span>
           </div>
         </div>
       </div>
