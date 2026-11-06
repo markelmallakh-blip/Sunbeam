@@ -88,20 +88,31 @@ export function ServiceIncluded({ service }: { service: Service }) {
 
 /*
  * Photos two to a row, framed by a top gutter equal to the side ones. On wider screens they are
- * 4:3, so a whole row fits in the window rather than one photo running past it.
+ * 4:3, so a whole row fits in the window rather than one photo running past it. On hover a photo
+ * zooms in slightly and the kind of project it comes from shows in a small white tag.
  */
 export function ServiceDetails({ service }: { service: Service }) {
   return (
     <section aria-label="Service details" className="grid gap-2 px-edge pt-edge md:grid-cols-2">
       {service.details.map((asset) => (
-        <div key={asset.src} className="relative aspect-[4/3] overflow-hidden">
-          <ResponsiveImage
-            asset={asset}
-            sizes="(min-width: 768px) 50vw, 100vw"
-            fill
-            parallax={false}
-          />
-        </div>
+        <figure key={asset.src} className="group relative aspect-[4/3] overflow-hidden">
+          <div className="absolute inset-0 transition-transform duration-700 ease-soft group-hover:scale-[1.04]">
+            <ResponsiveImage
+              asset={asset}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              fill
+              parallax={false}
+            />
+          </div>
+          <figcaption className="pointer-events-none absolute inset-0 grid place-items-center">
+            {/* The white tag opens out from its centre, then the word rises into it. */}
+            <span className="overflow-hidden bg-white px-4 py-2 transition-[clip-path] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [clip-path:inset(0_50%_0_50%)] group-hover:duration-700 group-hover:[clip-path:inset(0_0%_0_0%)]">
+              <span className="block translate-y-[115%] text-caption font-medium tracking-[1px] text-ink uppercase transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 group-hover:delay-150 group-hover:duration-700 sm:text-small">
+                {asset.label}
+              </span>
+            </span>
+          </figcaption>
+        </figure>
       ))}
     </section>
   );

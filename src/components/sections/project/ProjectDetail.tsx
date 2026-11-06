@@ -9,7 +9,7 @@ export function ProjectDetail({ detail }: { detail: NonNullable<Project["detail"
   return (
     <section
       aria-labelledby="detail-title"
-      className="flex flex-col items-center gap-stack px-edge pt-block text-center lg:gap-20"
+      className="flex flex-col items-center gap-stack px-edge py-block text-center lg:gap-20"
     >
       <div className="flex flex-col items-center gap-2">
         <h2 id="detail-title" className="text-heading-4 font-semibold text-ink">

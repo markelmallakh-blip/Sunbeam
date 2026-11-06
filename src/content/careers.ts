@@ -18,9 +18,13 @@ export type Role = {
 
 export const careersPage = {
   eyebrow: "Careers",
-  title: "Join the Studio",
+  title: "Join Sunbeam",
   intro:
     "We are a small team of architects and interior designers who care about light, material and detail. If that sounds like you, we would love to hear from you.",
+  hero: {
+    src: "/images/careers/careers-hero.webp",
+    alt: "A designer laying out fabric, stone and paint samples on a table",
+  },
   browseRoles: "View open roles",
   /* The hanging studio badge in the hero (React Bits Lanyard); drag it, click to flip. */
   badge: {
@@ -34,13 +38,11 @@ export const careersPage = {
    */
   statement: {
     text: "We are a small team {0} of architects and interior designers who care about light, {1} material and detail. If that sounds like you, {2} we would love to hear from you.",
+    /* Close-up crops (2.2:1), sized for the pills. */
     photos: [
-      {
-        src: "/images/about-v2/value-client-centered.webp",
-        alt: "Designers discussing a project on a sofa",
-      },
-      { src: "/images/about-v2/team-office.webp", alt: "The team at work in the studio" },
-      { src: "/images/about-v2/value-transparency.webp", alt: "Two designers sharing a high-five" },
+      { src: "/images/careers/pill-smile.webp", alt: "A smiling designer at the studio" },
+      { src: "/images/careers/pill-office.webp", alt: "The Sunbeam studio office" },
+      { src: "/images/careers/pill-drawing.webp", alt: "A hand marking up construction drawings" },
     ],
   },
   why: {
@@ -48,32 +50,32 @@ export const careersPage = {
     title: "Why Work at Sunbeam Studio",
     intro:
       "A small, close team where good ideas travel fast and every project gets the care it deserves.",
-    /* Placeholder reasons — confirm with the studio. `icon`: a square WebP line illustration
-     (like the About values), e.g. "/images/careers/icon-growth.webp"; empty shows a blank tile. */
+    /* Placeholder descriptions — confirm with the studio. Icons from Figma 209:2437; an empty
+     `icon` shows a blank tile. */
     reasons: [
       {
-        title: "Meaningful projects",
-        icon: "",
+        title: "Meaningful Projects",
+        icon: "/images/careers/icon-meaningful-projects.webp",
         description:
           "Homes, clinics, cafés, clubhouses and new buildings, followed from the first sketch to handover.",
       },
       {
-        title: "Room to grow",
-        icon: "",
+        title: "A Room to Grow",
+        icon: "/images/careers/icon-room-to-grow.webp",
         description:
           "Mentoring from senior designers, real ownership of your work and a clear path to lead projects.",
       },
       {
-        title: "One team, three crafts",
-        icon: "",
+        title: "Learn Across Disciplines",
+        icon: "/images/careers/icon-learn-across-disciplines.webp",
         description:
-          "Architecture, interiors and FF&E under one roof, so you learn how every part of a space comes together.",
+          "Work side by side with architects, interior designers and FF&E specialists, and see how a whole space comes together.",
       },
       {
-        title: "A calm studio",
-        icon: "",
+        title: "Care in Every Detail",
+        icon: "/images/careers/icon-care-in-every-detail.webp",
         description:
-          "Focused days, flexible hours and hybrid weeks, with time to think and a team that shares what it learns.",
+          "A studio that takes the time to get things right, where every idea gets a fair hearing and knowledge is shared freely.",
       },
     ],
   },

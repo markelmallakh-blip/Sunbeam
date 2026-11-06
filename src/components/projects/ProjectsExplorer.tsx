@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/DropdownMenu";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
-import { ProjectGridCard } from "./ProjectGridCard";
+import { ProjectGridCard, cardHovers, type CardHover } from "./ProjectGridCard";
 
 const SERVICES = ["All", "Interior Design", "FF&E", "Architecture"] as const;
 type Service = (typeof SERVICES)[number];
@@ -34,6 +34,8 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState("All");
   const [service, setService] = useState<Service>("All");
   const [visible, setVisible] = useState(projectsPage.pageSize);
+  // Temporary: which hover style the cards use, for the client to compare.
+  const [hover, setHover] = useState<CardHover>("A");
   const gridRef = useRef<HTMLDivElement>(null);
 
   const filters = projectsPage.filters
@@ -132,6 +134,30 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
        * Even rows of three on desktop; a last row that isn't full stays centred under the others.
        * Phones and tablets get one and two columns.
        */}
+      {/* Temporary: compares the card hover styles. Remove once the client has chosen. */}
+      <div className="hidden justify-end px-edge pt-6 lg:flex">
+        <div
+          role="group"
+          aria-label="Card hover style"
+          className="flex gap-1 rounded-[4px] bg-mist p-1"
+        >
+          {cardHovers.map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={hover === key}
+              onClick={() => setHover(key)}
+              className={cn(
+                "rounded-[2px] px-3 py-1.5 text-caption font-medium tracking-[1px] uppercase transition-colors duration-300",
+                hover === key ? "bg-ink text-white" : "text-slate hover:text-ink",
+              )}
+            >
+              Option {key} · {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div
         ref={gridRef}
         role="tabpanel"
@@ -140,7 +166,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
       >
         {shown.map((project) => (
           <div key={project.slug} className="lg:w-[calc((100%-6rem)/3)]">
-            <ProjectGridCard project={project} />
+            <ProjectGridCard project={project} hover={hover} />
           </div>
         ))}
       </div>

@@ -42,7 +42,8 @@ export type Service = {
   statement: { lead: string; muted: string };
   included: { title: string; items: ServiceStep[] };
   /** Photos shown two to a row (an even count keeps the grid full). */
-  details: ImageAsset[];
+  /** Detail photos, each with the kind of project it comes from, shown on hover. */
+  details: (ImageAsset & { label: string })[];
   projects: ProjectCard[];
 };
 
@@ -95,30 +96,42 @@ export const services: Service[] = [
       ],
     },
     details: [
-      image(
-        "interior-detail-1",
-        "Apartment living and dining area under timber beams with sea views",
-        2400,
-        1600,
-      ),
-      image(
-        "interior-detail-2",
-        "Grey clinic lounge with a monochrome artwork and linear lighting",
-        1600,
-        1920,
-      ),
-      image(
-        "interior-detail-stair",
-        "Villa reception with a travertine wall, a floating stair and an indoor olive tree",
-        2000,
-        1538,
-      ),
-      image(
-        "interior-detail-cafe",
-        "Café under a curved plaster ceiling with rattan seating and timber shelving",
-        2000,
-        1333,
-      ),
+      {
+        ...image(
+          "interior-detail-1",
+          "Apartment living and dining area under timber beams with sea views",
+          2400,
+          1600,
+        ),
+        label: "Residential",
+      },
+      {
+        ...image(
+          "interior-detail-2",
+          "Grey clinic lounge with a monochrome artwork and linear lighting",
+          1600,
+          1920,
+        ),
+        label: "Clinic",
+      },
+      {
+        ...image(
+          "interior-detail-stair",
+          "Villa reception with a travertine wall, a floating stair and an indoor olive tree",
+          2000,
+          1538,
+        ),
+        label: "Residential",
+      },
+      {
+        ...image(
+          "interior-detail-cafe",
+          "Café under a curved plaster ceiling with rattan seating and timber shelving",
+          2000,
+          1333,
+        ),
+        label: "F&B",
+      },
     ],
     projects: related("Interior Design"),
   },
@@ -181,21 +194,28 @@ export const services: Service[] = [
           1800,
           2000,
         ),
+        label: "Residential",
         // Frame the lower part of the portrait render: the travertine table, chairs and rug.
         focus: "50% 85%",
       },
-      image(
-        "ffe-detail-2",
-        "Round oak dining table with curved chairs on a jute rug in afternoon light",
-        1980,
-        2200,
-      ),
-      image(
-        "ffe-detail-open-plan",
-        "Open-plan living and kitchen with a green armchair, leather daybed and striped rug",
-        2000,
-        1538,
-      ),
+      {
+        ...image(
+          "ffe-detail-2",
+          "Round oak dining table with curved chairs on a jute rug in afternoon light",
+          1980,
+          2200,
+        ),
+        label: "Residential",
+      },
+      {
+        ...image(
+          "ffe-detail-open-plan",
+          "Open-plan living and kitchen with a green armchair, leather daybed and striped rug",
+          2000,
+          1538,
+        ),
+        label: "Residential",
+      },
       {
         ...image(
           "ffe-detail-lounge",
@@ -203,6 +223,7 @@ export const services: Service[] = [
           2000,
           1333,
         ),
+        label: "Residential",
         // Closer in on the sofa, armchairs and coffee table.
         focus: "50% 62%",
         zoom: 1.3,
@@ -258,30 +279,42 @@ export const services: Service[] = [
       ],
     },
     details: [
-      image(
-        "architecture-detail-1",
-        "Long, low clubhouse with timber screens across a lawn and palm trees",
-        1920,
-        1080,
-      ),
-      image(
-        "architecture-detail-2",
-        "Clubhouse entrance between lattice screens with the LA7 sign",
-        1600,
-        1920,
-      ),
-      image(
-        "architecture-detail-3",
-        "Glazed corner of the clubhouse with a lattice panel and planting",
-        1600,
-        1920,
-      ),
-      image(
-        "architecture-detail-4",
-        "Clubhouse wing with a dark sign, glazing and garden planting",
-        1600,
-        1920,
-      ),
+      {
+        ...image(
+          "architecture-detail-1",
+          "Long, low clubhouse with timber screens across a lawn and palm trees",
+          1920,
+          1080,
+        ),
+        label: "Clubhouse",
+      },
+      {
+        ...image(
+          "architecture-detail-2",
+          "Clubhouse entrance between lattice screens with the LA7 sign",
+          1600,
+          1920,
+        ),
+        label: "Clubhouse",
+      },
+      {
+        ...image(
+          "architecture-detail-3",
+          "Glazed corner of the clubhouse with a lattice panel and planting",
+          1600,
+          1920,
+        ),
+        label: "Clubhouse",
+      },
+      {
+        ...image(
+          "architecture-detail-4",
+          "Clubhouse wing with a dark sign, glazing and garden planting",
+          1600,
+          1920,
+        ),
+        label: "Clubhouse",
+      },
     ],
     projects: related("Architecture"),
   },

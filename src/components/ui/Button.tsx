@@ -19,6 +19,8 @@ const sizes = {
   sm: "h-8 gap-1.5 px-3.5 text-caption sm:h-9 sm:gap-2 sm:px-4 sm:text-small",
   md: "h-9 gap-1.5 px-4 text-[0.8125rem] sm:h-10 sm:gap-2 sm:px-[1.125rem] sm:text-[0.9375rem]",
   lg: "h-11 gap-2 px-6 text-small sm:h-[3.625rem] sm:gap-3 sm:px-8 sm:text-subtitle",
+  /* Between md and lg: the role page's Apply Now and the application's submit button. */
+  cta: "h-10 gap-2 px-5 text-small sm:h-12 sm:px-6 sm:text-body",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
@@ -66,7 +68,7 @@ export function Button({
   children,
   ...rest
 }: ButtonProps) {
-  const iconSize = size === "lg" ? 16 : size === "md" ? 13 : 12;
+  const iconSize = size === "lg" ? 16 : size === "cta" ? 14 : size === "md" ? 13 : 12;
   const classes = buttonClasses({ variant, size, className });
   const content = (
     <>

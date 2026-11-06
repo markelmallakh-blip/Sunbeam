@@ -31,8 +31,9 @@ const HOVER_CLOSE_DELAY = 160;
 
 export function Header({ booking }: { booking: ReactNode }) {
   const pathname = usePathname();
-  // Pages that open on a full-bleed photo: the homepage and each project.
-  const overHero = pathname === "/" || /^\/projects\/[^/]+\/?$/.test(pathname);
+  // Pages that open on a full-bleed photo: the homepage, careers and each project.
+  const overHero =
+    pathname === "/" || /^\/careers\/?$/.test(pathname) || /^\/projects\/[^/]+\/?$/.test(pathname);
   const [scrolled, setScrolled] = useState(false);
   // Past the full-bleed hero photo: only then does the header turn solid white on hero pages.
   const [pastHero, setPastHero] = useState(false);

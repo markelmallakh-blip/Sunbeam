@@ -1,55 +1,68 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, type CSSProperties } from "react";
 import { projectHref, projectTags, type Project } from "@/content/projects";
+import { Icon } from "@/components/ui/Icon";
+import { cn } from "@/lib/cn";
 
 /*
- * Figma "Project Card" (184:1815), Default → Hover, with the "frame" motion the client chose. At
- * rest the photo fills the card; on hover (desktop) its edges ease in to a thumbnail while the
- * photo settles back a touch, like a print sliding into a black passe-partout, and the tags rise
- * in beneath it. Smaller screens have no hover, so they keep the tags in a line above the title.
- * ProjectsExplorer scrubs a `--parallax` percentage on each frame that the photo drifts by.
+ * Figma "Project Card" (184:1815). Temporary: three hover styles for the client to compare (the
+ * toggle sits above the grid in ProjectsExplorer). The earlier "frame" (thumbnail zoom) hover is
+ * in git history. Hover only runs on desktop; smaller screens keep the tags in a line above the
+ * title. ProjectsExplorer scrubs a `--parallax` percentage on each frame that the photo drifts by.
+ *
+ *   A Veil     — the photo dims and the tags with a "View project" link rise in at the centre.
+ *   B Caption  — a white panel slides up over the foot of the photo with the tags and a link.
+ *   C Chips    — small white tag chips rise in at the top-left of the photo.
  */
-const SIZES = "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw";
+export type CardHover = "A" | "B" | "C";
 
-export function ProjectGridCard({ project }: { project: Project }) {
+export const cardHovers: { key: CardHover; label: string }[] = [
+  { key: "A", label: "Veil" },
+  { key: "B", label: "Caption" },
+  { key: "C", label: "Chips" },
+];
+
+const SIZES = "(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw";
+const EASE = "ease-[cubic-bezier(0.16,1,0.3,1)]";
+
+/* Stagger on the way in only; leaving, everything goes at once. */
+const rise = (index: number, base = 200) =>
+  ({ "--rise-delay": `${base + index * 70}ms` }) as CSSProperties;
+const RISE = `translate-y-3 opacity-0 transition-[opacity,translate] duration-200 ${EASE} group-hover:translate-y-0 group-hover:opacity-100 group-hover:delay-(--rise-delay) group-hover:duration-700`;
+
+export function ProjectGridCard({ project, hover }: { project: Project; hover: CardHover }) {
   const tags = projectTags(project);
+
   return (
     <Link href={projectHref(project.slug)} className="group flex flex-col gap-5">
-      <div
-        data-parallax-frame
-        // The mount turns black the instant the frame starts closing in and only goes back to
-        // grey (the loading colour) after the photo has grown back over it, so grey never shows.
-        className="relative aspect-[448/560] overflow-hidden bg-mist transition-colors delay-1000 duration-0 lg:group-hover:bg-black lg:group-hover:delay-0 lg:group-focus-visible:bg-black lg:group-focus-visible:delay-0"
-      >
-        {/* The thumbnail box from Figma's hover variant, as insets of the card. */}
-        <div className="absolute inset-0 transition-[clip-path] duration-1000 ease-soft [clip-path:inset(0)] lg:group-hover:[clip-path:inset(5.36%_6.03%_31.43%_6.03%)] lg:group-focus-visible:[clip-path:inset(5.36%_6.03%_31.43%_6.03%)]">
+      <div data-parallax-frame className="relative aspect-[448/560] overflow-hidden bg-mist">
+        {/* B lifts the photo a little so the panel never hides its subject. */}
+        <div
+          className={cn(
+            "absolute inset-0 transition-transform duration-1000",
+            EASE,
+            hover === "B" && "lg:group-hover:-translate-y-[8%]",
+          )}
+        >
           <div className="absolute inset-x-0 -top-[6%] h-[112%] translate-y-[calc(var(--parallax,0)*1%)]">
-            {/* Scales about the thumbnail's centre (37% down the card, 38% down this layer). */}
-            <div className="absolute inset-0 origin-[50%_38%] transition-transform duration-1000 ease-soft lg:group-hover:scale-[0.92] lg:group-focus-visible:scale-[0.92]">
-              <Image
-                src={project.cover.src}
-                alt={project.cover.alt}
-                fill
-                sizes={SIZES}
-                className="object-cover"
-              />
-            </div>
+            <Image
+              src={project.cover.src}
+              alt={project.cover.alt}
+              fill
+              sizes={SIZES}
+              className="object-cover"
+            />
           </div>
         </div>
 
-        <ul className="absolute bottom-6 left-6 hidden flex-col gap-[1.125rem] text-body font-medium tracking-[1.2px] text-silver uppercase lg:flex">
-          {tags.map((tag, index) => (
-            <li
-              key={tag}
-              // The stagger applies only on the way in; leaving, every tag fades out at once.
-              style={{ "--tag-delay": `${300 + index * 80}ms` } as CSSProperties}
-              className="translate-y-2 opacity-0 transition-[opacity,translate] duration-200 ease-soft group-hover:translate-y-0 group-hover:opacity-100 group-hover:delay-(--tag-delay) group-hover:duration-700 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 group-focus-visible:delay-(--tag-delay) group-focus-visible:duration-700"
-            >
-              {tag}
-            </li>
-          ))}
-        </ul>
+        <div className="hidden lg:contents">
+          {hover === "A" && <Veil tags={tags} />}
+          {hover === "B" && <Caption tags={tags} />}
+          {hover === "C" && <Chips tags={tags} />}
+        </div>
       </div>
 
       <div className="flex flex-col gap-2.5">
@@ -64,5 +77,79 @@ export function ProjectGridCard({ project }: { project: Project }) {
         <h2 className="text-heading-5 font-semibold text-ink">{project.title}</h2>
       </div>
     </Link>
+  );
+}
+
+function ViewLabel({ className }: { className?: string }) {
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center gap-2 text-caption font-medium tracking-[1.2px] uppercase",
+        className,
+      )}
+    >
+      View project
+      <Icon name="arrow-right" size={14} />
+    </span>
+  );
+}
+
+function Veil({ tags }: { tags: string[] }) {
+  return (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 bg-black/0 text-center text-white transition-colors duration-700 group-hover:bg-black/45">
+      <ul className="flex flex-col items-center gap-2 text-small font-medium tracking-[1.5px] uppercase">
+        {tags.map((tag, index) => (
+          <li key={tag} style={rise(index)} className={RISE}>
+            {tag}
+          </li>
+        ))}
+      </ul>
+      <span style={rise(tags.length, 260)} className={RISE}>
+        <ViewLabel className="border-b border-white/60 pb-1" />
+      </span>
+    </div>
+  );
+}
+
+function Caption({ tags }: { tags: string[] }) {
+  return (
+    <div
+      className={cn(
+        "absolute inset-x-0 bottom-0 flex translate-y-full flex-col gap-4 bg-white p-6 transition-transform duration-500 group-hover:translate-y-0 group-hover:duration-1000",
+        EASE,
+      )}
+    >
+      <p className="flex flex-wrap items-center gap-2 text-caption font-medium tracking-[1.2px] text-slate uppercase">
+        {/* Each dot rises with the label after it, so none shows before its tag. */}
+        {tags.map((tag, index) => (
+          <span key={tag} style={rise(index, 250)} className={cn(RISE, "flex items-center gap-2")}>
+            {index > 0 && <span aria-hidden className="size-[3px] rounded-full bg-ash" />}
+            {tag}
+          </span>
+        ))}
+      </p>
+      <span style={rise(tags.length, 300)} className={RISE}>
+        <ViewLabel className="text-ink" />
+      </span>
+    </div>
+  );
+}
+
+function Chips({ tags }: { tags: string[] }) {
+  return (
+    <ul className="absolute top-5 left-5 flex flex-wrap gap-2 pr-5">
+      {tags.map((tag, index) => (
+        <li
+          key={tag}
+          style={rise(index, 150)}
+          className={cn(
+            RISE,
+            "bg-white px-3 py-1.5 text-caption font-medium tracking-[1.2px] text-ink uppercase",
+          )}
+        >
+          {tag}
+        </li>
+      ))}
+    </ul>
   );
 }

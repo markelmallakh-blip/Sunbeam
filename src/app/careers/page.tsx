@@ -26,25 +26,51 @@ export default function CareersPage() {
 
   return (
     <>
-      {/* The badge hangs from the top centre, the heading centred beneath it. */}
+      {/*
+       * Figma 209:2360: a full-screen photo with a centred card — the badge hanging in a grey
+       * square over a white title. The badge's canvas spans the whole hero from the top of the
+       * square, so the card can be dragged out over the photo without being cropped.
+       */}
       <section
         aria-labelledby="careers-title"
-        className="relative flex flex-col items-center px-edge pb-block"
+        className="relative h-svh min-h-[40rem] overflow-hidden bg-ink"
       >
-        <StudioBadge
-          front={withBase(careersPage.badge.front)}
-          back={withBase(careersPage.badge.back)}
-          strap={withBase(careersPage.badge.strap)}
-          spacerClassName="h-[24rem] w-full sm:h-[28rem] lg:h-[min(32rem,52svh)]"
+        <Image
+          src={withBase(careersPage.hero.src)}
+          alt={careersPage.hero.alt}
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[50%_58%]"
         />
-        <div className="pointer-events-none relative -mt-2 flex flex-col items-center gap-4 text-center sm:-mt-4">
-          <p className="text-eyebrow-lg font-medium tracking-[0.5px] text-slate uppercase">
-            {careersPage.eyebrow}
-          </p>
-          <h1 id="careers-title" className="text-heading-1 font-semibold text-ink">
-            {careersPage.title}
-          </h1>
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.6)_0%,rgba(0,0,0,0)_20%),linear-gradient(180deg,rgba(0,0,0,0)_70%,rgba(0,0,0,0.9)_100%)]"
+        />
+        <div className="relative flex h-full items-center justify-center px-edge pt-10">
+          <div className="relative flex w-full max-w-[20.6875rem] flex-col">
+            <StudioBadge
+              front={withBase(careersPage.badge.front)}
+              back={withBase(careersPage.badge.back)}
+              strap={withBase(careersPage.badge.strap)}
+              spacerClassName="aspect-square w-full bg-[#d9d9d9]"
+              layerClassName="absolute top-0 left-1/2 z-10 h-svh w-screen -translate-x-1/2"
+              size={0.62}
+              strapLength={0.62}
+            />
+            <div className="flex flex-col items-center gap-4 bg-white p-5 text-center">
+              <p className="text-eyebrow-lg font-medium tracking-[2px] text-slate uppercase">
+                {careersPage.eyebrow}
+              </p>
+              <h1 id="careers-title" className="text-heading-2 font-semibold text-ink">
+                {careersPage.title}
+              </h1>
+            </div>
+          </div>
         </div>
+      </section>
+
+      <section aria-label="Life at Sunbeam" className="bg-white px-edge py-block">
         <InlineStatement />
       </section>
 
@@ -67,7 +93,9 @@ export default function CareersPage() {
               key={reason.title}
               className="flex flex-col items-center gap-3 text-center sm:gap-5 sm:px-4 lg:border-l lg:border-[#c4c5c7] lg:first:border-l-0"
             >
-              <div className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-white/70 sm:h-[8.625rem] sm:w-[8.6875rem]">
+              <div
+                className={`relative size-20 shrink-0 overflow-hidden rounded-lg sm:h-[8.625rem] sm:w-[8.6875rem] ${reason.icon ? "" : "bg-white/70"}`}
+              >
                 {reason.icon ? (
                   <Image
                     src={withBase(reason.icon)}

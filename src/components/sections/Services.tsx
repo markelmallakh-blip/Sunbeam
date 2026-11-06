@@ -13,6 +13,7 @@ import { useRef, useState, type CSSProperties } from "react";
 import { services } from "@/content/homepage";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Icon } from "@/components/ui/Icon";
+import { smoothScroll } from "@/lib/smooth-scroll";
 import { cn } from "@/lib/cn";
 
 type Option = "A" | "B" | "C";
@@ -217,6 +218,20 @@ function ListAndPhoto() {
     setActive(Math.min(count - 1, Math.floor(progress * count)));
   });
 
+  // Open a service: on the pinned layout, scroll to the middle of its share of the track (the
+  // scroll then sets it active); otherwise just pick it.
+  const open = (index: number) => {
+    const track = trackRef.current;
+    const pinned = !reduceMotion && window.matchMedia("(min-width: 1024px)").matches;
+    if (!track || !pinned) return setActive(index);
+    const top = track.getBoundingClientRect().top + window.scrollY;
+    const travel = track.offsetHeight - window.innerHeight;
+    const target = top + travel * ((index + 0.5) / count);
+    const lenis = smoothScroll.get();
+    if (lenis) lenis.scrollTo(target, { duration: 1.1 });
+    else window.scrollTo({ top: target, behavior: "smooth" });
+  };
+
   return (
     <div
       ref={trackRef}
@@ -238,12 +253,17 @@ function ListAndPhoto() {
                 <li key={item.title} className="relative border-b border-ink/15">
                   {/* This row's share of the scroll: full once it has been passed. */}
                   <Loader progress={scrollYProgress} index={index} count={count} />
-                  <Link
-                    href={item.href}
-                    // Without the pinned scroll (reduced motion), pointing at a row picks it.
+                  {/*
+                   * Clicking a row opens it in place (scrolling the pinned track to its part, so the
+                   * photo and loaders follow); only the open row's "View" link goes to the service.
+                   */}
+                  <div
+                    onClick={() => open(index)}
                     onMouseEnter={reduceMotion ? () => setActive(index) : undefined}
-                    onFocus={() => setActive(index)}
-                    className="group flex flex-col gap-4 py-6 sm:py-7 lg:pl-6"
+                    className={cn(
+                      "group flex flex-col gap-4 py-6 sm:py-7 lg:pl-6",
+                      !on && "lg:cursor-pointer",
+                    )}
                   >
                     <span className="relative block aspect-[16/10] overflow-hidden lg:hidden">
                       <ResponsiveImage asset={item.image} sizes="100vw" fill parallax={false} />
@@ -253,14 +273,20 @@ function ListAndPhoto() {
                         {String(index + 1).padStart(2, "0")}
                       </span>
                       <span className="flex flex-1 flex-col gap-2">
-                        <span
+                        <button
+                          type="button"
+                          aria-expanded={on}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            open(index);
+                          }}
                           className={cn(
-                            "text-heading-3 font-semibold transition-colors duration-500 ease-soft",
-                            on ? "text-ink" : "text-ink lg:text-ink/35",
+                            "text-left text-heading-3 font-semibold transition-colors duration-500 ease-soft",
+                            on ? "text-ink" : "text-ink lg:text-ink/35 lg:group-hover:text-ink/60",
                           )}
                         >
                           {item.title}
-                        </span>
+                        </button>
                         <span
                           className={cn(
                             "grid transition-[grid-template-rows,opacity] duration-500 ease-soft",
@@ -276,18 +302,9 @@ function ListAndPhoto() {
                           </span>
                         </span>
                       </span>
-                      <span
-                        className={cn(
-                          "grid size-10 shrink-0 place-items-center self-center rounded-[4px] border transition-colors duration-300",
-                          on
-                            ? "border-ink bg-ink text-white"
-                            : "border-ink/20 text-ink group-hover:border-ink",
-                        )}
-                      >
-                        <Icon name="arrow-right" size={18} />
-                      </span>
+                      <ViewLink href={item.href} title={item.title} on={on} />
                     </span>
-                  </Link>
+                  </div>
                 </li>
               );
             })}
@@ -316,6 +333,36 @@ function ListAndPhoto() {
         </div>
       </div>
     </div>
+  );
+}
+
+/*
+ * The row's arrow tile. On the open row (and always on phones) it widens into a dark "View" link to
+ * the service; on the others it stays a quiet arrow that only marks the row.
+ */
+function ViewLink({ href, title, on }: { href: string; title: string; on: boolean }) {
+  return (
+    <Link
+      href={href}
+      aria-label={`View ${title}`}
+      onClick={(event) => event.stopPropagation()}
+      className={cn(
+        "flex h-10 shrink-0 items-center justify-center gap-2 self-center rounded-[4px] border text-caption font-medium tracking-[1px] uppercase transition-[background-color,border-color,color,width,padding] duration-500 ease-soft",
+        on
+          ? "border-ink bg-ink px-4 text-white hover:bg-black"
+          : "border-ink bg-ink px-4 text-white lg:pointer-events-none lg:w-10 lg:border-ink/20 lg:bg-transparent lg:px-0 lg:text-ink lg:group-hover:border-ink",
+      )}
+    >
+      <span
+        className={cn(
+          "overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 ease-soft",
+          on ? "max-w-16 opacity-100" : "max-w-16 opacity-100 lg:max-w-0 lg:opacity-0",
+        )}
+      >
+        View
+      </span>
+      <Icon name="arrow-right" size={16} className="shrink-0" />
+    </Link>
   );
 }
 

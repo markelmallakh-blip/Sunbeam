@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
-import { careersPage, getRole, roleOffer, roleSlugs, roles } from "@/content/careers";
+import { careersPage, getRole, roleOffer, roleSlugs } from "@/content/careers";
 import { ApplicationForm } from "@/components/careers/ApplicationForm";
-import { RoleList, RoleMeta } from "@/components/careers/RoleList";
+import { RoleMeta } from "@/components/careers/RoleList";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { withBase } from "@/lib/base-path";
@@ -43,13 +43,12 @@ export default function RolePage({ params }: PageProps<"/careers/[slug]">) {
 /*
  * One open role, kept compact: a left-aligned header with "Apply now" beside it, the role as three
  * rows (title left, points listed right), then the application form under a centred "Apply now" (which
- * the header button scrolls down to) and the other roles.
+ * the header button scrolls down to).
  */
 async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["params"] }) {
   const { slug } = await params;
   const role = getRole(slug);
   if (!role) notFound();
-  const others = roles.filter((item) => item.slug !== slug);
 
   return (
     <>
@@ -69,7 +68,7 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
               </h1>
               <RoleMeta role={role} />
             </div>
-            <Button href="#apply" variant="dark" size="lg" className="self-start lg:self-end">
+            <Button href="#apply" variant="dark" size="cta" className="self-start lg:self-end">
               {careersPage.applyNow}
             </Button>
           </header>
@@ -96,21 +95,6 @@ async function RoleContent({ params }: { params: PageProps<"/careers/[slug]">["p
           </div>
         </div>
       </section>
-
-      {others.length > 0 && (
-        <section
-          aria-labelledby="other-roles-title"
-          className="flex flex-col gap-6 border-t border-hairline bg-white py-block sm:gap-10"
-        >
-          <h2
-            id="other-roles-title"
-            className="px-edge text-center text-heading-3 font-semibold text-ink"
-          >
-            {careersPage.otherRolesTitle}
-          </h2>
-          <RoleList roles={others} />
-        </section>
-      )}
     </>
   );
 }

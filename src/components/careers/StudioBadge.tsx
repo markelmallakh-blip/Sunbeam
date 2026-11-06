@@ -3,9 +3,6 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import Lanyard from "./Lanyard/Lanyard";
 
-/* The look of the badge within its own space (the spacer's height). */
-const SIZE = 0.55;
-const STRAP_LENGTH = 0.45;
 /* Lanyard places the card top this fraction of the canvas height down: mix(0.12, 0.42, strap). */
 const strapOffset = (strap: number) => 0.12 + 0.3 * strap;
 
@@ -24,11 +21,19 @@ export function StudioBadge({
   back,
   strap,
   spacerClassName,
+  layerClassName = "absolute inset-0",
+  size: SIZE = 0.55,
+  strapLength: STRAP_LENGTH = 0.45,
 }: {
   front: string;
   back: string;
   strap: string;
+  /* The space the badge reserves in the flow; size and strap are relative to its height. */
   spacerClassName: string;
+  /* Where the canvas sits. Its top must line up with the spacer's top, where the strap hangs. */
+  layerClassName?: string;
+  size?: number;
+  strapLength?: number;
 }) {
   const spacer = useRef<HTMLDivElement>(null);
   const layer = useRef<HTMLDivElement>(null);
@@ -53,7 +58,7 @@ export function StudioBadge({
 
   return (
     <>
-      <div ref={layer} className="absolute inset-0">
+      <div ref={layer} className={layerClassName}>
         <Lanyard
           frontImage={front}
           backImage={back}

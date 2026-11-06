@@ -133,7 +133,7 @@ export function ProjectGallery({ images }: { images: GalleryImage[] }) {
     <section
       ref={sectionRef}
       aria-labelledby="gallery-title"
-      className="flex scroll-mt-24 flex-col items-center gap-8 px-edge py-block"
+      className="flex scroll-mt-24 flex-col items-center gap-8 bg-mist px-edge py-block"
     >
       <div className="flex flex-col items-center gap-2 text-center">
         <p className="text-small font-medium tracking-[1px] text-slate uppercase">

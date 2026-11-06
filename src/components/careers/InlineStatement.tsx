@@ -6,15 +6,14 @@ import { Button } from "@/components/ui/Button";
 
 /*
  * A large centred statement with small rounded studio photos set into its lines, sized to the
- * type so they sit like words. It sits inside the careers hero, over the badge canvas (no
- * background) so the card can be dragged across it; only the button takes pointer events. `{n}` in the copy marks where photo n goes.
+ * type so they sit like words. `{n}` in the copy marks where photo n goes.
  */
 export function InlineStatement() {
   const { text, photos } = careersPage.statement;
   const parts = text.split(/\{(\d)\}/);
 
   return (
-    <div className="pointer-events-none relative mt-10 flex flex-col items-center gap-8 sm:mt-14 sm:gap-10">
+    <div className="flex flex-col items-center gap-8 sm:gap-10">
       <p className="mx-auto max-w-[90rem] text-center text-[clamp(1.75rem,1.1rem+2.7vw,4rem)] leading-[1.25] font-light tracking-[-0.01em] text-ink">
         {parts.map((part, index) => {
           if (index % 2 === 0) return <Fragment key={index}>{part}</Fragment>;
@@ -35,7 +34,7 @@ export function InlineStatement() {
           ) : null;
         })}
       </p>
-      <Button href="#roles" variant="dark" className="pointer-events-auto">
+      <Button href="#roles" variant="dark">
         {careersPage.browseRoles}
       </Button>
     </div>

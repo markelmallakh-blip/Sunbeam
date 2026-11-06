@@ -1008,7 +1008,13 @@ const Lanyard = ({
       if (viewHeight * aspect < minimumWidth) viewHeight = minimumWidth / aspect;
       const viewWidth = viewHeight * aspect;
       camera.aspect = aspect;
-      camera.position.set(0, 0, viewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
+      const distance = viewHeight / 2 / Math.tan((FOV * Math.PI) / 360);
+      camera.position.set(0, 0, distance);
+      // Sunbeam: keep the clip planes close around the badge. On a tall canvas the camera sits far
+      // back, and the fixed 0.1–200 range left too little depth precision between the card's
+      // body and its printed faces, which flickered through each other (z-fighting).
+      camera.near = distance * 0.2;
+      camera.far = distance * 3;
       camera.lookAt(0, 0, 0);
       camera.updateProjectionMatrix();
       camera.updateMatrixWorld();
