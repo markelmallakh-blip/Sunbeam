@@ -104,11 +104,11 @@ function RoleSection({ title, items }: { title: string; items: readonly string[]
   return (
     <section className="flex flex-col gap-3 py-8 first:pt-0 last:pb-0 sm:gap-4 lg:py-10">
       <h2 className="text-heading-5 font-semibold text-ink">{title}</h2>
-      <ul className="flex flex-col divide-y divide-mist">
+      <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li
             key={item}
-            className="flex gap-4 py-3 text-body tracking-[0.3px] text-ink/80 before:mt-[0.62em] before:size-1.5 before:shrink-0 before:rounded-full before:bg-ink first:pt-0 last:pb-0 sm:text-subtitle"
+            className="flex gap-3 text-small leading-[1.5] tracking-[0.3px] text-ink/80 before:mt-[0.6em] before:size-1.5 before:shrink-0 before:rounded-full before:bg-ink sm:text-body"
           >
             {item}
           </li>

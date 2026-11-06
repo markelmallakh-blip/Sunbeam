@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, type CSSProperties } from "react";
+import { Fragment, useLayoutEffect, useRef, type CSSProperties, type RefObject } from "react";
 import { projectHref, projectTags, type Project } from "@/content/projects";
 import { Icon } from "@/components/ui/Icon";
 import { cn } from "@/lib/cn";
@@ -35,16 +35,31 @@ const RISE = `translate-y-3 opacity-0 transition-[opacity,translate] duration-20
 
 export function ProjectGridCard({ project, hover }: { project: Project; hover: CardHover }) {
   const tags = projectTags(project);
+  const frame = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
+
+  // B: the photo stops at the panel's top edge (as a --panel height), so no sliver of it can
+  // show through the panel's antialiased sides.
+  useLayoutEffect(() => {
+    const el = panel.current;
+    if (!el || !frame.current) return;
+    const set = () => frame.current?.style.setProperty("--panel", `${el.offsetHeight}px`);
+    set();
+    const observer = new ResizeObserver(set);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hover]);
 
   return (
     <Link href={projectHref(project.slug)} className="group flex flex-col gap-5">
-      <div data-parallax-frame className="relative aspect-[448/560] overflow-hidden bg-mist">
+      <div ref={frame} data-parallax-frame className="relative aspect-[448/560] overflow-hidden">
         {/* B lifts the photo a little so the panel never hides its subject. */}
         <div
           className={cn(
-            "absolute inset-0 transition-transform duration-1000",
+            "absolute inset-0 transition-[translate,clip-path] duration-1000",
             EASE,
-            hover === "B" && "lg:group-hover:-translate-y-[8%]",
+            hover === "B" &&
+              "[clip-path:inset(0)] lg:group-hover:-translate-y-[8%] lg:group-hover:[clip-path:inset(0_0_calc(var(--panel,0px)_-_8%_-_2px)_0)]",
           )}
         >
           <div className="absolute inset-x-0 -top-[6%] h-[112%] translate-y-[calc(var(--parallax,0)*1%)]">
@@ -60,7 +75,7 @@ export function ProjectGridCard({ project, hover }: { project: Project; hover: C
 
         <div className="hidden lg:contents">
           {hover === "A" && <Veil tags={tags} />}
-          {hover === "B" && <Caption tags={tags} />}
+          {hover === "B" && <Caption tags={tags} panel={panel} />}
           {hover === "C" && <Chips tags={tags} />}
         </div>
       </div>
@@ -111,9 +126,10 @@ function Veil({ tags }: { tags: string[] }) {
   );
 }
 
-function Caption({ tags }: { tags: string[] }) {
+function Caption({ tags, panel }: { tags: string[]; panel: RefObject<HTMLDivElement | null> }) {
   return (
     <div
+      ref={panel}
       className={cn(
         "absolute inset-x-0 bottom-0 flex translate-y-full flex-col gap-4 bg-white p-6 transition-transform duration-500 group-hover:translate-y-0 group-hover:duration-1000",
         EASE,

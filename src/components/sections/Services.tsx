@@ -144,7 +144,7 @@ function Accordion() {
             key={item.title}
             className={cn(
               "min-w-0 transition-[flex-grow] duration-700 ease-soft",
-              on ? "grow-[4]" : "grow",
+              on ? "grow-[3] 2xl:grow-[4]" : "grow",
             )}
             style={{ flexBasis: 0 }}
           >
@@ -170,10 +170,17 @@ function Accordion() {
                   on ? "from-black/65 via-black/15 via-45%" : "from-black/70 via-black/40",
                 )}
               />
-              <div className="flex items-end justify-between gap-6">
+              <div className={cn("flex items-end", on && "pr-18")}>
                 <div className="flex min-w-0 flex-col">
-                  <h3 className="text-heading-3 font-semibold whitespace-nowrap">{item.title}</h3>
-                  {/* Collapsed panels fold the description away, so every title sits on one line. */}
+                  <h3
+                    className={cn(
+                      "text-heading-5 font-semibold 2xl:text-heading-4",
+                      on && "whitespace-nowrap",
+                    )}
+                  >
+                    {item.title}
+                  </h3>
+                  {/* Collapsed panels fold the description away; their titles may wrap to fit the narrow card. */}
                   <div
                     className={cn(
                       "grid transition-[grid-template-rows,opacity] duration-500 ease-soft",
@@ -187,7 +194,7 @@ function Accordion() {
                 </div>
                 <span
                   className={cn(
-                    "grid size-12 shrink-0 place-items-center rounded-[4px] border border-white transition-[opacity,background-color,color] duration-500",
+                    "absolute right-8 bottom-8 grid size-12 place-items-center rounded-[4px] border border-white transition-[opacity,background-color,color] duration-500",
                     on ? "opacity-100 group-hover:bg-white group-hover:text-ink" : "opacity-0",
                   )}
                 >
@@ -246,11 +253,11 @@ function ListAndPhoto() {
       >
         <div className="flex flex-col gap-8 lg:col-span-6 lg:self-center">
           <Intro align="left" />
-          <ul className="border-t border-ink/15">
+          <ul>
             {services.items.map((item, index) => {
               const on = active === index;
               return (
-                <li key={item.title} className="relative border-b border-ink/15">
+                <li key={item.title} className="relative">
                   {/* This row's share of the scroll: full once it has been passed. */}
                   <Loader progress={scrollYProgress} index={index} count={count} />
                   {/*
