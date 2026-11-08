@@ -68,7 +68,7 @@ async function Project({ params }: { params: PageProps<"/projects/[slug]">["para
           <ProjectGallery images={gallery} />
           {/* Both grey sections meet here; a hairline keeps them apart. */}
           <div aria-hidden className="bg-mist px-edge">
-            <div className="h-px bg-ink/10" />
+            <div className="h-px bg-ink/25" />
           </div>
         </>
       )}

@@ -25,7 +25,7 @@ export default function CareersPage() {
     <>
       <section
         aria-labelledby="careers-title"
-        className="relative isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-8 text-center sm:pb-12"
+        className="relative isolate flex h-svh min-h-[40rem] flex-col items-center justify-end overflow-hidden px-edge pt-[6.25rem] pb-5 text-center sm:pb-6"
       >
         <div className="absolute inset-0 -z-10 bg-ink">
           <Image
@@ -57,7 +57,7 @@ export default function CareersPage() {
 
         <a
           href="#roles"
-          className="mt-8 flex flex-col items-center gap-1.5 text-caption font-medium tracking-[1.5px] text-white/85 uppercase transition-colors duration-300 hover:text-white sm:mt-10"
+          className="mt-5 flex flex-col items-center gap-1 text-caption font-medium tracking-[1.5px] text-white/85 uppercase transition-colors duration-300 hover:text-white sm:mt-6"
         >
           {careersPage.scrollCue}
           <span className="motion-safe:animate-scroll-cue">
