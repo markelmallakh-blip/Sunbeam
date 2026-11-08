@@ -27,7 +27,10 @@ export function FaqAccordion({
         const buttonId = `${baseId}-q${index}`;
         const panelId = `${baseId}-a${index}`;
         return (
-          <li key={item.question} className={cn("py-6", index > 0 && "border-t border-hairline")}>
+          <li
+            key={item.question}
+            className={cn("py-4 sm:py-6", index > 0 && "border-t border-hairline")}
+          >
             <h3>
               <button
                 id={buttonId}
@@ -35,10 +38,10 @@ export function FaqAccordion({
                 aria-expanded={open}
                 aria-controls={panelId}
                 onClick={() => setOpenIndex(open ? null : index)}
-                className="-my-3 flex w-full items-center gap-6 py-3 text-left text-body font-medium tracking-[0.5px] text-ink"
+                className="-my-3 flex w-full items-center gap-4 py-3 text-left text-small font-medium tracking-[0.5px] text-ink sm:gap-6 sm:text-body"
               >
                 <span className="flex-1">{item.question}</span>
-                <Icon name={open ? "minus" : "plus"} size={24} className="shrink-0" />
+                <Icon name={open ? "minus" : "plus"} size={24} className="shrink-0 max-sm:size-5" />
               </button>
             </h3>
             <div
@@ -52,7 +55,7 @@ export function FaqAccordion({
               )}
             >
               <div className="overflow-hidden">
-                <p className="max-w-[46rem] pt-4 text-small tracking-[0.5px] text-slate">
+                <p className="max-w-[46rem] pt-3 text-caption leading-[1.5] tracking-[0.5px] text-slate sm:pt-4 sm:text-small sm:leading-[1.35]">
                   {item.answer}
                 </p>
               </div>
