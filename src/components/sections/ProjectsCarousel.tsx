@@ -40,25 +40,26 @@ export function ProjectsCarousel({ items }: { items: ProjectCard[] }) {
   };
 
   return (
-    // Below desktop the track runs to the screen's right edge, so the next card peeks in.
-    <div className="relative w-full max-lg:-mx-edge max-lg:w-[calc(100%+2*var(--spacing-edge))]">
+    // Whole cards only, edge to edge within the page margins: two on phones and tablets, three on
+    // desktop. No card is cut off; the rest scroll in.
+    <div className="relative w-full">
       <ul
         ref={trackRef}
         onScroll={update}
         data-lenis-prevent-horizontal
-        className="flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto max-lg:scroll-px-edge max-lg:px-edge [&::-webkit-scrollbar]:hidden"
+        className="flex snap-x snap-mandatory [scrollbar-width:none] gap-2 overflow-x-auto [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
           <li
             key={item.title}
-            className="w-[calc((100vw-2*var(--spacing-edge)-0.5rem)/2.25)] shrink-0 snap-start sm:w-[45vw] lg:w-[31.55%]"
+            className="w-[calc((100%-0.5rem)/2)] shrink-0 snap-start lg:w-[calc((100%-1rem)/3)]"
           >
             <Link href={item.href} className="group flex flex-col gap-2.5 sm:gap-4">
               <div className="relative aspect-[477/620] overflow-hidden">
                 <div className="absolute inset-0 transition-transform duration-1000 ease-soft group-hover:scale-[1.04]">
                   <ResponsiveImage
                     asset={item.image}
-                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 45vw, 45vw"
+                    sizes="(min-width: 1024px) 32vw, 50vw"
                     fill
                     parallax={false}
                   />
@@ -89,8 +90,8 @@ export function ProjectsCarousel({ items }: { items: ProjectCard[] }) {
       </ul>
 
       {/* Same height as a card photo, so the arrows sit on its vertical centre. */}
-      {/* Desktop only: on touch screens the peeking card shows there is more, and swiping moves. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 hidden lg:block lg:h-[calc((100vw-2*var(--spacing-edge))*0.3155*620/477)]">
+      {/* Desktop only: touch screens swipe. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 hidden lg:block lg:h-[calc((100vw-2*var(--spacing-edge)-1rem)/3*620/477)]">
         {(["prev", "next"] as const).map((direction) => {
           const hidden = direction === "prev" ? edges.start : edges.end;
           return (

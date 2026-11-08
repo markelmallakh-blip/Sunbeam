@@ -9,14 +9,16 @@ import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 export function Founder() {
   return (
     <section
-      aria-labelledby="founder-title"
+      aria-label={founder.title}
       className="relative z-10 flex flex-col bg-linen lg:flex-row"
     >
-      <div className="flex flex-1 flex-col items-center justify-center gap-stack px-edge py-block text-center">
+      {/* Phones read title, portrait, then the letter; desktop keeps the title with the letter. */}
+      <h2 className="px-edge pt-block pb-5 text-center text-heading-4 font-semibold text-ink lg:hidden">
+        {founder.title}
+      </h2>
+      <div className="flex flex-1 flex-col items-center justify-center gap-stack px-edge py-block text-center max-lg:order-2 max-lg:pt-5">
         <div className="flex flex-col items-center gap-4 text-ink">
-          <h2 id="founder-title" className="text-heading-4 font-semibold">
-            {founder.title}
-          </h2>
+          <h2 className="text-heading-4 font-semibold max-lg:hidden">{founder.title}</h2>
           <div className="flex max-w-[35.5rem] flex-col gap-[1em] text-body tracking-[0.5px] sm:gap-[1.3em]">
             {founder.letter.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
@@ -31,7 +33,7 @@ export function Founder() {
           </p>
         </div>
       </div>
-      <div className="relative order-first aspect-[756/709] flex-1 overflow-hidden lg:order-none lg:aspect-auto lg:min-h-[44.3125rem]">
+      <div className="relative aspect-[756/709] flex-1 overflow-hidden max-lg:order-1 lg:aspect-auto lg:min-h-[44.3125rem]">
         <ResponsiveImage asset={founder.image} sizes="(min-width: 1024px) 50vw, 100vw" fill />
       </div>
     </section>
