@@ -26,7 +26,7 @@ export function PageIntro({ id, eyebrow, title, intro, children, className }: Pa
         <p className="mt-2 max-w-[43.625rem] text-body tracking-[0.5px] text-slate">{intro}</p>
       )}
       {children && (
-        <div className="mt-8 flex w-full flex-wrap justify-center gap-3">{children}</div>
+        <div className="mt-3 flex w-full flex-wrap justify-center gap-3 sm:mt-8">{children}</div>
       )}
     </header>
   );

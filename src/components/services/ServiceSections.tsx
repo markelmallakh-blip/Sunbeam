@@ -2,6 +2,7 @@ import type { Service } from "@/content/services";
 import { Button } from "@/components/ui/Button";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { ProjectsCarousel } from "@/components/sections/ProjectsCarousel";
+import { InViewFigure } from "./InViewFigure";
 import { PageIntro } from "./PageIntro";
 
 /*
@@ -13,7 +14,7 @@ export function ServiceHero({ service }: { service: Service }) {
   return (
     <section
       aria-labelledby="service-title"
-      className="flex flex-col items-center gap-stack px-edge pt-block"
+      className="flex flex-col items-center gap-5 px-edge pt-block sm:gap-stack"
     >
       <PageIntro
         id="service-title"
@@ -58,7 +59,7 @@ export function ServiceIncluded({ service }: { service: Service }) {
   return (
     <section
       aria-labelledby="included-title"
-      className="flex flex-col items-center gap-10 bg-mist px-edge py-[clamp(3.5rem,2.5rem+2.6vw,7.5rem)] sm:gap-16"
+      className="flex flex-col items-center gap-10 bg-mist px-edge py-block sm:gap-16 sm:py-[clamp(3.5rem,2.5rem+2.6vw,7.5rem)]"
     >
       <h2 id="included-title" className="text-heading-4 font-semibold text-ink">
         {service.included.title}
@@ -95,7 +96,7 @@ export function ServiceDetails({ service }: { service: Service }) {
   return (
     <section aria-label="Service details" className="grid gap-2 px-edge pt-edge md:grid-cols-2">
       {service.details.map((asset) => (
-        <figure key={asset.src} className="group relative aspect-[4/3] overflow-hidden">
+        <InViewFigure key={asset.src} className="group relative aspect-[4/3] overflow-hidden">
           <div className="absolute inset-0 transition-transform duration-700 ease-soft group-hover:scale-[1.04]">
             <ResponsiveImage
               asset={asset}
@@ -104,15 +105,19 @@ export function ServiceDetails({ service }: { service: Service }) {
               parallax={false}
             />
           </div>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-700 ease-soft group-hover:bg-black/60 max-md:group-data-inview:bg-black/60"
+          />
           <figcaption className="pointer-events-none absolute inset-0 grid place-items-center">
             {/* The white tag opens out from its centre, then the word rises into it. */}
-            <span className="overflow-hidden bg-white px-4 py-2 transition-[clip-path] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [clip-path:inset(0_50%_0_50%)] group-hover:duration-700 group-hover:[clip-path:inset(0_0%_0_0%)]">
-              <span className="block translate-y-[115%] text-caption font-medium tracking-[1px] text-ink uppercase transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 group-hover:delay-150 group-hover:duration-700 sm:text-small">
+            <span className="overflow-hidden bg-white px-4 py-2 transition-[clip-path] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] [clip-path:inset(0_50%_0_50%)] group-hover:duration-700 group-hover:[clip-path:inset(0_0%_0_0%)] max-md:group-data-inview:duration-700 max-md:group-data-inview:[clip-path:inset(0_0%_0_0%)]">
+              <span className="block translate-y-[115%] text-caption font-medium tracking-[1px] text-ink uppercase transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 group-hover:delay-150 group-hover:duration-700 max-md:group-data-inview:translate-y-0 max-md:group-data-inview:delay-150 max-md:group-data-inview:duration-700 sm:text-small">
                 {asset.label}
               </span>
             </span>
           </figcaption>
-        </figure>
+        </InViewFigure>
       ))}
     </section>
   );

@@ -44,23 +44,23 @@ export function ApplicationForm({ role }: { role: string }) {
     <form action={formAction} noValidate className="flex flex-col gap-3">
       <input type="hidden" name="role" value={role} />
       <Fields key={state.attempt ?? 0} id={id} values={values} errors={errors} />
-      <div className="flex flex-col items-center gap-3 pt-2">
+      <div className="flex flex-col gap-3 pt-2">
         <button
           type="submit"
           disabled={pending}
-          className={buttonClasses({ variant: "dark", size: "cta" })}
+          className={cn(buttonClasses({ variant: "dark", size: "cta" }), "w-full")}
         >
           <span>{pending ? "Sending…" : "Submit application"}</span>
           <Icon
             name="arrow-right"
             size={14}
-            className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1"
+            className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1 max-sm:size-[10px]"
           />
         </button>
         <p
           role="status"
           className={cn(
-            "min-h-5 text-center text-small tracking-[0.5px]",
+            "text-center text-small tracking-[0.5px] empty:hidden",
             state.status === "error" ? "text-rust" : "text-slate",
           )}
         >

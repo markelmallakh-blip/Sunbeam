@@ -1,109 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import {
-  motion,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-  type MotionValue,
-} from "framer-motion";
-import { useRef, useState, type CSSProperties } from "react";
+import { useState } from "react";
 import { services } from "@/content/homepage";
 import { ResponsiveImage } from "@/components/media/ResponsiveImage";
 import { Icon } from "@/components/ui/Icon";
-import { smoothScroll } from "@/lib/smooth-scroll";
 import { cn } from "@/lib/cn";
 
-type Option = "A" | "B" | "C";
-
-const options: { key: Option; label: string }[] = [
-  { key: "A", label: "Option A" },
-  { key: "B", label: "Option B" },
-  { key: "C", label: "Option C" },
-];
-
 /*
- * "Our Services", set apart from the project cards that follow. Three layouts sit behind a
- * temporary switch so they can be compared with the client:
- * - A: wide, tall photo bands one under another, title and description centred at the bottom.
- * - B: an accordion of three photos side by side, one open and two collapsed; hovering a
- *   collapsed one opens it. Phones get A's stacked bands.
- * - C: a numbered list beside one tall photo; the section pins and scrolling steps through the
- *   services, each with a vertical loader, before the page moves on.
+ * "Our Services", set apart from the project cards that follow: an accordion of three photos side
+ * by side, one open and two collapsed; hovering a collapsed one opens it. Phones get the photos
+ * as stacked bands instead.
  */
 export function Services() {
-  const [option, setOption] = useState<Option>("A");
-
   return (
     <section
       id="services"
       aria-labelledby="services-title"
       className="relative flex scroll-mt-header flex-col items-center gap-stack bg-mist px-edge py-block"
     >
-      {/* Temporary: compares the three layouts. Remove once the client has chosen. */}
-      <div
-        role="group"
-        aria-label="Services layout"
-        className="flex gap-1 self-end rounded-[4px] bg-white p-1 lg:absolute lg:top-8 lg:right-(--spacing-edge)"
-      >
-        {options.map(({ key, label }) => (
-          <button
-            key={key}
-            type="button"
-            aria-pressed={option === key}
-            onClick={() => setOption(key)}
-            className={cn(
-              "rounded-[2px] px-3 py-1.5 text-caption font-medium tracking-[1px] uppercase transition-colors duration-300",
-              option === key ? "bg-ink text-white" : "text-slate hover:text-ink",
-            )}
-          >
-            {label}
-          </button>
-        ))}
+      <Intro />
+      <div className="w-full lg:hidden">
+        <Bands />
       </div>
-
-      {option !== "C" && <Intro />}
-      {option === "A" && <Bands />}
-      {option === "B" && (
-        <>
-          <div className="w-full lg:hidden">
-            <Bands />
-          </div>
-          <Accordion />
-        </>
-      )}
-      {option === "C" && <ListAndPhoto />}
+      <Accordion />
     </section>
   );
 }
 
-/* The section heading and line: centred over A and B, left-aligned over C's list. */
-function Intro({ align = "center" }: { align?: "center" | "left" }) {
+/* The section heading and line, centred. */
+function Intro() {
   return (
-    <div
-      className={cn(
-        "flex flex-col gap-2",
-        align === "center" ? "items-center text-center" : "items-start text-left",
-      )}
-    >
+    <div className="flex flex-col items-center gap-2 text-center">
       <h2 id="services-title" className="text-heading-2 font-semibold text-ink">
         {services.title}
       </h2>
-      <p
-        className={cn(
-          "text-body tracking-[0.5px] text-slate",
-          align === "center" ? "max-w-[43.625rem]" : "max-w-[34rem]",
-        )}
-      >
+      <p className="max-w-[43.625rem] text-body tracking-[0.5px] text-slate">
         {services.description}
       </p>
     </div>
   );
 }
 
-/* A: wide photo bands, one under another. */
+/* Phones: wide photo bands, one under another. */
 function Bands() {
   return (
     <ul className="flex w-full flex-col gap-3 sm:gap-5">
@@ -131,7 +70,7 @@ function Bands() {
   );
 }
 
-/* B: one wide panel and two narrow ones; the hovered (or focused) panel opens. */
+/* Desktop: one wide panel and two narrow ones; the hovered (or focused) panel opens. */
 function Accordion() {
   const [open, setOpen] = useState(0);
 
@@ -206,187 +145,5 @@ function Accordion() {
         );
       })}
     </ul>
-  );
-}
-
-/*
- * C: a numbered list beside one tall photo. On desktop the section pins while it is scrolled
- * through, one screen per service: a thin vertical loader beside each row fills as you scroll,
- * and when it is full the next service takes over (title, description and photo), so every
- * service is seen before the page moves on. Phones and reduced motion show the plain list.
- */
-function ListAndPhoto() {
-  const [active, setActive] = useState(0);
-  const trackRef = useRef<HTMLDivElement>(null);
-  const reduceMotion = useReducedMotion();
-  const count = services.items.length;
-  const { scrollYProgress } = useScroll({ target: trackRef, offset: ["start start", "end end"] });
-  useMotionValueEvent(scrollYProgress, "change", (progress) => {
-    setActive(Math.min(count - 1, Math.floor(progress * count)));
-  });
-
-  // Open a service: on the pinned layout, scroll to the middle of its share of the track (the
-  // scroll then sets it active); otherwise just pick it.
-  const open = (index: number) => {
-    const track = trackRef.current;
-    const pinned = !reduceMotion && window.matchMedia("(min-width: 1024px)").matches;
-    if (!track || !pinned) return setActive(index);
-    const top = track.getBoundingClientRect().top + window.scrollY;
-    const travel = track.offsetHeight - window.innerHeight;
-    const target = top + travel * ((index + 0.5) / count);
-    const lenis = smoothScroll.get();
-    if (lenis) lenis.scrollTo(target, { duration: 1.1 });
-    else window.scrollTo({ top: target, behavior: "smooth" });
-  };
-
-  return (
-    <div
-      ref={trackRef}
-      className={cn("w-full", !reduceMotion && "lg:h-[calc(var(--rows)*100svh)]")}
-      style={{ "--rows": count } as CSSProperties}
-    >
-      <div
-        className={cn(
-          "mx-auto grid w-full max-w-[90.5rem] gap-stack lg:grid-cols-12 lg:gap-16",
-          !reduceMotion && "lg:sticky lg:top-0 lg:h-svh lg:content-center",
-        )}
-      >
-        <div className="flex flex-col gap-8 lg:col-span-6 lg:self-center">
-          <Intro align="left" />
-          <ul>
-            {services.items.map((item, index) => {
-              const on = active === index;
-              return (
-                <li key={item.title} className="relative">
-                  {/* This row's share of the scroll: full once it has been passed. */}
-                  <Loader progress={scrollYProgress} index={index} count={count} />
-                  {/*
-                   * Clicking a row opens it in place (scrolling the pinned track to its part, so the
-                   * photo and loaders follow); only the open row's "View" link goes to the service.
-                   */}
-                  <div
-                    onClick={() => open(index)}
-                    onMouseEnter={reduceMotion ? () => setActive(index) : undefined}
-                    className={cn(
-                      "group flex flex-col gap-4 py-6 sm:py-7 lg:pl-6",
-                      !on && "lg:cursor-pointer",
-                    )}
-                  >
-                    <span className="relative block aspect-[16/10] overflow-hidden lg:hidden">
-                      <ResponsiveImage asset={item.image} sizes="100vw" fill parallax={false} />
-                    </span>
-                    <span className="flex items-start gap-5 sm:gap-8">
-                      <span className="pt-1 text-small font-medium tracking-[1px] text-slate tabular-nums">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                      <span className="flex flex-1 flex-col gap-2">
-                        <button
-                          type="button"
-                          aria-expanded={on}
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            open(index);
-                          }}
-                          className={cn(
-                            "text-left text-heading-3 font-semibold transition-colors duration-500 ease-soft",
-                            on ? "text-ink" : "text-ink lg:text-ink/35 lg:group-hover:text-ink/60",
-                          )}
-                        >
-                          {item.title}
-                        </button>
-                        <span
-                          className={cn(
-                            "grid transition-[grid-template-rows,opacity] duration-500 ease-soft",
-                            on
-                              ? "grid-rows-[1fr] opacity-100"
-                              : "grid-rows-[1fr] opacity-100 lg:grid-rows-[0fr] lg:opacity-0",
-                          )}
-                        >
-                          <span className="overflow-hidden">
-                            <span className="block max-w-[30rem] text-small tracking-[0.5px] text-slate sm:text-body">
-                              {item.description}
-                            </span>
-                          </span>
-                        </span>
-                      </span>
-                      <ViewLink href={item.href} title={item.title} on={on} />
-                    </span>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        <div className="relative hidden overflow-hidden lg:col-span-6 lg:block lg:h-[min(44rem,80svh)]">
-          {services.items.map((item, index) => (
-            <div
-              key={item.title}
-              aria-hidden={active !== index}
-              className={cn(
-                "absolute inset-0 transition-[opacity,scale] duration-700 ease-soft",
-                active === index ? "scale-100 opacity-100" : "scale-[1.04] opacity-0",
-              )}
-            >
-              <ResponsiveImage
-                asset={item.image}
-                sizes="(min-width: 1024px) 45vw, 1px"
-                quality={85}
-                fill
-                parallax={false}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/*
- * The row's arrow tile. On the open row (and always on phones) it widens into a dark "View" link to
- * the service; on the others it stays a quiet arrow that only marks the row.
- */
-function ViewLink({ href, title, on }: { href: string; title: string; on: boolean }) {
-  return (
-    <Link
-      href={href}
-      aria-label={`View ${title}`}
-      onClick={(event) => event.stopPropagation()}
-      className={cn(
-        "flex h-10 shrink-0 items-center justify-center gap-2 self-center rounded-[4px] border text-caption font-medium tracking-[1px] uppercase transition-[background-color,border-color,color,width,padding] duration-500 ease-soft",
-        on
-          ? "border-ink bg-ink px-4 text-white hover:bg-black"
-          : "border-ink bg-ink px-4 text-white lg:pointer-events-none lg:w-10 lg:border-ink/20 lg:bg-transparent lg:px-0 lg:text-ink lg:group-hover:border-ink",
-      )}
-    >
-      <span
-        className={cn(
-          "overflow-hidden whitespace-nowrap transition-[max-width,opacity] duration-500 ease-soft",
-          on ? "max-w-16 opacity-100" : "max-w-16 opacity-100 lg:max-w-0 lg:opacity-0",
-        )}
-      >
-        View
-      </span>
-      <Icon name="arrow-right" size={16} className="shrink-0" />
-    </Link>
-  );
-}
-
-/* A 2px vertical track on the row's left edge that fills top to bottom with its part of the scroll. */
-function Loader({
-  progress,
-  index,
-  count,
-}: {
-  progress: MotionValue<number>;
-  index: number;
-  count: number;
-}) {
-  const fill = useTransform(progress, (value) => Math.min(1, Math.max(0, value * count - index)));
-  return (
-    <span aria-hidden className="absolute top-0 bottom-0 left-0 hidden w-[2px] bg-ink/10 lg:block">
-      <motion.span style={{ scaleY: fill }} className="block size-full origin-top bg-ink" />
-    </span>
   );
 }

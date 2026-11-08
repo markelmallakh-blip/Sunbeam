@@ -25,11 +25,7 @@ export function MoreProjects({ current }: { current: string }) {
         {projectDetailCopy.discoverTitle}
       </h2>
       <ProjectsCarousel items={items} />
-      <Button
-        href={projectDetailCopy.discoverCta.href}
-        variant="outline-dark"
-        className="bg-white! hover:bg-mist-strong!"
-      >
+      <Button href={projectDetailCopy.discoverCta.href} variant="outline-dark">
         {projectDetailCopy.discoverCta.label}
       </Button>
     </section>

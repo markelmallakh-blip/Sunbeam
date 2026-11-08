@@ -43,22 +43,26 @@ export function ContactForm() {
   return (
     <form action={formAction} noValidate className="flex flex-col gap-3 sm:gap-4">
       <FormFields key={state.attempt ?? 0} id={id} values={values} errors={errors} />
-      <div className="flex flex-col items-center gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:pt-2">
         <p
           role="status"
           className={cn(
-            "min-h-5 text-center text-small tracking-[0.5px] sm:text-left",
+            "text-center text-small tracking-[0.5px] max-sm:order-last max-sm:empty:hidden sm:min-h-5 sm:text-left",
             state.status === "error" ? "text-rust" : "text-slate",
           )}
         >
           {state.message}
         </p>
-        <button type="submit" disabled={pending} className={buttonClasses({ variant: "dark" })}>
+        <button
+          type="submit"
+          disabled={pending}
+          className={cn(buttonClasses({ variant: "dark", size: "cta" }), "max-sm:w-full")}
+        >
           <span>{pending ? "Sending…" : "Send message"}</span>
           <Icon
             name="arrow-right"
             size={14}
-            className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1"
+            className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1 max-sm:size-[10px]"
           />
         </button>
       </div>
@@ -104,22 +108,27 @@ function FormFields({
           defaultValue={values?.lastName}
           error={errors.lastName}
         />
-        <Field
-          id={`${id}-email`}
-          name="email"
-          type="email"
-          label="Email address"
-          autoComplete="email"
-          required
-          defaultValue={values?.email}
-          error={errors.email}
-        />
-        <PhoneField
-          id={`${id}-phone`}
-          defaultCode={values?.phoneCode}
-          defaultValue={values?.phone}
-          error={errors.phone}
-        />
+        {/* Full width on phones, where half a row is too narrow for the phone field. */}
+        <div className="col-span-2 sm:col-span-1">
+          <Field
+            id={`${id}-email`}
+            name="email"
+            type="email"
+            label="Email address"
+            autoComplete="email"
+            required
+            defaultValue={values?.email}
+            error={errors.email}
+          />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <PhoneField
+            id={`${id}-phone`}
+            defaultCode={values?.phoneCode}
+            defaultValue={values?.phone}
+            error={errors.phone}
+          />
+        </div>
       </div>
 
       <SelectField

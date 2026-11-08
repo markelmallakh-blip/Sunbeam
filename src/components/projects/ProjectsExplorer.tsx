@@ -162,7 +162,7 @@ export function ProjectsExplorer({ projects }: { projects: Project[] }) {
         ref={gridRef}
         role="tabpanel"
         aria-label={`${filter} projects`}
-        className="grid gap-8 px-edge pt-8 pb-16 sm:grid-cols-2 sm:gap-12 sm:pt-[4.5rem] sm:pb-24 lg:flex lg:flex-wrap lg:justify-center lg:gap-x-12 lg:gap-y-20"
+        className="grid gap-8 px-edge pt-8 pb-10 sm:grid-cols-2 sm:gap-12 sm:pt-[4.5rem] sm:pb-24 lg:flex lg:flex-wrap lg:justify-center lg:gap-x-12 lg:gap-y-20"
       >
         {shown.map((project) => (
           <div key={project.slug} className="lg:w-[calc((100%-6rem)/3)]">

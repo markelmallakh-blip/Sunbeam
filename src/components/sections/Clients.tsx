@@ -34,7 +34,7 @@ export function Clients() {
   return (
     <section
       aria-labelledby="clients-title"
-      className="flex flex-col items-center gap-4 overflow-hidden bg-mist py-[clamp(3rem,2rem+2.6vw,7.5rem)] sm:gap-6"
+      className="flex flex-col items-center gap-4 overflow-hidden bg-mist py-block sm:gap-6 sm:py-[clamp(3rem,2rem+2.6vw,7.5rem)]"
     >
       <h2 id="clients-title" className="text-heading-6 font-semibold text-ink">
         {clients.title}

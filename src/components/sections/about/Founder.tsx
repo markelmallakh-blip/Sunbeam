@@ -24,14 +24,14 @@ export function Founder() {
           </div>
         </div>
         <div className="flex flex-col items-center gap-1">
-          <FounderSignature className="h-10 w-auto text-rust" />
+          <FounderSignature className="h-8 w-auto text-rust sm:h-10" />
           <p className="sr-only">{founder.name}</p>
-          <p className="text-small font-medium tracking-[1px] text-slate uppercase">
+          <p className="text-caption font-medium tracking-[1px] text-slate uppercase sm:text-small">
             {founder.role}
           </p>
         </div>
       </div>
-      <div className="relative aspect-[756/709] flex-1 overflow-hidden lg:aspect-auto lg:min-h-[44.3125rem]">
+      <div className="relative order-first aspect-[756/709] flex-1 overflow-hidden lg:order-none lg:aspect-auto lg:min-h-[44.3125rem]">
         <ResponsiveImage asset={founder.image} sizes="(min-width: 1024px) 50vw, 100vw" fill />
       </div>
     </section>

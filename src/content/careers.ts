@@ -18,13 +18,15 @@ export type Role = {
 
 export const careersPage = {
   eyebrow: "Careers",
-  title: "Join Sunbeam",
+  title: "Join Our Team",
+  scrollCue: "Scroll to join",
   intro:
     "We are a small team of architects and interior designers who care about light, material and detail. If that sounds like you, we would love to hear from you.",
   hero: {
-    src: "/images/careers/careers-hero.webp",
-    alt: "A designer laying out fabric, stone and paint samples on a table",
+    src: "/images/about-v2/team-office.webp",
+    alt: "The Sunbeam team at work in the studio, among timber shelves and warm light",
   },
+
   browseRoles: "View open roles",
   /* The hanging studio badge in the hero (React Bits Lanyard); drag it, click to flip. */
   badge: {

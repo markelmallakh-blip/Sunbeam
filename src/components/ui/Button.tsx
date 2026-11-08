@@ -16,11 +16,12 @@ const variants = {
 } as const;
 
 const sizes = {
-  sm: "h-8 gap-1.5 px-3.5 text-caption sm:h-9 sm:gap-2 sm:px-4 sm:text-small",
-  md: "h-9 gap-1.5 px-4 text-[0.8125rem] sm:h-10 sm:gap-2 sm:px-[1.125rem] sm:text-[0.9375rem]",
-  lg: "h-11 gap-2 px-6 text-small sm:h-[3.625rem] sm:gap-3 sm:px-8 sm:text-subtitle",
-  /* Between md and lg: the role page's Apply Now and the application's submit button. */
-  cta: "h-10 gap-2 px-5 text-small sm:h-12 sm:px-6 sm:text-body",
+  /* Phones get a step smaller of each size; the sm: values are the desktop sizes. */
+  sm: "h-6 gap-1 px-2 text-[0.5625rem] sm:h-9 sm:gap-2 sm:px-4 sm:text-small",
+  md: "h-7 gap-1 px-2.5 text-[0.625rem] sm:h-10 sm:gap-2 sm:px-[1.125rem] sm:text-[0.9375rem]",
+  lg: "h-8 gap-1.5 px-3.5 text-[0.6875rem] sm:h-[3.625rem] sm:gap-3 sm:px-8 sm:text-subtitle",
+  /* Between md and lg: the application's submit button. */
+  cta: "h-[1.875rem] gap-1 px-3 text-[0.6875rem] sm:h-12 sm:gap-2 sm:px-6 sm:text-body",
 } as const;
 
 export type ButtonVariant = keyof typeof variants;
@@ -72,13 +73,15 @@ export function Button({
   const classes = buttonClasses({ variant, size, className });
   const content = (
     <>
-      {icon === "left" && <Icon name="arrow-right" size={iconSize} />}
+      {icon === "left" && (
+        <Icon name="arrow-right" size={iconSize} className="max-sm:size-[10px]" />
+      )}
       <span>{children}</span>
       {icon === "right" && (
         <Icon
           name="arrow-right"
           size={iconSize}
-          className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1"
+          className="transition-transform duration-500 ease-soft group-hover/btn:translate-x-1 max-sm:size-[10px]"
         />
       )}
     </>

@@ -34,6 +34,8 @@ export function Header({ booking }: { booking: ReactNode }) {
   // Pages that open on a full-bleed photo: the homepage, careers and each project.
   const overHero =
     pathname === "/" || /^\/careers\/?$/.test(pathname) || /^\/projects\/[^/]+\/?$/.test(pathname);
+  // Pages on the light grey background (each open role): the solid header matches it.
+  const onMist = /^\/careers\/[^/]+\/?$/.test(pathname);
   const [scrolled, setScrolled] = useState(false);
   // Past the full-bleed hero photo: only then does the header turn solid white on hero pages.
   const [pastHero, setPastHero] = useState(false);
@@ -104,7 +106,9 @@ export function Header({ booking }: { booking: ReactNode }) {
   return (
     <>
       {/* The header is fixed; inner pages keep its height free so content starts below it. */}
-      {!overHero && <div aria-hidden style={{ height: TALL }} />}
+      {!overHero && (
+        <div aria-hidden className={onMist ? "bg-mist" : undefined} style={{ height: TALL }} />
+      )}
 
       <AnimatePresence>
         {openMenu && (
@@ -129,13 +133,15 @@ export function Header({ booking }: { booking: ReactNode }) {
           // Tailwind's translate utilities set `translate`, so that is the property to animate.
           "fixed inset-x-0 top-0 z-50 transition-[height,translate,background-color,color,box-shadow] duration-700 ease-soft",
           barHidden && "-translate-y-full",
-          solid ? "bg-white text-ink shadow-[0_1px_0_var(--color-mist)]" : "text-white",
+          solid
+            ? cn("text-ink", onMist ? "bg-mist" : "bg-white shadow-[0_1px_0_var(--color-mist)]")
+            : "text-white",
         )}
       >
         <div
           aria-hidden
           className={cn(
-            "pointer-events-none absolute inset-0 bg-linear-to-b from-black from-[7%] to-transparent transition-opacity duration-500 ease-soft",
+            "pointer-events-none absolute inset-0 bg-linear-to-b from-black/40 to-transparent to-70% transition-opacity duration-500 ease-soft",
             solid || bookingOpen ? "opacity-0" : "opacity-100",
           )}
         />
@@ -219,7 +225,7 @@ export function Header({ booking }: { booking: ReactNode }) {
                 setOpenMenu(null);
                 setBookingOpen((open) => !open);
               }}
-              className="hidden items-center gap-2.5 text-small font-medium tracking-[1px] uppercase transition-opacity duration-300 hover:opacity-70 sm:flex"
+              className="hidden items-center gap-2.5 text-[0.8125rem] font-medium tracking-[1px] uppercase transition-opacity duration-300 hover:opacity-70 sm:flex"
             >
               {bookingOpen ? (
                 <Icon name="close" size={20} />
